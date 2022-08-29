@@ -38,32 +38,32 @@ import { get } from 'lodash';
  * @returns {Object} a normalized result (see example).
  */
 export const normalizeResults = results => {
-    if (Array.isArray(results)) {
-        return results.map(normalizeResults);
-    }
+  if (Array.isArray(results)) {
+    return results.map(normalizeResults);
+  }
 
-    // detect 'hits: { edges: [] }' and shortcut it
-    const hits = get(results, 'hits.edges', null);
-    if (hits !== null) {
-        return normalizeResults(hits);
-    }
+  // detect 'hits: { edges: [] }' and shortcut it
+  const hits = get(results, 'hits.edges', null);
+  if (hits !== null) {
+    return normalizeResults(hits);
+  }
 
-    if (typeof results === 'object' && results !== null) {
-        return Object.keys(results).reduce((norm, key) => {
-            const prop = results[key];
+  if (typeof results === 'object' && results !== null) {
+    return Object.keys(results).reduce((norm, key) => {
+      const prop = results[key];
 
-            // detect 'node' and shortcut them
-            if (key === 'node' && typeof prop === 'object' && prop !== null) {
-                return Object.keys(prop).reduce((acc, p) => {
-                    acc[p] = normalizeResults(prop[p]);
-                    return acc;
-                }, norm);
-            }
+      // detect 'node' and shortcut them
+      if (key === 'node' && typeof prop === 'object' && prop !== null) {
+        return Object.keys(prop).reduce((acc, p) => {
+          acc[p] = normalizeResults(prop[p]);
+          return acc;
+        }, norm);
+      }
 
-            norm[key] = normalizeResults(prop);
-            return norm;
-        }, {});
-    }
+      norm[key] = normalizeResults(prop);
+      return norm;
+    }, {});
+  }
 
-    return results;
+  return results;
 };

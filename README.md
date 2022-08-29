@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/cqdg_logo.svg" alt="CQDG repository logo" width="660px" />
+  <img src="cqdg_logo.svg" alt="CQDG repository logo" width="660px" />
 </p>
 <p align="center">
   <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=for-the-badge"></a>

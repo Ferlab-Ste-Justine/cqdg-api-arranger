@@ -1,48 +1,48 @@
 import { SetSqon } from '../endpoints/sets/setsTypes';
 
 export type EventCreate = {
-    actionType: string;
-    values: EventCreateValue;
+  actionType: string;
+  values: EventCreateValue;
 };
 
 export type EventCreateValue = {
-    setId: string;
-    createdAt: Date;
-    ids: string[];
-    size: number;
-    sqon: SetSqon;
-    type: string;
-    userId: string;
-    path: string;
-    tag: string;
+  setId: string;
+  createdAt: Date;
+  ids: string[];
+  size: number;
+  sqon: SetSqon;
+  type: string;
+  userId: string;
+  path: string;
+  tag: string;
 };
 
 export type EventDelete = {
-    actionType: string;
-    values: EventDeleteValues;
+  actionType: string;
+  values: EventDeleteValues;
 };
 
 export type EventDeleteValues = {
-    userId: string;
-    setIds: string[];
+  userId: string;
+  setIds: string[];
 };
 
 export type EventUpdate = {
-    actionType: string;
-    subActionType: string;
-    values: UpdateTagValue | UpdateContentValue;
+  actionType: string;
+  subActionType: string;
+  values: UpdateTagValue | UpdateContentValue;
 };
 
 export type UpdateTagValue = {
-    userId: string;
-    setId: string;
-    newTag: string;
+  userId: string;
+  setId: string;
+  newTag: string;
 };
 
 export type UpdateContentValue = {
-    userId: string;
-    ids: string[];
-    setId: string;
-    createdAt: Date;
-    tag: string;
+  userId: string;
+  ids: string[];
+  setId: string;
+  createdAt: Date;
+  tag: string;
 };

@@ -1,28 +1,28 @@
 import { graphql } from 'graphql';
 import { get } from 'lodash';
 
+import { idKey, maxSetContentSize } from '../config/env';
 import { SetSqon, Sort } from '../endpoints/sets/setsTypes';
-import { idKey, maxSetContentSize } from '../env';
 
 export type ArrangerProject = {
-    runQuery: ({ query: string, variables: unknown }) => Promise<unknown>;
+  runQuery: ({ query: string, variables: unknown }) => Promise<unknown>;
 };
 export const searchSqon = async (
-    sqon: SetSqon,
-    projectId: string,
-    type: string,
-    sort: Sort[],
-    idField: string,
-    getProject: (projectId: string) => ArrangerProject,
+  sqon: SetSqon,
+  projectId: string,
+  type: string,
+  sort: Sort[],
+  idField: string,
+  getProject: (projectId: string) => ArrangerProject,
 ): Promise<string[]> => {
-    const project = getProject(projectId);
+  const project = getProject(projectId);
 
-    if (!project) {
-        throw new Error(`ProjectID '${projectId}' cannot be established.`);
-    }
+  if (!project) {
+    throw new Error(`ProjectID '${projectId}' cannot be established.`);
+  }
 
-    const results = await runQuery({
-        query: `
+  const results = await runQuery({
+    query: `
             query ($sqon: JSON, $sort: [Sort], $first: Int) {
                 ${type} {
                     hits(filters: $sqon, sort: $sort, first: $first) {
@@ -35,30 +35,30 @@ export const searchSqon = async (
                 }
             }
         `,
-        variables: { sqon, sort, first: maxSetContentSize },
-        mock: false,
-        project,
-    });
+    variables: { sqon, sort, first: maxSetContentSize },
+    mock: false,
+    project,
+  });
 
-    if (get(results, 'errors', undefined)) {
-        throw new Error(get(results, 'errors', undefined));
-    }
+  if (get(results, 'errors', undefined)) {
+    throw new Error(get(results, 'errors', undefined));
+  }
 
-    const ids: string[] = get(results, `data.${type}.hits.edges`, []).map(edge => edge.node[idKey]);
+  const ids: string[] = get(results, `data.${type}.hits.edges`, []).map(edge => edge.node[idKey]);
 
-    return ids;
+  return ids;
 };
 
 const runQuery = ({ query, variables, mock, project }) => {
-    const schema = mock ? project.mockSchema : project.schema;
-    return graphql({
-        schema,
-        contextValue: {
-            schema,
-            es: project.es,
-            projectId: project.id,
-        },
-        source: query,
-        variableValues: variables,
-    });
+  const schema = mock ? project.mockSchema : project.schema;
+  return graphql({
+    schema,
+    contextValue: {
+      schema,
+      es: project.es,
+      projectId: project.id,
+    },
+    source: query,
+    variableValues: variables,
+  });
 };

@@ -15,15 +15,17 @@ export const esHost = process.env.ES_HOST || 'http://localhost:9200';
 export const esUser = process.env.ES_USER;
 export const esPass = process.env.ES_PASS;
 
-export const esFileIndex = process.env.ES_FILE_INDEX || 'file_centric';
-export const esStudyIndex = process.env.ES_STUDY_INDEX || 'study_centric';
-export const esParticipantIndex = process.env.ES_PARTICIPANT_INDEX || 'participant_centric';
-export const esBiospecimenIndex = process.env.ES_BIOSPECIMEN_INDEX || 'biospecimen_centric';
+export const esFileIndex = process.env.ES_FILE_INDEX || 'files';
+export const esStudyIndex = process.env.ES_STUDY_INDEX || 'studies';
+export const esParticipantIndex = process.env.ES_PARTICIPANT_INDEX || 'donors'; // change to participants
+export const esBiospecimenIndex = process.env.ES_BIOSPECIMEN_INDEX || 'biospecimens';
+export const esVariantIndex = process.env.ES_VARIANT_INDEX || 'clin_qa_variant_centric';
 
 export const maxNOfGenomicFeatureSuggestions = process.env.MAX_NUMBER_OF_GF_SUGGESTIONS || 5;
 
-export const indexNameGeneFeatureSuggestion = process.env.GENES_SUGGESTIONS_INDEX_NAME;
-export const indexNameVariantFeatureSuggestion = process.env.VARIANTS_SUGGESTIONS_INDEX_NAME;
+export const indexNameGeneFeatureSuggestion = process.env.GENES_SUGGESTIONS_INDEX_NAME || 'clin_qa_gene_suggestions';
+export const indexNameVariantFeatureSuggestion =
+  process.env.VARIANTS_SUGGESTIONS_INDEX_NAME || 'clin_qa_variant_suggestions';
 
 export const userApiURL = process.env.USER_API_URL || 'https://cqdg-users-api-qa.373997854230.d3b.io';
 export const sendUpdateToSqs = process.env.SEND_UPDATE_TO_SQS !== 'false';
@@ -33,12 +35,13 @@ export const maxSetContentSize: number = Number.parseInt(process.env.MAX_SET_CON
 export const survivalPyFile = process.env.SURVIVAL_PY_FILE || 'resource/py/survival.py';
 export const pythonPath = process.env.PYTHON_PATH || '/usr/local/bin/python3';
 
-export const idKey = process.env.ID_KEY || 'cqdg_id';
-export const fileIdKey = process.env.FILE_ID_KEY || 'file_id';
-export const studyIdKey = process.env.STUDY_ID_KEY || 'study_id';
-export const participantIdKey = process.env.PARTICIPANT_ID_KEY || 'participant_id';
-export const biospecimenIdKey = process.env.BIOSPECIMEN_ID_KEY || 'biospecimen_id';
-export const familyIdKey = process.env.FAMILY_ID_KEY || 'family_id';
+export const fileIdKey = process.env.FILE_ID_KEY || 'internal_file_id';
+export const studyIdKey = process.env.STUDY_ID_KEY || 'internal_study_id';
+export const participantIdKey = process.env.PARTICIPANT_ID_KEY || 'internal_donor_id'; //todo: change to participant
+export const biospecimenIdKey = process.env.BIOSPECIMEN_ID_KEY || 'internal_biospecimen_id';
+export const variantIdKey = process.env.VARIANT_ID_KEY || 'internal_variant_id';
+export const familyIdKey = process.env.FAMILY_ID_KEY || '----';
+export const idKey = process.env.ID_KEY || 'id';
 
 export const participantKey = process.env.TO_PARTICIPANT_ID_KEY || 'participant';
 export const participantFileKey = process.env.TO_PARTICIPANT_FILE_ID_KEY || 'participantFile';

@@ -15,33 +15,33 @@ JBCiTrVNMy4wmZruwoG/sae517Jl6cIFePSifpOTsA==
 export const publicKey = `MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJgoVgqi7/C9uSoUsfQeep2Dbw5HfXWQIyypg+XZ3NqsxTA2k2Fr2vmBu82iGsNgwWBKac5IOzSGvyob1l64MkUCAwEAAQ==`;
 
 export const getToken = (expire = 1000, sub = '12345-678-90abcdef', roles = []) =>
-    jwt.sign(
-        {
-            iss: 'https://kf-keycloak-qa.kf-strides.org/auth/realms/kidsfirstdrc',
-            sub: sub,
-            aud: 'kf-api-arranger',
-            jti: '2c166d55-5ae6-4fb4-9daa-a1d5e1f535d7',
-            user_id: sub,
-            typ: 'Bearer',
-            azp: 'portal-ui',
-            session_state: 'ae2d1238-0180-4ea1-978a-8e9a95ba44f4',
-            acr: '1',
-            realm_access: {
-                roles,
-            },
-            scope: 'email profile',
-            email_verified: false,
-            name: 'test test',
-            groups: [],
-            preferred_username: 'test@test.test',
-            given_name: 'test',
-            family_name: 'test',
-            email: 'test@test.test',
-        },
-        privateKey,
-        {
-            expiresIn: expire,
-            algorithm: 'RS256',
-            keyid: 'Ip-PDWNUlHbpuTJ7mFERzFzm8CRDJU0A7qSRZMIFoQ0',
-        },
-    );
+  jwt.sign(
+    {
+      iss: 'https://kf-keycloak-qa.kf-strides.org/auth/realms/kidsfirstdrc',
+      sub: sub,
+      aud: 'kf-api-arranger',
+      jti: '2c166d55-5ae6-4fb4-9daa-a1d5e1f535d7',
+      user_id: sub,
+      typ: 'Bearer',
+      azp: 'portal-ui',
+      session_state: 'ae2d1238-0180-4ea1-978a-8e9a95ba44f4',
+      acr: '1',
+      realm_access: {
+        roles,
+      },
+      scope: 'email profile',
+      email_verified: false,
+      name: 'test test',
+      groups: [],
+      preferred_username: 'test@test.test',
+      given_name: 'test',
+      family_name: 'test',
+      email: 'test@test.test',
+    },
+    privateKey,
+    {
+      expiresIn: expire,
+      algorithm: 'RS256',
+      keyid: 'Ip-PDWNUlHbpuTJ7mFERzFzm8CRDJU0A7qSRZMIFoQ0',
+    },
+  );

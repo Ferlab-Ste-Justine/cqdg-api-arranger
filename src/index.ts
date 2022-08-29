@@ -7,22 +7,22 @@ import SQS from 'aws-sdk/clients/sqs';
 import Keycloak from 'keycloak-connect';
 
 import buildApp from './app';
-import { esHost, esPass, esUser, isDev, port } from './env';
-import keycloakConfig from './keycloak';
+import { esHost, esPass, esUser, isDev, port } from './config/env';
+import keycloakConfig from './config/keycloak';
 
 process.on('uncaughtException', err => {
-    console.log(`Uncaught Exception: ${err.message}`);
-    process.exit(1);
+  console.log(`Uncaught Exception: ${err.message}`);
+  process.exit(1);
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-    console.log('Unhandled rejection at ', promise, `reason: ${reason}`);
-    process.exit(1);
+  console.log('Unhandled rejection at ', promise, `reason: ${reason}`);
+  process.exit(1);
 });
 
 process.on('SIGINT', () => {
-    console.log(`Process ${process.pid} has been interrupted`);
-    process.exit(0);
+  console.log(`Process ${process.pid} has been interrupted`);
+  process.exit(0);
 });
 
 const keycloak = new Keycloak({}, keycloakConfig);
@@ -31,19 +31,19 @@ const app = buildApp(keycloak, sqs, getProject);
 const externalContext = (req, _res, _con) => ({ auth: req.kauth?.grant?.access_token || {} });
 
 Arranger({
-    esHost,
-    esUser,
-    esPass,
-    graphqlOptions: {
-        context: externalContext,
-    },
+  esHost,
+  esUser,
+  esPass,
+  graphqlOptions: {
+    context: externalContext,
+  },
 }).then(router => {
-    app.get('/*/ping', router);
+  app.get('/*/ping', router);
 
-    /** disable protect to enable graphql playground */
-    isDev ? app.use(router) : app.use(keycloak.protect(), router);
+  /** disable protect to enable graphql playground */
+  isDev ? app.use(router) : app.use(keycloak.protect(), router);
 
-    app.listen(port, async () => {
-        console.log(`⚡️ Listening on port ${port} ⚡️`);
-    });
+  app.listen(port, async () => {
+    console.log(`⚡️ Listening on port ${port} ⚡️`);
+  });
 });

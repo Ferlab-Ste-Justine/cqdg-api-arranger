@@ -1,7 +1,7 @@
 import { CONSTANTS } from '@arranger/middleware';
 import { get } from 'lodash';
 
-import { idKey } from '../../env';
+import { idKey } from '../../config/env';
 import { SetSqon } from '../sets/setsTypes';
 import { SearchByIdsResult, SourceType } from './searchByIdsTypes';
 
@@ -19,36 +19,36 @@ const query = `query ($sqon: JSON, $size: Int, $offset: Int) {
 }`;
 
 const getSqon = (ids = []): SetSqon => ({
-    op: CONSTANTS.OR_OP,
-    content: [
-        {
-            op: CONSTANTS.IN_OP,
-            content: {
-                field: 'family_id',
-                value: ids,
-            },
-        },
-    ],
+  op: CONSTANTS.OR_OP,
+  content: [
+    {
+      op: CONSTANTS.IN_OP,
+      content: {
+        field: 'family_id',
+        value: ids,
+      },
+    },
+  ],
 });
 
 const transform = (data: unknown, ids: string[]): SearchByIdsResult[] => {
-    const participants = get(data, 'participant', []).filter(p => !!p);
+  const participants = get(data, 'participant', []).filter(p => !!p);
 
-    return ids.map(id => {
-        const participantIds = participants
-            .filter(participant => participant.family_id === id)
-            .map(participant => participant[idKey]);
+  return ids.map(id => {
+    const participantIds = participants
+      .filter(participant => participant.family_id === id)
+      .map(participant => participant[idKey]);
 
-        return {
-            search: id,
-            type: 'FAMILY',
-            participantIds,
-        };
-    });
+    return {
+      search: id,
+      type: 'FAMILY',
+      participantIds,
+    };
+  });
 };
 
 export const byFamilyId: SourceType = {
-    query,
-    getSqon,
-    transform,
+  query,
+  getSqon,
+  transform,
 };
