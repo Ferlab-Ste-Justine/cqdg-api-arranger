@@ -1,14 +1,16 @@
 <p align="center">
-  <img src="docs/kids_first_logo.svg" alt="Kids First repository logo" width="660px" />
+  <img src="docs/cqdg_logo.svg" alt="CQDG repository logo" width="660px" />
 </p>
 <p align="center">
   <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=for-the-badge"></a>
 </p>
 
 # cqdg-api-arranger
-This is an instantiation of the [@arranger/server](https://github.com/overture-stack/arranger/tree/develop/modules/server) application for the Kids First portal, with an integration with [Keycloak](https://www.keycloak.org/docs/latest/securing_apps/index.html#_nodejs_adapter) for authentication.
+(copy from kf-api-arranger)
 
-Arranger server is an application that wraps Elasticsearch and provides a GraphQL search API for consumption by the [Kids First Portal UI](https://github.com/kids-first/kf-portal-ui).
+This is an instantiation of the [@arranger/server](https://github.com/overture-stack/arranger/tree/develop/modules/server) application for the CQDG portal, with an integration with [Keycloak](https://www.keycloak.org/docs/latest/securing_apps/index.html#_nodejs_adapter) for authentication.
+
+Arranger server is an application that wraps Elasticsearch and provides a GraphQL search API for consumption by the [CQDG Portal UI](https://github.com/Ferlab-Ste-Justine/cqdg-portal-ui).
 
 ## Development
 
