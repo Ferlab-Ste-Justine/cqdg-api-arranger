@@ -7,6 +7,7 @@ import NodeCache from 'node-cache';
 
 import { dependencies, version } from '../package.json';
 import genomicFeatureSuggestions, { SUGGESTIONS_TYPES } from './endpoints/genomicFeatureSuggestions';
+import { getPhenotypesNodes } from './endpoints/phenotypes';
 import { searchAllSources } from './endpoints/searchByIds/searchAllSources';
 import { SearchByIdsResult } from './endpoints/searchByIds/searchByIdsTypes';
 import {
@@ -26,7 +27,6 @@ import { STATISTICS_CACHE_ID, verifyCache } from './middleware/cache';
 import { injectBodyHttpHeaders } from './middleware/injectBodyHttpHeaders';
 import { resolveSetIdMiddleware } from './middleware/resolveSetIdInSqon';
 import { ArrangerProject } from './sqon/searchSqon';
-import { getPhenotypesNodes } from './endpoints/phenotypes';
 
 export default (keycloak: Keycloak, sqs: SQS, getProject: (projectId: string) => ArrangerProject): Express => {
     const app = addAsync.addAsync(express());
@@ -100,8 +100,7 @@ export default (keycloak: Keycloak, sqs: SQS, getProject: (projectId: string) =>
 
     app.getAsync('/sets', keycloak.protect(), async (req, res) => {
         const accessToken = req.headers.authorization;
-        const userId = req['kauth']?.grant?.access_token?.content?.sub;
-        const userSets = await getSets(accessToken, userId);
+        const userSets = await getSets(accessToken);
 
         res.send(userSets);
     });

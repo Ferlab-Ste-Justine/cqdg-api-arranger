@@ -5,16 +5,13 @@ import EsInstance from '../../ElasticSearchClientInstance';
 import {
     esFileIndex,
     esParticipantIndex,
-    esStudyIndex, familyIdKey,
+    esStudyIndex,
+    familyIdKey,
     fileIdKey,
     participantIdKey,
-    project,
-    PROJECT_INCLUDE,
-    PROJECT_KIDSFIRST,
     studyIdKey,
 } from '../../env';
-import { fetchBiospecimenStats as fetchIncludeBiospecimen } from './includeBiospecimen';
-import { fetchBiospecimenStats as fetchKidsfirstBiospecimen } from './kidsfirstBiospecimen';
+import { fetchBiospecimenStats } from './biospecimen';
 
 export type Statistics = {
     files: number;
@@ -78,18 +75,6 @@ const fetchFamilyStats = async (client: Client): Promise<number> => {
         size: 0,
     });
     return body.aggregations.types_count.value;
-};
-
-const fetchBiospecimenStats = async (client: Client): Promise<number> => {
-    if (project === PROJECT_KIDSFIRST) {
-        return fetchKidsfirstBiospecimen(client);
-    }
-
-    if (project === PROJECT_INCLUDE) {
-        return fetchIncludeBiospecimen(client);
-    }
-
-    return Promise.resolve(0);
 };
 
 export const getStatistics = async (): Promise<Statistics> => {

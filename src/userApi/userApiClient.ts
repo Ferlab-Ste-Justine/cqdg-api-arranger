@@ -1,8 +1,33 @@
 import fetch from 'node-fetch';
 
+import { SetSqon, Sort } from '../endpoints/sets/setsTypes';
 import { userApiURL } from '../env';
 import { UserApiError } from './userApiError';
-import { CreateUpdateBody, Output } from '../riff/riffClient';
+
+export type CreateUpdateBody = {
+    alias: string;
+    content: Content;
+    sharedPublicly: boolean;
+};
+
+export type Content = {
+    setType: string;
+    ids: string[];
+    sqon: SetSqon;
+    sort: Sort[];
+    idField: string;
+};
+
+export type Output = {
+    id: string;
+    uid: string;
+    content: Content;
+    alias: string;
+    sharedPublicly: boolean;
+    creationDate: Date;
+    updatedDate: Date;
+    updated_date: Date;
+};
 
 export const getUserContents = async (accessToken: string): Promise<Output[]> => {
     const uri = `${userApiURL}/user-sets`;
@@ -66,7 +91,7 @@ export const putUserContent = async (accessToken: string, set: CreateUpdateBody,
     throw new UserApiError(response.status, body);
 };
 
-export const deleteUserContent = async (accessToken: string, setId: string): Promise<string> => {
+export const deleteUserContent = async (accessToken: string, setId: string): Promise<boolean> => {
     const uri = `${userApiURL}/user-sets/${setId}`;
 
     const response = await fetch(encodeURI(uri), {
@@ -78,7 +103,7 @@ export const deleteUserContent = async (accessToken: string, setId: string): Pro
     });
 
     if (response.status === 200) {
-        return setId;
+        return true;
     }
 
     throw new UserApiError(response.status, response.body);

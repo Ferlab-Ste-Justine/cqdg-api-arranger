@@ -1,6 +1,6 @@
 @Library(value="kids-first/aws-infra-jenkins-shared-libraries", changelog=false) _
 ecs_service_type_1_standard {
-    projectName = "kf-api-arranger"
+    projectName = "cqdg-api-arranger"
     environments = "qa,prd"
     docker_image_type = "alpine"
     internal_app = "false"

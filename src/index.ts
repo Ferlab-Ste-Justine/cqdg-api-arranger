@@ -7,7 +7,7 @@ import SQS from 'aws-sdk/clients/sqs';
 import Keycloak from 'keycloak-connect';
 
 import buildApp from './app';
-import { esHost, esUser, esPass, port } from './env';
+import { esHost, esPass, esUser, isDev, port } from './env';
 import keycloakConfig from './keycloak';
 
 process.on('uncaughtException', err => {
@@ -39,7 +39,9 @@ Arranger({
     },
 }).then(router => {
     app.get('/*/ping', router);
-    app.use(keycloak.protect(), router);
+
+    /** disable protect to enable graphql playground */
+    isDev ? app.use(router) : app.use(keycloak.protect(), router);
 
     app.listen(port, async () => {
         console.log(`⚡️ Listening on port ${port} ⚡️`);

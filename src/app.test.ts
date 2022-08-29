@@ -19,8 +19,8 @@ import { Set, UpdateSetContentBody, UpdateSetTagBody } from './endpoints/sets/se
 import { getStatistics, Statistics } from './endpoints/statistics';
 import { calculateSurvivalForSqonResult } from './endpoints/survival';
 import { keycloakClient, keycloakRealm, keycloakURL } from './env';
-import { RiffError } from './riff/riffError';
 import { ArrangerProject } from './sqon/searchSqon';
+import { UserApiError } from './userApi/userApiError';
 
 jest.mock('./endpoints/sets/setsFeature');
 jest.mock('./endpoints/survival');
@@ -150,7 +150,7 @@ describe('Express app (without Arranger)', () => {
         });
 
         it('should return 500 if Authorization header contains valid token but an error occurs', async () => {
-            const expectedError = new RiffError(404, { message: 'OOPS' });
+            const expectedError = new UserApiError(404, { message: 'OOPS' });
             (getSets as jest.Mock).mockImplementation(() => {
                 throw expectedError;
             });
@@ -220,7 +220,7 @@ describe('Express app (without Arranger)', () => {
         });
 
         it('should return 500 if Authorization header contains valid token but an error occurs', async () => {
-            const expectedError = new RiffError(400, { message: 'OOPS' });
+            const expectedError = new UserApiError(400, { message: 'OOPS' });
             (createSet as jest.Mock).mockImplementation(() => {
                 throw expectedError;
             });
@@ -372,7 +372,7 @@ describe('Express app (without Arranger)', () => {
         });
 
         it('should return 500 if Authorization header contains valid token but an error occurs', async () => {
-            const expectedError = new RiffError(404, { message: 'OOPS' });
+            const expectedError = new UserApiError(404, { message: 'OOPS' });
             (deleteSet as jest.Mock).mockImplementation(() => {
                 throw expectedError;
             });

@@ -1,10 +1,11 @@
 {
-  "name": "kf-api-arranger",
+  "name": "cqdg-api-arranger",
   "version": "1.0.0",
   "description": ":factory: a data-model aware GraphQL API that sits above an Elasticsearch cluster",
   "main": "src/index.js",
   "scripts": {
     "start": "node ./dist/src/index.js",
+    "dev": "nodemon ./src/index.ts",
     "test": "jest",
     "test:watch": "jest --watch",
     "clean": "rm -rf ./dist/* ",
@@ -16,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kids-first/kf-api-arranger.git"
+    "url": "git+https://github.com/Ferlab-Ste-Justine/cqdg-api-arranger.git"
   },
   "keywords": [
     "arranger"
@@ -30,9 +31,9 @@
     }
   ],
   "bugs": {
-    "url": "https://github.com/kids-first/kf-api-arranger/issues"
+    "url": "https://github.com/Ferlab-Ste-Justine/cqdg-api-arranger/issues"
   },
-  "homepage": "https://github.com/kids-first/kf-api-arranger#readme",
+  "homepage": "https://github.com/Ferlab-Ste-Justine/cqdg-api-arranger#readme",
   "dependencies": {
     "@arranger/admin": "^2.17.0",
     "@arranger/middleware": "^2.16.0",
@@ -69,6 +70,7 @@
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "jest": "^27.0.6",
     "jsonwebtoken": "^8.5.1",
+    "nodemon": "^2.0.19",
     "prettier": "^1.19.1",
     "supertest": "^6.1.2",
     "ts-jest": "^27.0.4",

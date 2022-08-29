@@ -1,16 +1,7 @@
 import SQS from 'aws-sdk/clients/sqs';
-import { difference, dropRight, get, union } from 'lodash';
+import { difference, dropRight, union } from 'lodash';
 
-import { maxSetContentSize, project, PROJECT_INCLUDE, sendUpdateToSqs } from '../../env';
-import {
-    CreateUpdateBody,
-    deleteRiff,
-    getRiffs,
-    Output,
-    postRiff,
-    putRiff,
-    RIFF_TYPE_SET,
-} from '../../riff/riffClient';
+import { maxSetContentSize, sendUpdateToSqs } from '../../env';
 import { addSqonToSetSqon, removeSqonToSetSqon } from '../../sqon/manipulateSqon';
 import { resolveSetsInSqon } from '../../sqon/resolveSetInSqon';
 import { ArrangerProject, searchSqon } from '../../sqon/searchSqon';
@@ -24,11 +15,10 @@ import {
     UpdateTagValue,
 } from '../../SQS/eventTypes';
 import { sendSetInSQSQueue } from '../../SQS/sendEvent';
+import { CreateUpdateBody, Output } from '../../userApi/userApiClient';
+import { deleteUserContent, getUserContents, postUserContent, putUserContent } from '../../userApi/userApiClient';
 import { SetNotFoundError } from './setError';
 import { CreateSetBody, Set, UpdateSetContentBody, UpdateSetTagBody } from './setsTypes';
-import { deleteUserContent, getUserContents, postUserContent, putUserContent } from '../../userApi/userApiClient';
-
-const projectType = project;
 
 export const SubActionTypes = {
     RENAME_TAG: 'RENAME_TAG',
@@ -43,12 +33,7 @@ const ActionTypes = {
 };
 
 export const getUserSet = async (accessToken: string, userId: string, setId: string): Promise<Output> => {
-    let existingSetsFilterById;
-    if (projectType === PROJECT_INCLUDE) {
-        existingSetsFilterById = (await getUserContents(accessToken)).filter(r => r.id === setId);
-    } else {
-        existingSetsFilterById = (await getRiffs(accessToken, userId)).filter(r => r.id === setId);
-    }
+    const existingSetsFilterById = (await getUserContents(accessToken)).filter(r => r.id === setId);
 
     if (existingSetsFilterById.length !== 1) {
         throw new SetNotFoundError('Set to update can not be found !');
@@ -57,18 +42,9 @@ export const getUserSet = async (accessToken: string, userId: string, setId: str
     return existingSetsFilterById[0];
 };
 
-export const getSets = async (accessToken: string, userId: string): Promise<Set[]> => {
-    if (projectType === PROJECT_INCLUDE) {
-        const userContents = await getUserContents(accessToken);
-
-        return userContents.map(set => mapResultToSet(set));
-    } else {
-        const userContents = await getRiffs(accessToken, userId);
-        return userContents
-            .filter(riff => get(riff, 'content.riffType', '') === RIFF_TYPE_SET)
-            .filter(riff => riff.alias)
-            .map(riff => mapResultToSet(riff));
-    }
+export const getSets = async (accessToken: string): Promise<Set[]> => {
+    const userContents = await getUserContents(accessToken);
+    return userContents.map(set => mapResultToSet(set));
 };
 
 export const createSet = async (
@@ -87,18 +63,13 @@ export const createSet = async (
     const payload = {
         alias: tag,
         sharedPublicly: false,
-        content: { ids: truncatedIds, riffType: RIFF_TYPE_SET, setType: type, sqon, sort, idField },
+        content: { ids: truncatedIds, setType: type, sqon, sort, idField },
     } as CreateUpdateBody;
 
-    let createResult;
-    if (projectType === PROJECT_INCLUDE) {
-        if (!payload.alias || !payload.content.ids) {
-            throw Error(`Set must have ${!payload.alias ? 'a name' : 'no set ids'}`);
-        }
-        createResult = await postUserContent(accessToken, payload);
-    } else {
-        createResult = await postRiff(accessToken, payload);
+    if (!payload.alias || !payload.content.ids) {
+        throw Error(`Set must have ${!payload.alias ? 'a name' : 'no set ids'}`);
     }
+    const createResult = await postUserContent(accessToken, payload);
 
     const setResult: Set = mapResultToSet(createResult);
 
@@ -136,12 +107,7 @@ export const updateSetTag = async (
         content: setToUpdate.content,
     } as CreateUpdateBody;
 
-    let updateResult;
-    if (projectType === PROJECT_INCLUDE) {
-        updateResult = await putUserContent(accessToken, payload, setId);
-    } else {
-        updateResult = await putRiff(accessToken, payload, setId);
-    }
+    const updateResult = await putUserContent(accessToken, payload, setId);
 
     const setResult: Set = mapResultToSet(updateResult);
 
@@ -198,12 +164,7 @@ export const updateSetContent = async (
         content: { ...setToUpdate.content, sqon: existingSqonWithNewSqon, ids: truncatedIds },
     } as CreateUpdateBody;
 
-    let updateResult;
-    if (projectType === PROJECT_INCLUDE) {
-        updateResult = await putUserContent(accessToken, payload, setId);
-    } else {
-        updateResult = await putRiff(accessToken, payload, setId);
-    }
+    const updateResult = await putUserContent(accessToken, payload, setId);
 
     const setResult: Set = mapResultToSet(updateResult);
 
@@ -224,13 +185,7 @@ export const updateSetContent = async (
 };
 
 export const deleteSet = async (accessToken: string, setId: string, userId: string, sqs: SQS): Promise<boolean> => {
-    let deleteResult;
-
-    if (projectType === PROJECT_INCLUDE) {
-        deleteResult = await deleteUserContent(accessToken, setId);
-    } else {
-        deleteResult = await deleteRiff(accessToken, setId);
-    }
+    const deleteResult = await deleteUserContent(accessToken, setId);
 
     if (sendUpdateToSqs) {
         await sendSetInSQSQueue(sqs, {
@@ -238,6 +193,7 @@ export const deleteSet = async (accessToken: string, setId: string, userId: stri
             values: { setIds: [setId], userId } as EventDeleteValues,
         } as EventDelete);
     }
+
     return deleteResult;
 };
 

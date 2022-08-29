@@ -9,4 +9,12 @@ const keycloakConfig = {
     resource: keycloakClient,
 };
 
+// cqdg-arranger:
+// const keycloakConfig = {
+//     clientId: authClientId,
+//     bearerOnly: true,
+//     serverUrl: authServerUrl,
+//     realm: authRealm,
+// };
+
 export default keycloakConfig;
