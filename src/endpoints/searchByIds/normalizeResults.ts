@@ -1,4 +1,4 @@
-import { get } from 'lodash';
+import get from 'lodash/get';
 
 /**
  * Normalizes the results of a graphql query to make it easier to manipulate,

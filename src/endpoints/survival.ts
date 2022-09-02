@@ -1,4 +1,5 @@
-import { get, min } from 'lodash';
+import get from 'lodash/get';
+import min from 'lodash/min';
 import { Options, PythonShell } from 'python-shell';
 
 import { idKey, pythonPath, survivalPyFile } from '../config/env';

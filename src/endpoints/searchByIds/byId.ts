@@ -1,12 +1,12 @@
 import { CONSTANTS } from '@arranger/middleware';
-import { get } from 'lodash';
+import get from 'lodash/get';
 
 import { idKey } from '../../config/env';
 import { SetSqon } from '../sets/setsTypes';
 import { SearchByIdsResult, SourceType } from './searchByIdsTypes';
 
 const query = `query ($sqon: JSON, $size: Int, $offset: Int) {
-  participant {
+  Participant {
     hits (filters: $sqon, first:$size, offset:$offset){
       edges {
         node {

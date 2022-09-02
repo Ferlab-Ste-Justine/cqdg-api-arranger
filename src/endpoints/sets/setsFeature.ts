@@ -1,5 +1,7 @@
 import SQS from 'aws-sdk/clients/sqs';
-import { difference, dropRight, union } from 'lodash';
+import difference from 'lodash/difference';
+import dropRight from 'lodash/dropRight';
+import union from 'lodash/union';
 
 import { maxSetContentSize, sendUpdateToSqs } from '../../config/env';
 import { addSqonToSetSqon, removeSqonToSetSqon } from '../../sqon/manipulateSqon';

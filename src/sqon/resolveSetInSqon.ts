@@ -1,4 +1,8 @@
-import { Dictionary, flattenDeep, get, isArray, zipObject } from 'lodash';
+import { Dictionary } from 'lodash';
+import flattenDeep from 'lodash/flattenDeep';
+import get from 'lodash/get';
+import isArray from 'lodash/isArray';
+import zipObject from 'lodash/zipObject';
 
 import { SetSqon } from '../endpoints/sets/setsTypes';
 import { getUserContents } from '../userApi/userApiClient';

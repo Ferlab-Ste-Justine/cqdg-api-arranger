@@ -165,7 +165,7 @@ export default (keycloak: Keycloak, sqs: SQS, getProject: (projectId: string) =>
     res.send({ data });
   });
 
-  app.use(globalErrorLogger, globalErrorHandler);
+  // app.use(globalErrorLogger, globalErrorHandler);
 
   return app;
 };

@@ -1,4 +1,4 @@
-import { get } from 'lodash';
+import get from 'lodash/get';
 
 import { ArrangerProject } from '../../sqon/searchSqon';
 import { SetSqon } from '../sets/setsTypes';

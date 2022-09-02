@@ -50,7 +50,7 @@ export const fetchFileSizeStats = async (): Promise<string> => {
     },
     size: 0,
   });
-  return filesize(body.aggregations.types_count.value);
+  return filesize(body.aggregations.types_count.value).replace(' ', '');
 };
 
 export const fetchStudyStats = async (): Promise<number> => {

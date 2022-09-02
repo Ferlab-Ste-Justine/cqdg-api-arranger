@@ -17,7 +17,7 @@ export const esPass = process.env.ES_PASS;
 
 export const esFileIndex = process.env.ES_FILE_INDEX || 'files';
 export const esStudyIndex = process.env.ES_STUDY_INDEX || 'studies';
-export const esParticipantIndex = process.env.ES_PARTICIPANT_INDEX || 'donors'; // change to participants
+export const esParticipantIndex = process.env.ES_PARTICIPANT_INDEX || 'participants'; // change to participants
 export const esBiospecimenIndex = process.env.ES_BIOSPECIMEN_INDEX || 'biospecimens';
 export const esVariantIndex = process.env.ES_VARIANT_INDEX || 'clin_qa_variant_centric';
 
@@ -30,7 +30,7 @@ export const indexNameVariantFeatureSuggestion =
 export const userApiURL = process.env.USER_API_URL || 'https://cqdg-users-api-qa.373997854230.d3b.io';
 export const sendUpdateToSqs = process.env.SEND_UPDATE_TO_SQS !== 'false';
 export const sqsQueueUrl = process.env.SQS_QUEUE_URL || '';
-export const maxSetContentSize: number = Number.parseInt(process.env.MAX_SET_CONTENT_SIZE) || 100000;
+export const maxSetContentSize: number = Number.parseInt(process.env.MAX_SET_CONTENT_SIZE) || 10000;
 
 export const survivalPyFile = process.env.SURVIVAL_PY_FILE || 'resource/py/survival.py';
 export const pythonPath = process.env.PYTHON_PATH || '/usr/local/bin/python3';

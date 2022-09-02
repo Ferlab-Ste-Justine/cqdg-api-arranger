@@ -93,6 +93,7 @@ describe('Express app (without Arranger)', () => {
         samples: 6111,
         families: 1291,
         participants: 4330,
+        variants: 2333,
       };
       (getStatistics as jest.Mock).mockImplementation(() => expectedStats);
 
@@ -414,7 +415,7 @@ describe('Express app (without Arranger)', () => {
           died: 7,
           censored: 467,
           cumulativeSurvival: 1,
-          donors: [
+          participants: [
             {
               time: 0,
               censored: true,
@@ -430,7 +431,7 @@ describe('Express app (without Arranger)', () => {
           died: 1,
           censored: 1,
           cumulativeSurvival: 0.9944223107569721,
-          donors: [
+          participants: [
             {
               time: 2,
               censored: true,

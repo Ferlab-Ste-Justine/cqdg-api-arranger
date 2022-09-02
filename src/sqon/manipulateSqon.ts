@@ -1,9 +1,9 @@
 import { SetSqon } from '../endpoints/sets/setsTypes';
 
-export const addSqonToSetSqon = (receivingSqon: SetSqon, donorSqon: SetSqon): SetSqon =>
+export const addSqonToSetSqon = (receivingSqon: SetSqon, participantSqon: SetSqon): SetSqon =>
   ({
     op: 'or',
-    content: [receivingSqon, donorSqon],
+    content: [receivingSqon, participantSqon],
   } as SetSqon);
 
 export const removeSqonToSetSqon = (setSqon: SetSqon, sqonToRemove: SetSqon): SetSqon => {

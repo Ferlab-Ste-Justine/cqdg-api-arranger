@@ -1,17 +1,15 @@
-import { get } from 'lodash';
+import get from 'lodash/get';
 
-import { idKey } from '../config/env';
+import { idKey, maxSetContentSize } from '../config/env';
 import { ArrangerProject, searchSqon } from '../sqon/searchSqon';
 import { replaceSetByIds } from '../sqon/setSqon';
 import { SetSqon } from './sets/setsTypes';
-
-const MAX_PHENOTYPES = 100000;
 
 const getParticipantIds = async (
   sqon: SetSqon,
   projectId: string,
   getProject: (projectId: string) => ArrangerProject,
-) => await searchSqon(sqon, projectId, 'participant', [], idKey, getProject);
+) => await searchSqon(sqon, projectId, 'Participant', [], idKey, getProject);
 
 export const getPhenotypesNodes = async (
   sqon: SetSqon,
@@ -37,19 +35,19 @@ const getPhenotypesNodesByIds = async (
   aggregations_filter_themselves: boolean,
 ) => {
   const query = `query($sqon: JSON, $term_filters: JSON) {
-          participant {
-            aggregations(filters: $sqon, aggregations_filter_themselves: ${aggregations_filter_themselves}) {
-              ${type}__name {
-                buckets {
-                  key
-                  doc_count
-                  top_hits(_source: ["${type}.parents"], size: 1)
-                  filter_by_term(filter: $term_filters)
-                }
-              }
-            }
+    Participant {
+      aggregations(filters: $sqon, aggregations_filter_themselves: ${aggregations_filter_themselves}) {
+        ${type}__name {
+          buckets {
+            key
+            doc_count
+            top_hits(_source: ["${type}.parents"], size: 1)
+            filter_by_term(filter: $term_filters)
           }
-        }`;
+        }
+      }
+    }
+  }`;
 
   const sqon = {
     content: [
@@ -57,7 +55,7 @@ const getPhenotypesNodesByIds = async (
         content: {
           field: idKey,
           value: ids,
-          index: 'participant',
+          index: 'Participant',
         },
         op: 'in',
       },
@@ -83,9 +81,12 @@ const getPhenotypesNodesByIds = async (
     throw new Error(`ProjectID '${projectId}' cannot be established.`);
   }
 
+  const variables = { sqon, term_filters: termFilter, size: maxSetContentSize, offset: 0 };
+
   const res = await project.runQuery({
     query,
-    variables: { sqon, term_filters: termFilter, size: MAX_PHENOTYPES, offset: 0 },
+    variables,
   });
+
   return get(res, `data.participant.aggregations.${type}__name.buckets`, []);
 };
