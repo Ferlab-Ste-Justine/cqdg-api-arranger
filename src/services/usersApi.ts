@@ -2,7 +2,6 @@ import fetch from 'node-fetch';
 
 import { usersApiURL } from '../config/env';
 import { SetSqon, Sort } from '../endpoints/sets/setsTypes';
-import { UsersApiError } from './usersApiError';
 
 export type CreateUpdateBody = {
   alias: string;
@@ -108,3 +107,16 @@ export const deleteUserContent = async (accessToken: string, setId: string): Pro
 
   throw new UsersApiError(response.status, response.body);
 };
+
+export class UsersApiError extends Error {
+  public readonly status: number;
+  public readonly details: unknown;
+
+  constructor(status: number, details: unknown) {
+    super(`UsersApi returns status ${status}`);
+    Object.setPrototypeOf(this, UsersApiError.prototype);
+    this.name = UsersApiError.name;
+    this.status = status;
+    this.details = details;
+  }
+}

@@ -4,9 +4,6 @@ import dropRight from 'lodash/dropRight';
 import union from 'lodash/union';
 
 import { maxSetContentSize, sendUpdateToSqs } from '../../config/env';
-import { addSqonToSetSqon, removeSqonToSetSqon } from '../../sqon/manipulateSqon';
-import { resolveSetsInSqon } from '../../sqon/resolveSetInSqon';
-import { ArrangerProject, searchSqon } from '../../sqon/searchSqon';
 import {
   EventCreate,
   EventCreateValue,
@@ -15,10 +12,13 @@ import {
   EventUpdate,
   UpdateContentValue,
   UpdateTagValue,
-} from '../../SQS/eventTypes';
-import { sendSetInSQSQueue } from '../../SQS/sendEvent';
-import { CreateUpdateBody, Output } from '../../usersApi/UsersApiClient';
-import { deleteUserContent, getUserContents, postUserContent, putUserContent } from '../../usersApi/UsersApiClient';
+} from '../../services/SQS/eventTypes';
+import { sendSetInSQSQueue } from '../../services/SQS/sendEvent';
+import { CreateUpdateBody, Output } from '../../services/usersApi';
+import { deleteUserContent, getUserContents, postUserContent, putUserContent } from '../../services/usersApi';
+import { addSqonToSetSqon, removeSqonToSetSqon } from '../../sqon/manipulateSqon';
+import { resolveSetsInSqon } from '../../sqon/resolveSetInSqon';
+import { ArrangerProject, searchSqon } from '../../sqon/searchSqon';
 import { SetNotFoundError } from './setError';
 import { CreateSetBody, Set, UpdateSetContentBody, UpdateSetTagBody } from './setsTypes';
 

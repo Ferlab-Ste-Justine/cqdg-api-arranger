@@ -1,4 +1,4 @@
-import { SetSqon } from '../endpoints/sets/setsTypes';
+import { SetSqon } from '../../endpoints/sets/setsTypes';
 
 export type EventCreate = {
   actionType: string;

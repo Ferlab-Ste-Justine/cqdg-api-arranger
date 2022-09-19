@@ -5,7 +5,7 @@ import isArray from 'lodash/isArray';
 import zipObject from 'lodash/zipObject';
 
 import { SetSqon } from '../endpoints/sets/setsTypes';
-import { getUserContents } from '../usersApi/UsersApiClient';
+import { getUserContents } from '../services/usersApi';
 
 const getSetIdsFromSqon = (sqon: SetSqon, collection = []) =>
   (isArray(sqon.content)

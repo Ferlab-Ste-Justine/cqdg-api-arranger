@@ -19,8 +19,8 @@ import {
 import { Set, UpdateSetContentBody, UpdateSetTagBody } from './endpoints/sets/setsTypes';
 import { getStatistics, Statistics } from './endpoints/statistics';
 import { calculateSurvivalForSqonResult } from './endpoints/survival';
+import { UsersApiError } from './services/usersApi';
 import { ArrangerProject } from './sqon/searchSqon';
-import { UsersApiError } from './usersApi/UsersApiError';
 
 jest.mock('./endpoints/sets/setsFeature');
 jest.mock('./endpoints/survival');

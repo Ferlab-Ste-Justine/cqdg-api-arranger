@@ -1,7 +1,7 @@
 import AWS from 'aws-sdk';
 import { PromiseResult } from 'aws-sdk/lib/request';
 
-import { sqsQueueUrl } from '../config/env';
+import { sqsQueueUrl } from '../../config/env';
 import { EventCreate, EventDelete, EventUpdate } from './eventTypes';
 
 export const sendSetInSQSQueue = async (
