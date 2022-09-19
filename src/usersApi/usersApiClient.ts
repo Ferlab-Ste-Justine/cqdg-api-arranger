@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 
 import { usersApiURL } from '../config/env';
 import { SetSqon, Sort } from '../endpoints/sets/setsTypes';
-import { UsersApiError } from './UsersApiError';
+import { UsersApiError } from './usersApiError';
 
 export type CreateUpdateBody = {
   alias: string;

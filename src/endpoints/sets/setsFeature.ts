@@ -17,8 +17,8 @@ import {
   UpdateTagValue,
 } from '../../SQS/eventTypes';
 import { sendSetInSQSQueue } from '../../SQS/sendEvent';
-import { CreateUpdateBody, Output } from '../../UsersApi/UsersApiClient';
-import { deleteUserContent, getUserContents, postUserContent, putUserContent } from '../../UsersApi/UsersApiClient';
+import { CreateUpdateBody, Output } from '../../usersApi/UsersApiClient';
+import { deleteUserContent, getUserContents, postUserContent, putUserContent } from '../../usersApi/UsersApiClient';
 import { SetNotFoundError } from './setError';
 import { CreateSetBody, Set, UpdateSetContentBody, UpdateSetTagBody } from './setsTypes';
 
