@@ -1,8 +1,8 @@
 import fetch from 'node-fetch';
 
-import { userApiURL } from '../config/env';
+import { usersApiURL } from '../config/env';
 import { SetSqon, Sort } from '../endpoints/sets/setsTypes';
-import { UserApiError } from './userApiError';
+import { UsersApiError } from './UsersApiError';
 
 export type CreateUpdateBody = {
   alias: string;
@@ -30,7 +30,7 @@ export type Output = {
 };
 
 export const getUserContents = async (accessToken: string): Promise<Output[]> => {
-  const uri = `${userApiURL}/user-sets`;
+  const uri = `${usersApiURL}/user-sets`;
 
   const response = await fetch(encodeURI(uri), {
     method: 'get',
@@ -46,11 +46,11 @@ export const getUserContents = async (accessToken: string): Promise<Output[]> =>
     return body;
   }
 
-  throw new UserApiError(response.status, body);
+  throw new UsersApiError(response.status, body);
 };
 
 export const postUserContent = async (accessToken: string, set: CreateUpdateBody): Promise<Output> => {
-  const uri = `${userApiURL}/user-sets`;
+  const uri = `${usersApiURL}/user-sets`;
 
   const response = await fetch(encodeURI(uri), {
     method: 'post',
@@ -67,11 +67,11 @@ export const postUserContent = async (accessToken: string, set: CreateUpdateBody
     return body;
   }
 
-  throw new UserApiError(response.status, body);
+  throw new UsersApiError(response.status, body);
 };
 
 export const putUserContent = async (accessToken: string, set: CreateUpdateBody, setId: string): Promise<Output> => {
-  const uri = `${userApiURL}/user-sets/${setId}`;
+  const uri = `${usersApiURL}/user-sets/${setId}`;
 
   const response = await fetch(encodeURI(uri), {
     method: 'put',
@@ -88,11 +88,11 @@ export const putUserContent = async (accessToken: string, set: CreateUpdateBody,
     return body;
   }
 
-  throw new UserApiError(response.status, body);
+  throw new UsersApiError(response.status, body);
 };
 
 export const deleteUserContent = async (accessToken: string, setId: string): Promise<boolean> => {
-  const uri = `${userApiURL}/user-sets/${setId}`;
+  const uri = `${usersApiURL}/user-sets/${setId}`;
 
   const response = await fetch(encodeURI(uri), {
     method: 'delete',
@@ -106,5 +106,5 @@ export const deleteUserContent = async (accessToken: string, setId: string): Pro
     return true;
   }
 
-  throw new UserApiError(response.status, response.body);
+  throw new UsersApiError(response.status, response.body);
 };

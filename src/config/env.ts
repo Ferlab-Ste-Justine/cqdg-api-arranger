@@ -27,7 +27,7 @@ export const indexNameGeneFeatureSuggestion = process.env.GENES_SUGGESTIONS_INDE
 export const indexNameVariantFeatureSuggestion =
   process.env.VARIANTS_SUGGESTIONS_INDEX_NAME || 'clin_qa_variant_suggestions';
 
-export const userApiURL = process.env.USER_API_URL || 'https://cqdg-users-api-qa.373997854230.d3b.io';
+export const usersApiURL = process.env.USERS_API_URL || 'https://users.qa.cqdg.ferlab.bio';
 export const sendUpdateToSqs = process.env.SEND_UPDATE_TO_SQS !== 'false';
 export const sqsQueueUrl = process.env.SQS_QUEUE_URL || '';
 export const maxSetContentSize: number = Number.parseInt(process.env.MAX_SET_CONTENT_SIZE) || 10000;

@@ -20,7 +20,7 @@ import { Set, UpdateSetContentBody, UpdateSetTagBody } from './endpoints/sets/se
 import { getStatistics, Statistics } from './endpoints/statistics';
 import { calculateSurvivalForSqonResult } from './endpoints/survival';
 import { ArrangerProject } from './sqon/searchSqon';
-import { UserApiError } from './userApi/userApiError';
+import { UsersApiError } from './UsersApi/UsersApiError';
 
 jest.mock('./endpoints/sets/setsFeature');
 jest.mock('./endpoints/survival');
@@ -151,7 +151,7 @@ describe('Express app (without Arranger)', () => {
     });
 
     it('should return 500 if Authorization header contains valid token but an error occurs', async () => {
-      const expectedError = new UserApiError(404, { message: 'OOPS' });
+      const expectedError = new UsersApiError(404, { message: 'OOPS' });
       (getSets as jest.Mock).mockImplementation(() => {
         throw expectedError;
       });
@@ -221,7 +221,7 @@ describe('Express app (without Arranger)', () => {
     });
 
     it('should return 500 if Authorization header contains valid token but an error occurs', async () => {
-      const expectedError = new UserApiError(400, { message: 'OOPS' });
+      const expectedError = new UsersApiError(400, { message: 'OOPS' });
       (createSet as jest.Mock).mockImplementation(() => {
         throw expectedError;
       });
@@ -373,7 +373,7 @@ describe('Express app (without Arranger)', () => {
     });
 
     it('should return 500 if Authorization header contains valid token but an error occurs', async () => {
-      const expectedError = new UserApiError(404, { message: 'OOPS' });
+      const expectedError = new UsersApiError(404, { message: 'OOPS' });
       (deleteSet as jest.Mock).mockImplementation(() => {
         throw expectedError;
       });
