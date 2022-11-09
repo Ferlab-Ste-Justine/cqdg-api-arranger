@@ -19,7 +19,7 @@ export const esFileIndex = process.env.ES_FILE_INDEX || 'files';
 export const esStudyIndex = process.env.ES_STUDY_INDEX || 'studies';
 export const esParticipantIndex = process.env.ES_PARTICIPANT_INDEX || 'participants'; // change to participants
 export const esBiospecimenIndex = process.env.ES_BIOSPECIMEN_INDEX || 'biospecimens';
-export const esVariantIndex = process.env.ES_VARIANT_INDEX || 'clin_qa_variant_centric';
+export const esVariantIndex = process.env.ES_VARIANT_INDEX || 'variants';
 
 export const maxNOfGenomicFeatureSuggestions = process.env.MAX_NUMBER_OF_GF_SUGGESTIONS || 5;
 

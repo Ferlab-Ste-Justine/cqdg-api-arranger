@@ -165,6 +165,7 @@ export default (keycloak: Keycloak, sqs: SQS, getProject: (projectId: string) =>
     res.send({ data });
   });
 
+  //todo: commented cuz hide err, to verify why
   // app.use(globalErrorLogger, globalErrorHandler);
 
   return app;

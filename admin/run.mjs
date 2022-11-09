@@ -1,12 +1,20 @@
 /* eslint-disable no-console */
 import 'regenerator-runtime/runtime';
 
-import EsInstance from '../dist/src/ElasticSearchClientInstance';
-import { countNOfDocs, createIndexIfNeeded } from '../dist/src/esUtils';
+import { Client } from '@elastic/elasticsearch';
 
+import { countNOfDocs, createIndexIfNeeded } from '../dist/src/services/elasticsearch';
 import { ArrangerApi } from './arrangerApi.mjs';
 import { projectsConfig } from './projectsConfig.mjs';
-import { esHost } from '../dist/src/env.js';
+import { esHost, esPass, esUser, esFileIndex, esBiospecimenIndex, esParticipantIndex, esStudyIndex, esVariantIndex } from '../dist/src/config/env';
+
+const client = new Client({
+    node: esHost,
+    auth: {
+        password: esPass,
+        username: esUser,
+    },
+});
 
 const hasProjectArrangerMetadataIndex = async (esClient, projectName) => {
     const r = await esClient.indices.exists({
@@ -31,9 +39,7 @@ const sameIndices = (xs, ys) => {
 //===== Start =====//
 console.info(`admin-project-script - Starting script`);
 
-//values are hardcoded for now, but as soon as possible, we should use env var from env.ts
-const projectIndices =
-    ['migration_test_participant_centric', 'migration_test_study_centric']?.filter(p => !!p)?.map(p => p?.trim()) ?? [];
+const projectIndices = [esFileIndex, esParticipantIndex, esStudyIndex, esVariantIndex]
 
 if (projectIndices.length === 0) {
     console.warn(
@@ -62,7 +68,6 @@ if (projectsConf.length === 0) {
 const projectConf = projectsConf[0];
 
 console.debug(`admin-project-script - Reaching to ElasticSearch at ${esHost}`);
-const client = await EsInstance.default.getInstance();
 
 const addArrangerProjectWithClient = ArrangerApi.addArrangerProject(client);
 
