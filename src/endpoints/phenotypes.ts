@@ -1,6 +1,6 @@
 import get from 'lodash/get';
 
-import { idKey, maxSetContentSize } from '../config/env';
+import { maxSetContentSize, participantIdKey } from '../config/env';
 import { ArrangerProject, searchSqon } from '../sqon/searchSqon';
 import { replaceSetByIds } from '../sqon/setSqon';
 import { SetSqon } from './sets/setsTypes';
@@ -9,7 +9,7 @@ const getParticipantIds = async (
   sqon: SetSqon,
   projectId: string,
   getProject: (projectId: string) => ArrangerProject,
-) => await searchSqon(sqon, projectId, 'Participant', [], idKey, getProject);
+) => await searchSqon(sqon, projectId, 'Participant', [], participantIdKey, getProject);
 
 export const getPhenotypesNodes = async (
   sqon: SetSqon,
@@ -53,7 +53,7 @@ const getPhenotypesNodesByIds = async (
     content: [
       {
         content: {
-          field: idKey,
+          field: participantIdKey,
           value: ids,
           index: 'Participant',
         },
@@ -88,5 +88,5 @@ const getPhenotypesNodesByIds = async (
     variables,
   });
 
-  return get(res, `data.participant.aggregations.${type}__name.buckets`, []);
+  return get(res, `data.Participant.aggregations.${type}__name.buckets`, []);
 };

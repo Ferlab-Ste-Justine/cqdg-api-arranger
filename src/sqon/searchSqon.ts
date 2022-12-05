@@ -1,7 +1,7 @@
-import get from 'lodash/get';
+import get from "lodash/get";
 
-import { idKey, maxSetContentSize } from '../config/env';
-import { SetSqon, Sort } from '../endpoints/sets/setsTypes';
+import { maxSetContentSize } from "../config/env";
+import { SetSqon, Sort } from "../endpoints/sets/setsTypes";
 
 export type ArrangerProject = {
   runQuery: ({ query: string, variables: unknown }) => Promise<unknown>;
@@ -42,7 +42,5 @@ export const searchSqon = async (
     throw new Error(get(results, 'errors', undefined));
   }
 
-  const ids: string[] = get(results, `data.${type}.hits.edges`, []).map(edge => edge.node[idKey]);
-
-  return ids;
+  return get(results, `data.${type}.hits.edges`, []).map(edge => edge.node[idField]);
 };
