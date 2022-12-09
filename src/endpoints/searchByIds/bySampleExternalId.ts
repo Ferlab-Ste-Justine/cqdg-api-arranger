@@ -1,16 +1,16 @@
 import { CONSTANTS } from '@arranger/middleware';
 import get from 'lodash/get';
 
-import { idKey } from '../../config/env';
 import { SetSqon } from '../sets/setsTypes';
 import { SearchByIdsResult, SourceType } from './searchByIdsTypes';
 
+//todo: check for issue bio on parti
 const query = `query ($sqon: JSON, $size: Int, $offset: Int) {
   Participant {
     hits (filters: $sqon, first:$size, offset:$offset){
       edges {
         node {
-          ${idKey}
+          participant_id
           biospecimens {
             hits {
               edges {
@@ -48,7 +48,7 @@ const transform = (data: unknown, ids: string[]): SearchByIdsResult[] => {
         const biospecimens = get(participant, 'biospecimens', []);
         return biospecimens.some(bio => bio.external_sample_id === id);
       })
-      .map(participant => participant[idKey]);
+      .map(participant => participant.participant_id);
 
     return {
       search: id,

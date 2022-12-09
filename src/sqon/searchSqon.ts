@@ -1,7 +1,7 @@
-import get from "lodash/get";
+import get from 'lodash/get';
 
-import { maxSetContentSize } from "../config/env";
-import { SetSqon, Sort } from "../endpoints/sets/setsTypes";
+import { maxSetContentSize } from '../config/env';
+import { SetSqon, Sort } from '../endpoints/sets/setsTypes';
 
 export type ArrangerProject = {
   runQuery: ({ query: string, variables: unknown }) => Promise<unknown>;
@@ -25,7 +25,7 @@ export const searchSqon = async (
     query: `
       query($sqon: JSON, $sort: [Sort], $first: Int) {
         ${type} {
-          hits (filters: $sqon, sort: $sort, first: $first) {
+          hits(filters: $sqon, sort: $sort, first: $first) {
             edges {
               node {
                 ${idField}

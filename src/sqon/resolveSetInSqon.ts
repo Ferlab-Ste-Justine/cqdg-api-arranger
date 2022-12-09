@@ -35,13 +35,19 @@ const injectIdsIntoSqon = (sqon: SetSqon, setIdsToValueMap: Dictionary<string[]>
 export const resolveSetsInSqon = async (sqon: SetSqon, userId: string, accessToken: string): Promise<SetSqon> => {
   const setIds: string[] = getSetIdsFromSqon(sqon || ({} as SetSqon));
   if (setIds.length) {
+    console.log('userSets==');
     const userSets = await getUserContents(accessToken);
+    console.dir(userSets, { depth: null });
+    console.log('setIds==');
+    console.dir(setIds, { depth: null });
 
     const ids = setIds.map(setId => get(userSets.filter(r => r.id === setId)[0], 'content.ids', []));
+    console.log('ids==');
     const setIdsToValueMap: Dictionary<string[]> = zipObject(
       setIds.map(id => `set_id:${id}`),
       ids,
     );
+    console.log('setIdsToValueMap==', setIdsToValueMap);
 
     return injectIdsIntoSqon(sqon, setIdsToValueMap);
   } else {

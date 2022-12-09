@@ -21,7 +21,6 @@ import {
 } from './endpoints/sets/setsFeature';
 import { CreateSetBody, Set, SetSqon, UpdateSetContentBody, UpdateSetTagBody } from './endpoints/sets/setsTypes';
 import { getStatistics } from './endpoints/statistics';
-import { calculateSurvivalForSqonResult } from './endpoints/survival';
 import { STATISTICS_CACHE_ID, verifyCache } from './middleware/cache';
 import { injectBodyHttpHeaders } from './middleware/injectBodyHttpHeaders';
 import { resolveSetIdMiddleware } from './middleware/resolveSetIdInSqon';
@@ -78,16 +77,6 @@ export default (keycloak: Keycloak, sqs: SQS, getProject: (projectId: string) =>
     const data = await getStatistics();
     cache.set(STATISTICS_CACHE_ID, data);
     res.json(data);
-  });
-
-  app.postAsync('/survival', async (req, res) => {
-    const accessToken = req.headers.authorization;
-    const userId = req['kauth']?.grant?.access_token?.content?.sub;
-    const sqon: SetSqon = req.body.sqon;
-    const projectId: string = req.body.project;
-    const data = await calculateSurvivalForSqonResult(sqon, projectId, userId, accessToken, getProject);
-
-    res.send({ data });
   });
 
   app.postAsync('/searchByIds', async (req, res) => {

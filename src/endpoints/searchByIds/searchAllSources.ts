@@ -2,7 +2,6 @@ import flatten from 'lodash/flatten';
 
 import { ArrangerProject } from '../../sqon/searchSqon';
 import { byBiospecimenId } from './byBiospecimenId';
-import { byFamilyId } from './byFamilyId';
 import { byId } from './byId';
 import { bySampleExternalId } from './bySampleExternalId';
 import executePagedQuery from './executePagedQuery';
@@ -37,4 +36,4 @@ export const searchAllSources: (
   ids: string[],
   projectId: string,
   getProject: (projectId: string) => ArrangerProject,
-) => Promise<SearchByIdsResult[]> = searchSources([byId, byBiospecimenId, byFamilyId, bySampleExternalId]);
+) => Promise<SearchByIdsResult[]> = searchSources([byId, byBiospecimenId, bySampleExternalId]);
