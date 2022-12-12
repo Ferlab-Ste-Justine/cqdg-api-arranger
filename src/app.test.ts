@@ -89,7 +89,6 @@ describe('Express app (without Arranger)', () => {
         fileSize: '441.69 TB',
         studies: 7,
         samples: 6111,
-        families: 1291,
         participants: 4330,
         variants: 2333,
       };
