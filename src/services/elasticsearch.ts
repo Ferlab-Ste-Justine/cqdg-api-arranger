@@ -11,7 +11,6 @@ import {
   esStudyIndex,
   esUser,
   esVariantIndex,
-  familyIdKey,
   fileIdKey,
   indexNameGeneFeatureSuggestion,
   indexNameVariantFeatureSuggestion,
@@ -48,7 +47,7 @@ export const fetchFileSizeStats = async (): Promise<string> => {
   const { body } = await client.search({
     index: esFileIndex,
     body: {
-      aggs: { types_count: { sum: { field: 'size' } } },
+      aggs: { types_count: { sum: { field: 'file_size' } } },
     },
     size: 0,
   });
@@ -71,17 +70,6 @@ export const fetchParticipantStats = async (): Promise<number> => {
     index: esParticipantIndex,
     body: {
       aggs: { types_count: { value_count: { field: participantIdKey } } },
-    },
-    size: 0,
-  });
-  return body.aggregations.types_count.value;
-};
-
-export const fetchFamilyStats = async (): Promise<number> => {
-  const { body } = await client.search({
-    index: esParticipantIndex,
-    body: {
-      aggs: { types_count: { value_count: { field: familyIdKey } } },
     },
     size: 0,
   });
