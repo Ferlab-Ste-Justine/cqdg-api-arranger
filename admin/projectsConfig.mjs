@@ -1,10 +1,13 @@
 import config from './conf.json' assert { type: "json" };
+import dateFormat from "dateformat";
 
-export const projectsConfig = () =>
+export const projectsConfig = (version) =>
     Object.entries(config).map(([key, value]) => {
-        const lambda = x => ({ ...x, projectId: key });
+        const currentDate = dateFormat(new Date(), "yyyy_mm_dd");
+        const projectName = `${key}_${currentDate}_${version}`
+        const lambda = x => ({ ...x, projectId: projectName });
         return {
-            name: key,
+            name: projectName,
             indices: [...value.indices].map(lambda),
             extendedMappingMutations: [...value.extendedMappingMutations].map(lambda),
         };
