@@ -1,5 +1,5 @@
 # First image to compile typescript to javascript
-FROM node:16.13-alpine AS build-image
+FROM node:18.10-alpine AS build-image
 WORKDIR /app
 COPY . .
 RUN npm ci

@@ -1,6 +1,6 @@
 {
   "name": "cqdg-api-arranger",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": ":factory: a data-model aware GraphQL API that sits above an Elasticsearch cluster",
   "main": "src/index.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "clean": "rm -rf ./dist/* ",
-    "build": "npm run clean; tsc ",
+    "build": "npm run clean; tsc && cp -r admin dist/admin",
     "lint": "eslint src",
     "lint:fix": "eslint --fix src",
     "buildAndRun": "npm run build; npm start",
