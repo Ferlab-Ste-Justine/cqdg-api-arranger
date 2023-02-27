@@ -9,7 +9,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "clean": "rm -rf ./dist/* ",
-    "build": "npm run clean; tsc ",
+    "build": "npm run clean; tsc && cp -r admin dist/admin",
     "lint": "eslint src",
     "lint:fix": "eslint --fix src",
     "buildAndRun": "npm run build; npm start",
