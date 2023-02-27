@@ -12,6 +12,7 @@ WORKDIR /code
 COPY --from=build-image ./code/dist ./dist
 COPY package* ./
 COPY ./resource ./resource
+COPY ./admin ./admin
 RUN npm ci --production
 RUN pip3 install -r resource/py/requirements.txt
 
