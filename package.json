@@ -1,6 +1,6 @@
 {
   "name": "cqdg-api-arranger",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": ":factory: a data-model aware GraphQL API that sits above an Elasticsearch cluster",
   "main": "src/index.js",
   "scripts": {
