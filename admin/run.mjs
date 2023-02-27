@@ -6,7 +6,7 @@ import { Client } from '@elastic/elasticsearch';
 import { countNOfDocs, createIndexIfNeeded } from '../dist/src/services/elasticsearch';
 import { ArrangerApi } from './arrangerApi.mjs';
 import { projectsConfig } from './projectsConfig.mjs';
-import { esHost, esPass, esUser, esFileIndex, esBiospecimenIndex, esParticipantIndex, esStudyIndex, esVariantIndex } from '../dist/src/config/env';
+import { esHost, esPass, esUser, esFileIndex, esBiospecimenIndex, esParticipantIndex, esStudyIndex } from '../dist/src/config/env';
 
 const client = new Client({
     node: esHost,
@@ -39,7 +39,7 @@ const sameIndices = (xs, ys) => {
 //===== Start =====//
 console.info(`admin-project-script - Starting script`);
 
-const projectIndices = [esFileIndex, esParticipantIndex, esStudyIndex, esVariantIndex]
+const projectIndices = [esFileIndex, esParticipantIndex, esStudyIndex, esBiospecimenIndex]
 
 if (projectIndices.length === 0) {
     console.warn(
@@ -48,7 +48,10 @@ if (projectIndices.length === 0) {
     process.exit(0);
 }
 
-const allProjectsConf = projectsConfig();
+const versionExtract = process.argv.filter(e => e.includes("projectVersion")).map(e => e.replace("projectVersion:", ""))
+const version = (versionExtract[0] || "v1").toLowerCase()
+
+const allProjectsConf = projectsConfig(version);
 
 const projectsConf = allProjectsConf.filter(p => {
     const indicesInConf = p.indices.map(i => i.esIndex);
@@ -66,6 +69,7 @@ if (projectsConf.length === 0) {
 }
 
 const projectConf = projectsConf[0];
+const projectName = projectConf.name
 
 console.debug(`admin-project-script - Reaching to ElasticSearch at ${esHost}`);
 
@@ -77,9 +81,6 @@ if (hasCreatedIndex) {
         `admin-project-script - Created this index: '${ArrangerApi.constants.ARRANGER_PROJECT_INDEX}'. Since no existing arranger projects detected.`,
     );
 }
-
-const projectName = projectConf.name;
-
 const resolveSanityConditions = async () =>
     await Promise.all([
         hasProjectArrangerMetadataIndex(client, projectName),
@@ -87,6 +88,7 @@ const resolveSanityConditions = async () =>
     ]);
 
 const creationConditions = await resolveSanityConditions();
+
 if (creationConditions.every(b => !b)) {
     console.debug(
         `admin-project-script - Creating a new metadata project since no existing project='${projectName}' detected.`,
@@ -103,7 +105,7 @@ if (creationConditions.every(b => !b)) {
     console.warn(
         `admin-project-script - The project seems to be in a weird state for '${projectName}' does ${
             creationConditions[0] ? '' : 'not '
-        }exist while it is ${creationConditions[1] ? '' : 'not '}listed in ${
+        } exist while it is ${creationConditions[1] ? '' : 'not '}listed in ${
             ArrangerApi.constants.ARRANGER_PROJECT_INDEX
         }`,
     );
