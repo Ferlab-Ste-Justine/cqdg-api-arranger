@@ -1,17 +1,17 @@
 version: "3.9"
 services:
   cqdg_arranger:
-    image: node:16.13-alpine
+    image: node:18.10-alpine
     working_dir: /code
     volumes:
       - .:/code
     command: sh -c 'npm install && npm run build && npm start'
     profiles:
-      - dev0
+      - dev
     ports:
       - "5050:5050"
   cqdg_arranger_with_local_es:
-    image: node:16.13-alpine
+    image: node:18.10-alpine
     working_dir: /code
     volumes:
       - .:/code
@@ -23,7 +23,7 @@ services:
     networks:
       - es-net
   cqdg_arranger_test:
-    image: node:16.13-alpine
+    image: node:18.10-alpine
     working_dir: /code
     volumes:
       - .:/code
