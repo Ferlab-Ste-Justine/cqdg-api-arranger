@@ -1,5 +1,6 @@
 import addAsync from '@awaitjs/express';
 import SQS from 'aws-sdk/clients/sqs';
+import compression from 'compression';
 import cors from 'cors';
 import express, { Express } from 'express';
 import { Keycloak } from 'keycloak-connect';
@@ -33,7 +34,7 @@ export default (keycloak: Keycloak, sqs: SQS, getProject: (projectId: string) =>
   const cache = new NodeCache({ stdTTL: cacheTTL });
 
   app.use(cors());
-
+  app.use(compression());
   app.use(express.json({ limit: '50mb' }));
   app.use(
     express.urlencoded({
@@ -155,7 +156,7 @@ export default (keycloak: Keycloak, sqs: SQS, getProject: (projectId: string) =>
   });
 
   //todo: commented cuz hide err, to verify why
-  // app.use(globalErrorLogger, globalErrorHandler);
+  app.use(globalErrorLogger, globalErrorHandler);
 
   return app;
 };

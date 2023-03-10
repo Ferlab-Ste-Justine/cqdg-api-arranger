@@ -4,7 +4,7 @@ import { ArrangerProject } from '../../sqon/searchSqon';
 import { SetSqon } from '../sets/setsTypes';
 import { normalizeResults } from './normalizeResults';
 
-const pageSize = 1000;
+const pageSize = 10000;
 
 const runPagedQuery = async (project: ArrangerProject, query: string, sqon: SetSqon) => {
   let complete = false;
