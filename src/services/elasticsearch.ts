@@ -40,7 +40,7 @@ export const fetchFileStats = async (): Promise<number> => {
     size: 0,
   });
 
-  return body.aggregations.types_count.value;
+  return body?.aggregations?.types_count.value;
 };
 
 export const fetchFileSizeStats = async (): Promise<string> => {
@@ -51,7 +51,7 @@ export const fetchFileSizeStats = async (): Promise<string> => {
     },
     size: 0,
   });
-  return filesize(body.aggregations.types_count.value).replace(' ', '');
+  return filesize(body?.aggregations?.types_count.value).replace(' ', '');
 };
 
 export const fetchStudyStats = async (): Promise<number> => {
@@ -62,7 +62,7 @@ export const fetchStudyStats = async (): Promise<number> => {
     },
     size: 0,
   });
-  return body.aggregations.types_count.value;
+  return body?.aggregations?.types_count.value;
 };
 
 export const fetchParticipantStats = async (): Promise<number> => {
@@ -73,7 +73,7 @@ export const fetchParticipantStats = async (): Promise<number> => {
     },
     size: 0,
   });
-  return body.aggregations.types_count.value;
+  return body?.aggregations?.types_count.value;
 };
 
 export const fetchBiospecimenStats = async (): Promise<number> => {
@@ -84,7 +84,7 @@ export const fetchBiospecimenStats = async (): Promise<number> => {
     },
     size: 0,
   });
-  return body.aggregations.types_count.value;
+  return body?.aggregations?.types_count.value;
 };
 
 export const fetchVariantStats = async (): Promise<number> => {
@@ -95,7 +95,7 @@ export const fetchVariantStats = async (): Promise<number> => {
     },
     size: 0,
   });
-  return body.aggregations.types_count.value;
+  return body?.aggregations?.types_count.value;
 };
 
 export const fetchGenomicFeatureSuggestions = async (prefix: string, type: string): Promise<any> => {
@@ -114,7 +114,7 @@ export const fetchGenomicFeatureSuggestions = async (prefix: string, type: strin
       },
     },
   });
-  return body.suggest.suggestions[0];
+  return body?.suggest?.suggestions[0];
 };
 
 export const createIndexIfNeeded = async (esClient: Client, indexName: string): Promise<boolean> => {
