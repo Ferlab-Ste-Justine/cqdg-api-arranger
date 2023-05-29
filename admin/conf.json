@@ -160,6 +160,13 @@
                 }
             },
             {
+                "field": "phenotypes_tagged.parents",
+                "graphqlField": "Participant",
+                "extendedFieldMappingInput": {
+                    "isArray": true
+                }
+            },
+            {
                 "field": "biospecimens.participant.observed_phenotype_tagged.parents",
                 "graphqlField": "File",
                 "extendedFieldMappingInput": {
@@ -168,6 +175,13 @@
             },
             {
                 "field": "biospecimens.participant.non_observed_phenotype_tagged.parents",
+                "graphqlField": "File",
+                "extendedFieldMappingInput": {
+                    "isArray": true
+                }
+            },
+            {
+                "field": "biospecimens.participant.phenotypes_tagged.parents",
                 "graphqlField": "File",
                 "extendedFieldMappingInput": {
                     "isArray": true
@@ -188,6 +202,13 @@
                 }
             },
             {
+                "field": "participants.phenotypes_tagged.parents",
+                "graphqlField": "File",
+                "extendedFieldMappingInput": {
+                    "isArray": true
+                }
+            },
+            {
                 "field": "participant.observed_phenotype_tagged.parents",
                 "graphqlField": "Biospecimen",
                 "extendedFieldMappingInput": {
@@ -196,6 +217,13 @@
             },
             {
                 "field": "participant.non_observed_phenotype_tagged.parents",
+                "graphqlField": "Biospecimen",
+                "extendedFieldMappingInput": {
+                    "isArray": true
+                }
+            },
+            {
+                "field": "participant.phenotypes_tagged.parents",
                 "graphqlField": "Biospecimen",
                 "extendedFieldMappingInput": {
                     "isArray": true
