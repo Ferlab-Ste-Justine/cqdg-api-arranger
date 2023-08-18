@@ -532,7 +532,7 @@
         }
       },
       {
-        "field": "clinvar.condition",
+        "field": "clinvar.conditions",
         "graphqlField": "Variant",
         "extendedFieldMappingInput": {
           "isArray": true
