@@ -14,6 +14,8 @@ import {
   esBiospecimenIndex,
   esParticipantIndex,
   esStudyIndex,
+  esVariantIndex,
+  esGeneIndex
 } from '../dist/src/config/env';
 
 const client = new Client({
@@ -83,7 +85,7 @@ const updateProjectBackup = async name => {
 //===== Start =====//
 console.info(`admin-project-script - Starting script`);
 
-const projectIndices = [esFileIndex, esParticipantIndex, esStudyIndex, esBiospecimenIndex];
+const projectIndices = [esFileIndex, esParticipantIndex, esStudyIndex, esBiospecimenIndex, esVariantIndex, esGeneIndex];
 
 if (projectIndices.length === 0) {
   console.warn(

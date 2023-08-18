@@ -1,521 +1,655 @@
 {
-    "cqdg": {
-        "indices": [
-            {
-                "graphqlField": "Study",
-                "esIndex": "study_centric"
-            },
-            {
-                "graphqlField": "Participant",
-                "esIndex": "participant_centric"
-            },
-            {
-                "graphqlField": "Biospecimen",
-                "esIndex": "biospecimen_centric"
-            },
-            {
-                "graphqlField": "File",
-                "esIndex": "file_centric"
-            }
-        ],
-        "extendedMappingMutations": [
-            {
-                "field": "experimental_strategies",
-                "graphqlField": "Study",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "participants.icd_tagged.parents",
-                "graphqlField": "File",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "biospecimens.participant.icd_tagged.parents",
-                "graphqlField": "File",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "icd_tagged.parents",
-                "graphqlField": "Participant",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "participant.icd_tagged.parents",
-                "graphqlField": "Biospecimen",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "icd_terms",
-                "graphqlField": "Study",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "mondo_tagged.parents",
-                "graphqlField": "Participant",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "participants.mondo_tagged.parents",
-                "graphqlField": "File",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "biospecimens.participant.mondo_tagged.parents",
-                "graphqlField": "File",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "participant.mondo_tagged.parents",
-                "graphqlField": "Biospecimen",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "mondo.parents",
-                "graphqlField": "Participant",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "mondo.age_at_event",
-                "graphqlField": "Participant",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "participants.mondo.parents",
-                "graphqlField": "File",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "participants.mondo.age_at_event",
-                "graphqlField": "File",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "biospecimens.participant.mondo.parents",
-                "graphqlField": "File",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "biospecimens.participant.mondo.age_at_event",
-                "graphqlField": "File",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "participant.mondo.parents",
-                "graphqlField": "Biospecimen",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "participant.mondo.age_at_event",
-                "graphqlField": "Biospecimen",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "observed_phenotype_tagged.parents",
-                "graphqlField": "Participant",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "non_observed_phenotype_tagged.parents",
-                "graphqlField": "Participant",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "phenotypes_tagged.parents",
-                "graphqlField": "Participant",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "biospecimens.participant.observed_phenotype_tagged.parents",
-                "graphqlField": "File",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "biospecimens.participant.non_observed_phenotype_tagged.parents",
-                "graphqlField": "File",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "biospecimens.participant.phenotypes_tagged.parents",
-                "graphqlField": "File",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "participants.observed_phenotype_tagged.parents",
-                "graphqlField": "File",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "participants.non_observed_phenotype_tagged.parents",
-                "graphqlField": "File",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "participants.phenotypes_tagged.parents",
-                "graphqlField": "File",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "participant.observed_phenotype_tagged.parents",
-                "graphqlField": "Biospecimen",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "participant.non_observed_phenotype_tagged.parents",
-                "graphqlField": "Biospecimen",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "participant.phenotypes_tagged.parents",
-                "graphqlField": "Biospecimen",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "observed_phenotypes.parents",
-                "graphqlField": "Participant",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "observed_phenotypes.age_at_event",
-                "graphqlField": "Participant",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "participants.observed_phenotypes.parents",
-                "graphqlField": "File",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "biospecimens.participant.observed_phenotypes.parents",
-                "graphqlField": "File",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "participants.observed_phenotypes.age_at_event",
-                "graphqlField": "File",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "biospecimens.participant.observed_phenotypes.age_at_event",
-                "graphqlField": "File",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "participant.observed_phenotypes.parents",
-                "graphqlField": "Biospecimen",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "participant.observed_phenotypes.age_at_event",
-                "graphqlField": "Biospecimen",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "study.icd_terms",
-                "graphqlField": "Participant",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "study.icd_terms",
-                "graphqlField": "File",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "study.icd_terms",
-                "graphqlField": "Biospecimen",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "study.keyword",
-                "graphqlField": "Participant",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "study.keyword",
-                "graphqlField": "File",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "study.keyword",
-                "graphqlField": "Biospecimen",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "study.domain",
-                "graphqlField": "Participant",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "study.domain",
-                "graphqlField": "File",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "study.domain",
-                "graphqlField": "Biospecimen",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "study.data_category",
-                "graphqlField": "Participant",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "study.data_category",
-                "graphqlField": "File",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "study.data_category",
-                "graphqlField": "Biospecimen",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "study.hpo_terms",
-                "graphqlField": "Participant",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "study.hpo_terms",
-                "graphqlField": "File",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "study.hpo_terms",
-                "graphqlField": "Biospecimen",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "study.experimental_strategy",
-                "graphqlField": "Participant",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "study.experimental_strategy",
-                "graphqlField": "File",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "study.experimental_strategy",
-                "graphqlField": "Biospecimen",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "study.mondo_terms",
-                "graphqlField": "Participant",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "study.mondo_terms",
-                "graphqlField": "File",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "study.mondo_terms",
-                "graphqlField": "Biospecimen",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "study.data_access_codes.access_requirements",
-                "graphqlField": "Participant",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "study.data_access_codes.access_requirements",
-                "graphqlField": "File",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "study.data_access_codes.access_requirements",
-                "graphqlField": "Biospecimen",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "study.data_access_codes.access_limitations",
-                "graphqlField": "Participant",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "study.data_access_codes.access_limitations",
-                "graphqlField": "File",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "study.data_access_codes.access_limitations",
-                "graphqlField": "Biospecimen",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "data_access_codes.access_requirements",
-                "graphqlField": "Study",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "data_access_codes.access_limitations",
-                "graphqlField": "Study",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "keyword",
-                "graphqlField": "Study",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "domain",
-                "graphqlField": "Study",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "hpo_terms",
-                "graphqlField": "Study",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            },
-            {
-                "field": "mondo_terms",
-                "graphqlField": "Study",
-                "extendedFieldMappingInput": {
-                    "isArray": true
-                }
-            }
-        ]
-    }
+  "cqdg": {
+    "indices": [
+      {
+        "graphqlField": "Study",
+        "esIndex": "study_centric"
+      },
+      {
+        "graphqlField": "Participant",
+        "esIndex": "participant_centric"
+      },
+      {
+        "graphqlField": "Biospecimen",
+        "esIndex": "biospecimen_centric"
+      },
+      {
+        "graphqlField": "File",
+        "esIndex": "file_centric"
+      },
+      {
+        "graphqlField": "Variant",
+        "esIndex": "variant_centric"
+      },
+      {
+        "graphqlField": "Gene",
+        "esIndex": "gene_centric"
+      }
+    ],
+    "extendedMappingMutations": [
+      {
+        "field": "experimental_strategies",
+        "graphqlField": "Study",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "participants.icd_tagged.parents",
+        "graphqlField": "File",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "biospecimens.participant.icd_tagged.parents",
+        "graphqlField": "File",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "icd_tagged.parents",
+        "graphqlField": "Participant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "participant.icd_tagged.parents",
+        "graphqlField": "Biospecimen",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "icd_terms",
+        "graphqlField": "Study",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "mondo_tagged.parents",
+        "graphqlField": "Participant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "participants.mondo_tagged.parents",
+        "graphqlField": "File",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "biospecimens.participant.mondo_tagged.parents",
+        "graphqlField": "File",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "participant.mondo_tagged.parents",
+        "graphqlField": "Biospecimen",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "mondo.parents",
+        "graphqlField": "Participant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "mondo.age_at_event",
+        "graphqlField": "Participant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "participants.mondo.parents",
+        "graphqlField": "File",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "participants.mondo.age_at_event",
+        "graphqlField": "File",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "biospecimens.participant.mondo.parents",
+        "graphqlField": "File",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "biospecimens.participant.mondo.age_at_event",
+        "graphqlField": "File",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "participant.mondo.parents",
+        "graphqlField": "Biospecimen",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "participant.mondo.age_at_event",
+        "graphqlField": "Biospecimen",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "observed_phenotype_tagged.parents",
+        "graphqlField": "Participant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "non_observed_phenotype_tagged.parents",
+        "graphqlField": "Participant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "phenotypes_tagged.parents",
+        "graphqlField": "Participant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "biospecimens.participant.observed_phenotype_tagged.parents",
+        "graphqlField": "File",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "biospecimens.participant.non_observed_phenotype_tagged.parents",
+        "graphqlField": "File",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "biospecimens.participant.phenotypes_tagged.parents",
+        "graphqlField": "File",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "participants.observed_phenotype_tagged.parents",
+        "graphqlField": "File",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "participants.non_observed_phenotype_tagged.parents",
+        "graphqlField": "File",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "participants.phenotypes_tagged.parents",
+        "graphqlField": "File",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "participant.observed_phenotype_tagged.parents",
+        "graphqlField": "Biospecimen",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "participant.non_observed_phenotype_tagged.parents",
+        "graphqlField": "Biospecimen",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "participant.phenotypes_tagged.parents",
+        "graphqlField": "Biospecimen",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "observed_phenotypes.parents",
+        "graphqlField": "Participant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "observed_phenotypes.age_at_event",
+        "graphqlField": "Participant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "participants.observed_phenotypes.parents",
+        "graphqlField": "File",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "biospecimens.participant.observed_phenotypes.parents",
+        "graphqlField": "File",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "participants.observed_phenotypes.age_at_event",
+        "graphqlField": "File",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "biospecimens.participant.observed_phenotypes.age_at_event",
+        "graphqlField": "File",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "participant.observed_phenotypes.parents",
+        "graphqlField": "Biospecimen",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "participant.observed_phenotypes.age_at_event",
+        "graphqlField": "Biospecimen",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "study.icd_terms",
+        "graphqlField": "Participant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "study.icd_terms",
+        "graphqlField": "File",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "study.icd_terms",
+        "graphqlField": "Biospecimen",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "study.keyword",
+        "graphqlField": "Participant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "study.keyword",
+        "graphqlField": "File",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "study.keyword",
+        "graphqlField": "Biospecimen",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "study.domain",
+        "graphqlField": "Participant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "study.domain",
+        "graphqlField": "File",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "study.domain",
+        "graphqlField": "Biospecimen",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "study.data_category",
+        "graphqlField": "Participant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "study.data_category",
+        "graphqlField": "File",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "study.data_category",
+        "graphqlField": "Biospecimen",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "study.hpo_terms",
+        "graphqlField": "Participant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "study.hpo_terms",
+        "graphqlField": "File",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "study.hpo_terms",
+        "graphqlField": "Biospecimen",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "study.experimental_strategy",
+        "graphqlField": "Participant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "study.experimental_strategy",
+        "graphqlField": "File",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "study.experimental_strategy",
+        "graphqlField": "Biospecimen",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "study.mondo_terms",
+        "graphqlField": "Participant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "study.mondo_terms",
+        "graphqlField": "File",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "study.mondo_terms",
+        "graphqlField": "Biospecimen",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "study.data_access_codes.access_requirements",
+        "graphqlField": "Participant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "study.data_access_codes.access_requirements",
+        "graphqlField": "File",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "study.data_access_codes.access_requirements",
+        "graphqlField": "Biospecimen",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "study.data_access_codes.access_limitations",
+        "graphqlField": "Participant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "study.data_access_codes.access_limitations",
+        "graphqlField": "File",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "study.data_access_codes.access_limitations",
+        "graphqlField": "Biospecimen",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "data_access_codes.access_requirements",
+        "graphqlField": "Study",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "data_access_codes.access_limitations",
+        "graphqlField": "Study",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "keyword",
+        "graphqlField": "Study",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "domain",
+        "graphqlField": "Study",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "hpo_terms",
+        "graphqlField": "Study",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "mondo_terms",
+        "graphqlField": "Study",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "clinvar.clin_sig",
+        "graphqlField": "Variant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "clinvar.condition",
+        "graphqlField": "Variant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "clinvar.inheritance",
+        "graphqlField": "Variant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "clinvar.interpretations",
+        "graphqlField": "Variant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "gene_external_reference",
+        "graphqlField": "Variant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "genes",
+        "graphqlField": "Variant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "genes.alias",
+        "graphqlField": "Variant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "genes.consequences.consequence",
+        "graphqlField": "Variant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "genes.consequences.refseq_mrna_id",
+        "graphqlField": "Variant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "genes.cosmic.tumour_types_germline",
+        "graphqlField": "Variant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "genes.omim.inheritance",
+        "graphqlField": "Variant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "genes.omim.inheritance_code",
+        "graphqlField": "Variant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "genes.orphanet.inheritance",
+        "graphqlField": "Variant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "genes.spliceai.type",
+        "graphqlField": "Variant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "studies.participant_ids",
+        "graphqlField": "Variant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "studies.transmission",
+        "graphqlField": "Variant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "studies.zygosity",
+        "graphqlField": "Variant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "alias",
+        "graphqlField": "Gene",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      }
+    ]
+  }
 }

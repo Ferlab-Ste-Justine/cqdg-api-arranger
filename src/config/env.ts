@@ -20,6 +20,7 @@ export const esStudyIndex = process.env.ES_STUDY_INDEX || 'study_centric';
 export const esParticipantIndex = process.env.ES_PARTICIPANT_INDEX || 'participant_centric';
 export const esBiospecimenIndex = process.env.ES_BIOSPECIMEN_INDEX || 'biospecimen_centric';
 export const esVariantIndex = process.env.ES_VARIANT_INDEX || 'variant_centric';
+export const esGeneIndex = process.env.ES_GENE_INDEX || 'gene_centric';
 
 export const maxNOfGenomicFeatureSuggestions = process.env.MAX_NUMBER_OF_GF_SUGGESTIONS || 5;
 
