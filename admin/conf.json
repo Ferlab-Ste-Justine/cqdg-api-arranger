@@ -504,6 +504,20 @@
         }
       },
       {
+        "field": "datasets.data_types",
+        "graphqlField": "Study",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
+        "field": "datasets.experimental_strategies",
+        "graphqlField": "Study",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
         "field": "domain",
         "graphqlField": "Study",
         "extendedFieldMappingInput": {
