@@ -20,18 +20,25 @@ export const replaceSetByIds = async (sqon: SetSqon, accessToken: string, userId
   }
   const contents = [];
 
-  for (let i = 0; i < sqon.content.length; i++) {
-    const c = sqon.content[i];
-
-    if (c.content.value[0].match(setRegex)) {
-      const match = setRegex.exec(c.content.value[0])[1];
-      const set = await getUserSet(accessToken, userId, match);
-      const newContent = { ...c };
-      newContent.content.field = getPathToParticipantId(set.content.setType);
-      newContent.content.value = set.content.ids;
-      contents.push(newContent);
+  for (const content of sqon.content) {
+    const handleContent = async content => {
+      if (content?.content?.value[0].match(setRegex)) {
+        const match = setRegex.exec(content.content.value[0])[1];
+        const set = await getUserSet(accessToken, userId, match);
+        const newContent = { ...content };
+        newContent.content.field = getPathToParticipantId(set.content.setType);
+        newContent.content.value = set.content.ids;
+        contents.push(newContent);
+      } else {
+        contents.push(content);
+      }
+    };
+    if (Array.isArray(content.content)) {
+      for (const deepContent of content.content) {
+        await handleContent(deepContent);
+      }
     } else {
-      contents.push(c);
+      await handleContent(content);
     }
   }
   return { op: 'and', content: contents };
