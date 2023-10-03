@@ -26,6 +26,10 @@ const client = new Client({
   },
 });
 
+function sleep(millis) {
+  return new Promise(resolve => setTimeout(resolve, millis));
+}
+
 const hasProjectArrangerMetadataIndex = async (esClient, projectName) => {
   const r = await esClient.indices.exists({
     index: ArrangerApi.getProjectMetadataEsLocation(projectName).index,
@@ -114,11 +118,10 @@ if (projectsConf.length === 0) {
 const projectConf = projectsConf[0];
 const projectName = projectConf.name;
 
+await sleep(360000)
+
 console.debug(`admin-project-script - Reaching to ElasticSearch at ${esHost}`);
 
-setTimeout(() => {
-  console.log("Sleeping for a while....");
-}, 360000);
 
 const addArrangerProjectWithClient = ArrangerApi.addArrangerProject(client);
 
