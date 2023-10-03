@@ -116,6 +116,10 @@ const projectName = projectConf.name;
 
 console.debug(`admin-project-script - Reaching to ElasticSearch at ${esHost}`);
 
+setTimeout(() => {
+  console.log("Sleeping for a while....");
+}, 360000);
+
 const addArrangerProjectWithClient = ArrangerApi.addArrangerProject(client);
 
 const hasCreatedIndex = await createIndexIfNeeded(client, ArrangerApi.constants.ARRANGER_PROJECT_INDEX);
