@@ -1,22 +1,23 @@
 /* eslint-disable no-console */
 import 'regenerator-runtime/runtime';
 
-import { Client } from '@elastic/elasticsearch';
+import {Client} from '@elastic/elasticsearch';
 
-import { countNOfDocs, createIndexIfNeeded } from '../dist/src/services/elasticsearch';
-import { ArrangerApi } from './arrangerApi.mjs';
-import { projectsConfig } from './projectsConfig.mjs';
+import {createIndexIfNeeded} from '../dist/src/services/elasticsearch';
+import {ArrangerApi} from './arrangerApi.mjs';
+import {projectsConfig} from './projectsConfig.mjs';
 import {
-  esHost,
-  esPass,
-  esUser,
-  esFileIndex,
   esBiospecimenIndex,
+  esFileIndex,
+  esGeneIndex,
+  esHost,
   esParticipantIndex,
+  esPass,
   esStudyIndex,
+  esUser,
   esVariantIndex,
-  esGeneIndex
 } from '../dist/src/config/env';
+import arrangerMapping from './arrangerMapping.json' assert {type: 'json'};
 
 const client = new Client({
   node: esHost,
@@ -58,14 +59,17 @@ const sameIndices = (xs, ys) => {
 };
 
 const updateProjectBackup = async name => {
-  const ES_UPDATE_WAIT_TIME = 5000
+  const ES_UPDATE_WAIT_TIME = 5000;
   const backupIndex = await client.indices.exists({ index: `arranger-projects-${name}-backup` });
 
   if (backupIndex.body) {
     await client.indices.delete({ index: `arranger-projects-${name}-backup` });
   }
 
-  await client.indices.create({ index: `arranger-projects-${name}-backup` });
+  await client.indices.create({
+    index: `arranger-projects-${name}-backup`,
+    body: arrangerMapping,
+  });
   await client.reindex({
     body: {
       source: {
