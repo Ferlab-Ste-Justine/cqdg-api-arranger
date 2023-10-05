@@ -22,9 +22,10 @@ export const replaceSetByIds = async (sqon: SetSqon, accessToken: string, userId
 
   for (const content of sqon.content) {
     const handleContent = async content => {
-      if (content?.content?.value[0].match(setRegex)) {
-        const match = setRegex.exec(content.content.value[0])[1];
-        const set = await getUserSet(accessToken, userId, match);
+      const matches = setRegex.exec(content?.content?.value[0]);
+      const setId = matches && matches[1] ? matches[1] : null;
+      if (setId) {
+        const set = await getUserSet(accessToken, userId, setId);
         const newContent = { ...content };
         newContent.content.field = getPathToParticipantId(set.content.setType);
         newContent.content.value = set.content.ids;
