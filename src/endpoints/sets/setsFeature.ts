@@ -199,14 +199,14 @@ export const deleteSet = async (accessToken: string, setId: string, userId: stri
   return deleteResult;
 };
 
-const mapResultToSet = (output: Output): Set =>
-  ({
-    id: output.id,
-    tag: output.alias,
-    size: output.content.ids.length,
-    updated_date: output.updated_date,
-    setType: output.content.setType,
-  } as Set);
+const mapResultToSet = (output: Output): Set => ({
+  id: output.id,
+  tag: output.alias,
+  size: output.content.ids.length,
+  updated_date: output.updated_date,
+  setType: output.content.setType,
+  ids: output.content.ids,
+});
 
 const truncateIds = (ids: string[]): string[] => {
   if (ids.length <= maxSetContentSize) {

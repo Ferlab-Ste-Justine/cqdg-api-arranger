@@ -1,6 +1,6 @@
 import { participantBiospecimenKey, participantFileKey, participantKey } from '../config/env';
-import { getUserSet } from '../endpoints/sets/setsFeature';
-import { SetSqon } from '../endpoints/sets/setsTypes';
+import { getSets } from '../endpoints/sets/setsFeature';
+import { Set, SetSqon } from '../endpoints/sets/setsTypes';
 
 const setRegex = /^set_id:(.+)$/gm;
 
@@ -24,16 +24,16 @@ interface ISqonContent {
   op: 'in';
 }
 
-const handleContent = async (content: ISqonContent, accessToken: string, userId: string) => {
+const handleContent = async (content: ISqonContent, sets: Set[]) => {
   try {
     const contents = [];
     const matches = setRegex.exec(content?.content.value ? content.content.value[0] : '');
     const setId = matches && matches[1] ? matches[1] : null;
     if (setId) {
-      const set = await getUserSet(accessToken, userId, setId);
+      const set = sets.find(s => s.id === setId);
       const newContent = { ...content };
-      newContent.content.field = getPathToParticipantId(set.content.setType);
-      newContent.content.value = set.content.ids;
+      newContent.content.field = getPathToParticipantId(set.setType);
+      newContent.content.value = set.ids;
       contents.push(newContent);
     } else {
       contents.push(content);
@@ -44,14 +44,14 @@ const handleContent = async (content: ISqonContent, accessToken: string, userId:
   }
 };
 
-const handleContentRecursively = async (content: any, accessToken: string, userId: string) => {
+const handleContentRecursively = async (content: any, sets: Set[]) => {
   const contents = [];
   if (Array.isArray(content)) {
     for (const deepContent of content) {
-      contents.push(...(await handleContentRecursively(deepContent, accessToken, userId)));
+      contents.push(...(await handleContentRecursively(deepContent, sets)));
     }
   } else {
-    contents.push(...(await handleContent(content, accessToken, userId)));
+    contents.push(...(await handleContent(content, sets)));
   }
   return contents;
 };
@@ -60,6 +60,7 @@ export const replaceSetByIds = async (sqon: SetSqon, accessToken: string, userId
   if (!sqon) {
     throw new Error('Sqon is missing');
   }
-  const contents = await handleContentRecursively(sqon.content, accessToken, userId);
+  const sets = await getSets(accessToken);
+  const contents = await handleContentRecursively(sqon.content, sets);
   return { op: 'and', content: contents };
 };
