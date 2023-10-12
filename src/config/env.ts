@@ -39,8 +39,8 @@ export const participantIdKey = process.env.PARTICIPANT_ID_KEY || 'participant_i
 export const biospecimenIdKey = process.env.BIOSPECIMEN_ID_KEY || 'sample_id';
 export const variantIdKey = process.env.VARIANT_ID_KEY || 'id';
 
-export const participantKey = process.env.TO_PARTICIPANT_ID_KEY || 'participant';
-export const participantFileKey = process.env.TO_PARTICIPANT_FILE_ID_KEY || 'participantFile';
-export const participantBiospecimenKey = process.env.TO_PARTICIPANT_BIOSPECIMEN_ID_KEY || 'participantBiospecimen';
+export const participantKey = process.env.TO_PARTICIPANT_ID_KEY || 'participant_id';
+export const participantFileKey = process.env.TO_PARTICIPANT_FILE_ID_KEY || 'file_id';
+export const participantBiospecimenKey = process.env.TO_PARTICIPANT_BIOSPECIMEN_ID_KEY || 'sample_id';
 
 export const cacheTTL: number = Number.parseInt(process.env.CACHE_TTL_SEC) || 3600;
