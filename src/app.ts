@@ -137,7 +137,6 @@ export default (keycloak: Keycloak, sqs: SQS, getProject: (projectId: string) =>
 
   app.postAsync('/phenotypes', async (req, res) => {
     const accessToken = req.headers.authorization;
-    const userId = req['kauth']?.grant?.access_token?.content?.sub;
     const sqon: SetSqon = req.body.sqon;
     const type: string = req.body.type;
     const projectId: string = req.body.project;
@@ -149,7 +148,6 @@ export default (keycloak: Keycloak, sqs: SQS, getProject: (projectId: string) =>
       type,
       aggregations_filter_themselves,
       accessToken,
-      userId,
     );
 
     res.send({ data });
