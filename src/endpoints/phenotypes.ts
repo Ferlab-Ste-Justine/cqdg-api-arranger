@@ -20,7 +20,7 @@ export const getPhenotypesNodes = async (
   accessToken: string,
 ) => {
   const newSqon = await replaceSetByIds(sqon, accessToken);
-  const participantIds = await getParticipantIds(newSqon as SetSqon, projectId, getProject);
+  const participantIds = await getParticipantIds(newSqon, projectId, getProject);
   return getPhenotypesNodesByIds(participantIds, projectId, getProject, type, aggregations_filter_themselves);
 };
 
