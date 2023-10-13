@@ -2,7 +2,7 @@ import { participantBiospecimenKey, participantFileKey, participantKey } from '.
 import { getSets } from '../endpoints/sets/setsFeature';
 import { Set, SetSqon } from '../endpoints/sets/setsTypes';
 
-const setRegex = /^set_id:(.+)$/gm;
+const setRegex = /^set_id:(.+)$/;
 
 const getPathToParticipantId = (type: string) => {
   if (type === 'biospecimen') {
@@ -14,7 +14,7 @@ const getPathToParticipantId = (type: string) => {
   }
 };
 
-const handleContent = async (content: any, sets: Set[]) => {
+const handleContent = (content: any, sets: Set[]) => {
   const contents = [];
   const firstValue = content?.content?.value ? content.content.value[0] : '';
   const matches = setRegex.exec(firstValue);
@@ -42,10 +42,10 @@ export const replaceSetByIds = async (sqon: SetSqon, accessToken: string) => {
   for (const content of sqon.content) {
     if (Array.isArray(content.content)) {
       for (const deepContent of content.content) {
-        contents.push(...(await handleContent(deepContent, sets)));
+        contents.push(...handleContent(deepContent, sets));
       }
     } else {
-      contents.push(...(await handleContent(content, sets)));
+      contents.push(...handleContent(content, sets));
     }
   }
   return { op: 'and', content: contents };
