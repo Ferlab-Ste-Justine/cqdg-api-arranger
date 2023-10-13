@@ -574,6 +574,13 @@
         }
       },
       {
+        "field": "variant_external_reference",
+        "graphqlField": "Variant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
         "field": "genes",
         "graphqlField": "Variant",
         "extendedFieldMappingInput": {
