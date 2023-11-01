@@ -651,6 +651,13 @@
         }
       },
       {
+        "field": "sources",
+        "graphqlField": "Variant",
+        "extendedFieldMappingInput": {
+          "isArray": true
+        }
+      },
+      {
         "field": "studies.transmission",
         "graphqlField": "Variant",
         "extendedFieldMappingInput": {
