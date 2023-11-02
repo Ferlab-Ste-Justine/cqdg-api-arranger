@@ -24,9 +24,8 @@ export const esGeneIndex = process.env.ES_GENE_INDEX || 'gene_centric';
 
 export const maxNOfGenomicFeatureSuggestions = process.env.MAX_NUMBER_OF_GF_SUGGESTIONS || 5;
 
-export const indexNameGeneFeatureSuggestion = process.env.GENES_SUGGESTIONS_INDEX_NAME || 'clin_qa_gene_suggestions';
-export const indexNameVariantFeatureSuggestion =
-  process.env.VARIANTS_SUGGESTIONS_INDEX_NAME || 'clin_qa_variant_suggestions';
+export const indexNameGeneFeatureSuggestion = process.env.GENES_SUGGESTIONS_INDEX_NAME || 'gene_suggestions';
+export const indexNameVariantFeatureSuggestion = process.env.VARIANTS_SUGGESTIONS_INDEX_NAME || 'variant_suggestions';
 
 export const usersApiURL = process.env.USERS_API_URL || 'https://users.qa.cqdg.ferlab.bio';
 export const sendUpdateToSqs = process.env.SEND_UPDATE_TO_SQS === 'true';
