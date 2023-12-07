@@ -2,7 +2,12 @@ import { Client } from '@elastic/elasticsearch';
 import filesize from 'filesize';
 
 import {
+  addCagCount,
   biospecimenIdKey,
+  cagBiospecimensCount,
+  cagFilesCount,
+  cagFilesSize,
+  cagParticipantsCount,
   esBiospecimenIndex,
   esFileIndex,
   esHost,
@@ -35,13 +40,14 @@ export const fetchFileStats = async (): Promise<number> => {
   try {
     const { body } = await client.search({
       index: esFileIndex,
-      body: {
-        aggs: { types_count: { value_count: { field: fileIdKey } } },
-      },
+      body: { aggs: { types_count: { value_count: { field: fileIdKey } } } },
       size: 0,
     });
-
-    return body?.aggregations?.types_count.value;
+    let filesCount = body?.aggregations?.types_count.value;
+    if (addCagCount) {
+      filesCount += cagFilesCount;
+    }
+    return filesCount;
   } catch (error) {
     console.log('[fetchFileStats] error: ', error);
     return null;
@@ -52,12 +58,14 @@ export const fetchFileSizeStats = async (): Promise<string> => {
   try {
     const { body } = await client.search({
       index: esFileIndex,
-      body: {
-        aggs: { types_count: { sum: { field: 'file_size' } } },
-      },
+      body: { aggs: { types_count: { sum: { field: 'file_size' } } } },
       size: 0,
     });
-    return filesize(body?.aggregations?.types_count.value).replace(' ', '');
+    let filesSize = body?.aggregations?.types_count.value;
+    if (addCagCount) {
+      filesSize += cagFilesSize;
+    }
+    return filesize(filesSize).replace(' ', '');
   } catch (error) {
     console.log('[fetchFileSizeStats] error: ', error);
     return null;
@@ -68,9 +76,7 @@ export const fetchStudyStats = async (): Promise<number> => {
   try {
     const { body } = await client.search({
       index: esStudyIndex,
-      body: {
-        aggs: { types_count: { value_count: { field: studyIdKey } } },
-      },
+      body: { aggs: { types_count: { value_count: { field: studyIdKey } } } },
       size: 0,
     });
     return body?.aggregations?.types_count.value;
@@ -84,12 +90,14 @@ export const fetchParticipantStats = async (): Promise<number> => {
   try {
     const { body } = await client.search({
       index: esParticipantIndex,
-      body: {
-        aggs: { types_count: { value_count: { field: participantIdKey } } },
-      },
+      body: { aggs: { types_count: { value_count: { field: participantIdKey } } } },
       size: 0,
     });
-    return body?.aggregations?.types_count.value;
+    let participantsCount = body?.aggregations?.types_count.value;
+    if (addCagCount) {
+      participantsCount += cagParticipantsCount;
+    }
+    return participantsCount;
   } catch (error) {
     console.log('[fetchParticipantStats] error: ', error);
     return null;
@@ -100,12 +108,14 @@ export const fetchBiospecimenStats = async (): Promise<number> => {
   try {
     const { body } = await client.search({
       index: esBiospecimenIndex,
-      body: {
-        aggs: { types_count: { value_count: { field: biospecimenIdKey } } },
-      },
+      body: { aggs: { types_count: { value_count: { field: biospecimenIdKey } } } },
       size: 0,
     });
-    return body?.aggregations?.types_count.value;
+    let biospecimensCount = body?.aggregations?.types_count.value;
+    if (addCagCount) {
+      biospecimensCount += cagBiospecimensCount;
+    }
+    return biospecimensCount;
   } catch (error) {
     console.log('[fetchBiospecimenStats] error: ', error);
     return null;
@@ -116,9 +126,7 @@ export const fetchVariantStats = async (): Promise<number> => {
   try {
     const { body } = await client.search({
       index: esVariantIndex,
-      body: {
-        aggs: { types_count: { value_count: { field: variantIdKey } } },
-      },
+      body: { aggs: { types_count: { value_count: { field: variantIdKey } } } },
       size: 0,
     });
     return body?.aggregations?.types_count.value;
