@@ -46,7 +46,7 @@ export const cacheTTL: number = Number.parseInt(process.env.CACHE_TTL_SEC) || 36
 
 // CQDG-434
 export const addCagCount = process.env.ADD_CAG_COUNT === 'true';
-export const cagFilesCount = process.env.CAG_FILES_COUNT || 10900;
-export const cagFilesSize = process.env.CAG_FILES_SIZE || 11035156250;
-export const cagParticipantsCount = process.env.CAG_PARTICIPANTS_COUNT || 2179;
-export const cagBiospecimensCount = process.env.CAG_BIOSPECIMENS_COUNT || 2179;
+export const cagFilesCount = Number(process.env.CAG_FILES_COUNT) || 10900;
+export const cagFilesSize = Number(process.env.CAG_FILES_SIZE) || 11035156250;
+export const cagParticipantsCount = Number(process.env.CAG_PARTICIPANTS_COUNT) || 2179;
+export const cagBiospecimensCount = Number(process.env.CAG_BIOSPECIMENS_COUNT) || 2179;
