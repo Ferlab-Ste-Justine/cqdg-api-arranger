@@ -23,8 +23,8 @@ import {
   participantIdKey,
   studyIdKey,
   variantIdKey,
-} from '../config/env';
-import { SUGGESTIONS_TYPES } from '../endpoints/genomicFeatureSuggestions';
+} from '../../config/env';
+import { SUGGESTIONS_TYPES } from '../../endpoints/genomicFeatureSuggestions';
 
 const client = new Client({
   node: esHost,

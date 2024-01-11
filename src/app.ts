@@ -1,12 +1,11 @@
-import addAsync from '@awaitjs/express';
 import SQS from 'aws-sdk/clients/sqs';
 import compression from 'compression';
 import cors from 'cors';
 import express, { Express } from 'express';
 import { Keycloak } from 'keycloak-connect';
+import { createRequire } from 'module';
 import NodeCache from 'node-cache';
 
-import { dependencies, version } from '../package.json';
 import { cacheTTL, esHost, keycloakURL } from './config/env';
 import genomicFeatureSuggestions, { SUGGESTIONS_TYPES } from './endpoints/genomicFeatureSuggestions';
 import { getPhenotypesNodes } from './endpoints/phenotypes';
@@ -28,8 +27,12 @@ import { resolveSetIdMiddleware } from './middleware/resolveSetIdInSqon';
 import { ArrangerProject } from './sqon/searchSqon';
 import { globalErrorHandler, globalErrorLogger } from './utils/errors';
 
-export default (keycloak: Keycloak, sqs: SQS, getProject: (projectId: string) => ArrangerProject): Express => {
-  const app = addAsync.addAsync(express());
+const require = createRequire(import.meta.url);
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { dependencies, version } = require('../package.json');
+
+const buildApp = (keycloak: Keycloak, sqs: SQS, getProject: (projectId: string) => ArrangerProject): Express => {
+  const app = express();
 
   const cache = new NodeCache({ stdTTL: cacheTTL });
 
@@ -51,7 +54,7 @@ export default (keycloak: Keycloak, sqs: SQS, getProject: (projectId: string) =>
     }),
   );
 
-  app.useAsync(resolveSetIdMiddleware());
+  app.use(resolveSetIdMiddleware());
 
   app.get('/status', (_req, res) =>
     res.send({
@@ -67,20 +70,20 @@ export default (keycloak: Keycloak, sqs: SQS, getProject: (projectId: string) =>
     res.send('OK');
   });
 
-  app.getAsync('/genesFeature/suggestions/:prefix', (req, res) =>
+  app.get('/genesFeature/suggestions/:prefix', (req, res) =>
     genomicFeatureSuggestions(req, res, SUGGESTIONS_TYPES.GENE),
   );
-  app.getAsync('/variantsFeature/suggestions/:prefix', (req, res) =>
+  app.get('/variantsFeature/suggestions/:prefix', (req, res) =>
     genomicFeatureSuggestions(req, res, SUGGESTIONS_TYPES.VARIANT),
   );
 
-  app.getAsync('/statistics', verifyCache(STATISTICS_CACHE_ID, cache), async (req, res) => {
+  app.get('/statistics', verifyCache(STATISTICS_CACHE_ID, cache), async (req, res) => {
     const data = await getStatistics();
     cache.set(STATISTICS_CACHE_ID, data);
     res.json(data);
   });
 
-  app.postAsync('/searchByIds', async (req, res) => {
+  app.post('/searchByIds', async (req, res) => {
     const ids: string[] = req.body.ids;
     const projectId: string = req.body.project;
     const participants: SearchByIdsResult[] = await searchAllSources(ids, projectId, getProject);
@@ -88,14 +91,14 @@ export default (keycloak: Keycloak, sqs: SQS, getProject: (projectId: string) =>
     res.send({ participants });
   });
 
-  app.getAsync('/sets', async (req, res) => {
+  app.get('/sets', async (req, res) => {
     const accessToken = req.headers.authorization;
     const userSets = await getSets(accessToken);
 
     res.send(userSets);
   });
 
-  app.postAsync('/sets', async (req, res) => {
+  app.post('/sets', async (req, res) => {
     const accessToken = req.headers.authorization;
     const userId = req['kauth']?.grant?.access_token?.content?.sub;
     const createdSet = await createSet(req.body as CreateSetBody, accessToken, userId, sqs, getProject);
@@ -103,7 +106,7 @@ export default (keycloak: Keycloak, sqs: SQS, getProject: (projectId: string) =>
     res.send(createdSet);
   });
 
-  app.putAsync('/sets/:setId', async (req, res) => {
+  app.put('/sets/:setId', async (req, res) => {
     const requestBody: UpdateSetTagBody | UpdateSetContentBody = req.body;
     const accessToken = req.headers.authorization;
     const userId = req['kauth']?.grant?.access_token?.content?.sub;
@@ -125,7 +128,7 @@ export default (keycloak: Keycloak, sqs: SQS, getProject: (projectId: string) =>
     res.send(updatedSet);
   });
 
-  app.deleteAsync('/sets/:setId', async (req, res) => {
+  app.delete('/sets/:setId', async (req, res) => {
     const accessToken = req.headers.authorization;
     const userId = req['kauth']?.grant?.access_token?.content?.sub;
     const setId: string = req.params.setId;
@@ -135,7 +138,7 @@ export default (keycloak: Keycloak, sqs: SQS, getProject: (projectId: string) =>
     res.send(deletedResult);
   });
 
-  app.postAsync('/phenotypes', async (req, res) => {
+  app.post('/phenotypes', async (req, res) => {
     const accessToken = req.headers.authorization;
     const sqon: SetSqon = req.body.sqon;
     const type: string = req.body.type;
@@ -153,8 +156,9 @@ export default (keycloak: Keycloak, sqs: SQS, getProject: (projectId: string) =>
     res.send({ data });
   });
 
-  //todo: commented cuz hide err, to verify whyy
   app.use(globalErrorLogger, globalErrorHandler);
 
   return app;
 };
+
+export default buildApp;

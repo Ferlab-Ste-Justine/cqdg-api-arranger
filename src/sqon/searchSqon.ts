@@ -4,7 +4,7 @@ import { maxSetContentSize } from '../config/env';
 import { SetSqon, Sort } from '../endpoints/sets/setsTypes';
 
 export type ArrangerProject = {
-  runQuery: ({ query: string, variables: unknown }) => Promise<unknown>;
+  runQuery: ({ query, variables }) => Promise<unknown>;
 };
 
 export const searchSqon = async (
