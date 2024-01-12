@@ -1,17 +1,15 @@
 {
     "compilerOptions": {
-        "resolveJsonModule": true,
-        "module": "commonjs",
         "esModuleInterop": true,
-        "target": "es6",
         "moduleResolution": "node",
+        "module": "ESNext",
+        "target": "ESNext",
         "sourceMap": true,
         "outDir": "dist",
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true
     },
-    "lib": ["es2015"],
     "exclude": ["node_modules"],
-    "include": [
-        "src/**/*"
-    ]
+    "include": ["src"]
 }
