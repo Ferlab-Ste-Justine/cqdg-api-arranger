@@ -1,30 +1,30 @@
+import { CONSTANTS as ARRANGER_CONSTANTS } from '@arranger/middleware';
 import { GraphQLEnumType, GraphQLInputObjectType, GraphQLList, GraphQLString } from 'graphql';
 
 const OpType = new GraphQLEnumType({
   name: 'OpType',
   description: '',
   values: {
-    //TODO get from arranger mappings
-    in: { value: 'in' },
-    or: { value: 'or' },
-    and: { value: 'and' },
+    in: { value: ARRANGER_CONSTANTS.in },
+    or: { value: ARRANGER_CONSTANTS.or },
+    and: { value: ARRANGER_CONSTANTS.and },
   },
 });
 
-const ContentType = new GraphQLInputObjectType({
-  name: 'ContentType',
-  fields: {
+const SqonContentType = new GraphQLInputObjectType({
+  name: 'SqonContentType',
+  fields: () => ({
     field: { type: GraphQLString },
     value: { type: new GraphQLList(GraphQLString) },
-  },
+  }),
 });
 
 const SqonElementType = new GraphQLInputObjectType({
   name: 'SqonElement',
-  fields: {
-    content: { type: ContentType },
+  fields: () => ({
+    content: { type: SqonContentType },
     op: { type: OpType },
-  },
+  }),
 });
 
 export const RootSqonType = new GraphQLInputObjectType({

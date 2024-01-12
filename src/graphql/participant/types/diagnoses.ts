@@ -1,6 +1,7 @@
-import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql/index';
+import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
-import { aggregationsType, AggsStateType, ColumnsStateType, hitsArgsType, jsonType, MatchBoxStateType } from './index';
+import { aggregationsType, AggsStateType, ColumnsStateType, hitsArgsType, MatchBoxStateType } from '../../common/types';
+import GraphQLJSON from '../../common/types/jsonType';
 
 export const DiagnosisType = new GraphQLObjectType({
   name: 'DiagnosisType',
@@ -20,7 +21,7 @@ export const DiagnosisType = new GraphQLObjectType({
 const DiagnosisEdgesType = new GraphQLObjectType({
   name: 'DiagnosisEdgesType',
   fields: () => ({
-    searchAfter: { type: jsonType },
+    searchAfter: { type: GraphQLJSON },
     node: { type: DiagnosisType },
   }),
 });

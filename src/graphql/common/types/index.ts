@@ -1,21 +1,22 @@
-import { GraphQLBoolean, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLScalarType, GraphQLString } from 'graphql';
+import { GraphQLBoolean, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
+import GraphQLJSON from './jsonType';
 import { SortType } from './sortType';
-
-export const jsonType = new GraphQLScalarType({
-  name: 'JSON',
-  serialize(value) {
-    return JSON.stringify(value);
-  },
-});
+import { RootSqonType } from './sqonType';
 
 export const hitsArgsType = {
   first: { type: GraphQLInt },
   offset: { type: GraphQLInt },
   sort: { type: new GraphQLList(SortType) },
-  sqon: { type: jsonType },
-  searchAfter: { type: jsonType },
-  filters: { type: jsonType },
+  sqon: { type: RootSqonType },
+  searchAfter: { type: GraphQLJSON },
+  filters: { type: GraphQLJSON },
+};
+
+export const aggregationsArgsType = {
+  sqon: { type: RootSqonType },
+  aggregations_filter_themselves: { type: GraphQLBoolean },
+  include_missing: { type: GraphQLBoolean },
 };
 
 export const AggsStateType = new GraphQLObjectType({

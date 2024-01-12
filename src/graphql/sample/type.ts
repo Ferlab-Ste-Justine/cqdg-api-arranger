@@ -1,15 +1,9 @@
 import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
-import {
-  aggregationsType,
-  AggsStateType,
-  ColumnsStateType,
-  hitsArgsType,
-  jsonType,
-  MatchBoxStateType,
-} from '../common/types';
+import { aggregationsType, AggsStateType, ColumnsStateType, hitsArgsType, MatchBoxStateType } from '../common/types';
+import GraphQLJSON from '../common/types/jsonType';
 import FilesType from '../file/type';
-import { ParticipantType } from '../participant/type';
+import { ParticipantType } from '../participant/types';
 import { StudyType } from '../study/type';
 import SampleModel from './model';
 
@@ -41,7 +35,7 @@ const SampleType = new GraphQLObjectType({
 const SampleEdgesType = new GraphQLObjectType({
   name: 'SampleEdgesType',
   fields: () => ({
-    searchAfter: { type: jsonType },
+    searchAfter: { type: GraphQLJSON },
     node: { type: SampleType },
   }),
 });
@@ -64,8 +58,15 @@ const SamplesType = new GraphQLObjectType({
       type: SampleHitsType,
       args: hitsArgsType,
       resolve: async (parent, args, context) => {
-        const results = await SampleModel.getHits(args.first, args.sqon, args.sort, context);
-        return { total: results?.length || 0, edges: results || [] };
+        const result = await SampleModel.getHits({
+          first: args.first,
+          offset: args.offset,
+          sqon: args.sqon,
+          sort: args.sort,
+          searchAfter: args.searchAfter,
+          context,
+        });
+        return { total: result.total || 0, edges: result.hits || [] };
       },
     },
     mapping: { type: GraphQLString },

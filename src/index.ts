@@ -3,7 +3,6 @@ import 'regenerator-runtime/runtime.js';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
-import Arranger from '@arranger/server';
 import { getProject } from '@arranger/server';
 import { Client } from '@elastic/elasticsearch';
 import SQS from 'aws-sdk/clients/sqs';
@@ -51,6 +50,7 @@ app.use('/graphql', cors(), express.json({ limit: '50mb' }), expressMiddleware(s
 await new Promise<void>(resolve => httpServer.listen({ port }, resolve));
 console.log(`🚀 Server ready on ${port} ⚡️`);
 
+// import Arranger from '@arranger/server';
 // Arranger({
 //   esHost,
 //   esUser,

@@ -1,4 +1,4 @@
-import VariantsType from './types/variant';
+import VariantsType from './types';
 
 export const getVariants = {
   type: VariantsType,

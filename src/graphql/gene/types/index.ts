@@ -1,13 +1,7 @@
 import { GraphQLBoolean, GraphQLFloat, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
-import {
-  aggregationsType,
-  AggsStateType,
-  ColumnsStateType,
-  hitsArgsType,
-  jsonType,
-  MatchBoxStateType,
-} from '../../common/types';
+import { aggregationsType, AggsStateType, ColumnsStateType, hitsArgsType, MatchBoxStateType } from '../../common/types';
+import GraphQLJSON from '../../common/types/jsonType';
 import GeneModel from '../model';
 import CosmicsType from './cosmic';
 import DddsType from './ddd';
@@ -21,7 +15,7 @@ const ConsequenceType = new GraphQLObjectType({
   }),
 });
 
-const GeneType = new GraphQLObjectType({
+export const GeneType = new GraphQLObjectType({
   name: 'Gene',
   fields: () => ({
     id: { type: GraphQLString },
@@ -54,12 +48,15 @@ const GeneType = new GraphQLObjectType({
     omim: { type: GraphQLString },
     orphanet: { type: GraphQLString },
   }),
+  extensions: {
+    nestedFields: ['consequences'],
+  },
 });
 
 const GeneEdgesType = new GraphQLObjectType({
   name: 'GeneEdgesType',
   fields: () => ({
-    searchAfter: { type: jsonType },
+    searchAfter: { type: GraphQLJSON },
     node: { type: GeneType },
   }),
 });
@@ -82,7 +79,8 @@ const GenesType = new GraphQLObjectType({
       type: GeneHitsType,
       args: hitsArgsType,
       resolve: async (parent, args, context) => {
-        const results = await GeneModel.getHits(args.first, args.sqon, args.sort, context);
+        // const results = await GeneModel.getHits(args.first, args.sqon, args.sort, context);
+        const results = parent.genes;
         return { total: results?.length || 0, edges: results || [] };
       },
     },

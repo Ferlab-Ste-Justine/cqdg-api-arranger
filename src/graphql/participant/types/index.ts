@@ -1,18 +1,13 @@
 import { GraphQLBoolean, GraphQLEnumType, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
-import {
-  aggregationsType,
-  AggsStateType,
-  ColumnsStateType,
-  hitsArgsType,
-  jsonType,
-  MatchBoxStateType,
-} from '../common/types';
-import DiagnosesType from '../common/types/diagnoses';
-import FileModel from '../file/model';
-import FilesType from '../file/type';
-import SamplesType from '../sample/type';
-import ParticipantModel from './model';
+import { aggregationsType, AggsStateType, ColumnsStateType, hitsArgsType, MatchBoxStateType } from '../../common/types';
+import GraphQLJSON from '../../common/types/jsonType';
+import { getGQLFields } from '../../common/utils';
+import FileModel from '../../file/model';
+import FilesType from '../../file/type';
+import SamplesType from '../../sample/type';
+import ParticipantModel from '../model';
+import DiagnosesType from './diagnoses';
 
 const GenderType = new GraphQLEnumType({
   name: 'Gender',
@@ -45,10 +40,14 @@ export const ParticipantType = new GraphQLObjectType({
     study_id: { type: GraphQLString },
     submitter_participant_id: { type: GraphQLString },
     vital_status: { type: GraphQLString },
+    //get files direct
+    files: { type: FilesType },
+    //get files with new field from resolve
     files_from_participant: {
       type: FilesType,
       resolve: async participant => ({ hits: participant.files || [] }),
     },
+    //get files with new field from file index
     files_from_es: {
       type: FilesType,
       args: hitsArgsType,
@@ -82,7 +81,7 @@ export const ParticipantType = new GraphQLObjectType({
 const ParticipantEdgesType = new GraphQLObjectType({
   name: 'ParticipantEdgesType',
   fields: () => ({
-    searchAfter: { type: jsonType },
+    searchAfter: { type: GraphQLJSON },
     node: { type: ParticipantType },
   }),
 });
@@ -105,8 +104,15 @@ const ParticipantsType = new GraphQLObjectType({
       type: ParticipantHitsType,
       args: hitsArgsType,
       resolve: async (parent, args, context) => {
-        const results = await ParticipantModel.getHits(args.first, args.sqon, args.sort, context);
-        return { total: results?.length || 0, edges: results || [] };
+        const result = await ParticipantModel.getHits({
+          sqon: args.sqon,
+          sort: args.sort,
+          first: args.first,
+          offset: args.offset,
+          searchAfter: args.searchAfter,
+          context,
+        });
+        return { total: result.total || 0, edges: result.hits || [] };
       },
     },
     mapping: { type: GraphQLString },
@@ -114,7 +120,19 @@ const ParticipantsType = new GraphQLObjectType({
     aggsState: { type: AggsStateType },
     columnsState: { type: ColumnsStateType },
     matchBoxState: { type: MatchBoxStateType },
-    aggregations: { type: aggregationsType },
+    aggregations: {
+      type: aggregationsType,
+      resolve: (parent, args, context, info) => {
+        const graphqlFields = getGQLFields(info);
+        return ParticipantModel.getAggs(
+          args.sqon,
+          args.aggregations_filter_themselves,
+          args.include_missing,
+          context,
+          graphqlFields,
+        );
+      },
+    },
   }),
 });
 

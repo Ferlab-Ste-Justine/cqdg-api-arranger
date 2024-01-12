@@ -1,17 +1,12 @@
 import { GraphQLBoolean, GraphQLFloat, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
-import {
-  aggregationsType,
-  AggsStateType,
-  ColumnsStateType,
-  hitsArgsType,
-  jsonType,
-  MatchBoxStateType,
-} from '../common/types';
+import { aggregationsType, AggsStateType, ColumnsStateType, hitsArgsType, MatchBoxStateType } from '../common/types';
+import GraphQLJSON from '../common/types/jsonType';
 import StudyModel from './model';
 
 export const StudyType = new GraphQLObjectType({
   name: 'Study',
+
   fields: () => ({
     id: { type: GraphQLString },
     data_category: { type: GraphQLString },
@@ -27,6 +22,12 @@ export const StudyType = new GraphQLObjectType({
     mondo_terms: { type: new GraphQLList(GraphQLString) },
     name: { type: GraphQLString },
     participant_count: { type: GraphQLFloat },
+    participant_count2: {
+      type: GraphQLFloat,
+      resolve: study => {
+        //do req to ES on participant_secret_centric index
+      },
+    },
     population: { type: GraphQLString },
     release_id: { type: GraphQLString },
     sample_count: { type: GraphQLFloat },
@@ -35,6 +36,7 @@ export const StudyType = new GraphQLObjectType({
     study_code: { type: GraphQLString },
     study_id: { type: GraphQLString },
     study_version: { type: GraphQLString },
+
     // contact: { type: StudyContact },
     // data_access_codes: { type: StudyData_access_codes },
   }),
@@ -43,7 +45,7 @@ export const StudyType = new GraphQLObjectType({
 const StudyEdgesType = new GraphQLObjectType({
   name: 'StudyEdgesType',
   fields: () => ({
-    searchAfter: { type: jsonType },
+    searchAfter: { type: GraphQLJSON },
     node: { type: StudyType },
   }),
 });
@@ -66,8 +68,15 @@ const StudiesType = new GraphQLObjectType({
       type: StudiesHitsType,
       args: hitsArgsType,
       resolve: async (parent, args, context) => {
-        const results = await StudyModel.getHits(args.first, args.sqon, args.sort, context);
-        return { total: results?.length || 0, edges: results || [] };
+        const result = await StudyModel.getHits({
+          first: args.first,
+          offset: args.offset,
+          sqon: args.sqon,
+          sort: args.sort,
+          searchAfter: args.searchAfter,
+          context,
+        });
+        return { total: result.total || 0, edges: result.hits || [] };
       },
     },
     mapping: { type: GraphQLString },

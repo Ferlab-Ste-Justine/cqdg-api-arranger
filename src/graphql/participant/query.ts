@@ -1,4 +1,4 @@
-import ParticipantsType from './type';
+import ParticipantsType from './types';
 
 export const getParticipants = {
   type: ParticipantsType,

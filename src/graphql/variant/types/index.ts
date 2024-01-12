@@ -1,9 +1,17 @@
-import { GraphQLFloat, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
+import { GraphQLBoolean, GraphQLFloat, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
-import { aggregationsType, AggsStateType, ColumnsStateType, hitsArgsType, MatchBoxStateType } from '../../common/types';
-import GeneType from '../../gene/types/gene';
-import VariantModel from '../model';
+import {
+  aggregationsArgsType,
+  AggsStateType,
+  ColumnsStateType,
+  hitsArgsType,
+  MatchBoxStateType,
+} from '../../common/types';
+import GraphQLJSON from '../../common/types/jsonType';
+import GenesType from '../../gene/types';
+import { aggResolver, hitsResolver } from '../resolvers';
 import { frequenciesType } from './frequencies';
+import VariantAggType from './variantAggType';
 import VariantStudiesType from './variantStudies';
 
 const ClinvarType = new GraphQLObjectType({
@@ -22,7 +30,7 @@ const VariantType = new GraphQLObjectType({
   fields: () => ({
     id: { type: GraphQLString },
     studies: { type: VariantStudiesType },
-    genes: { type: new GraphQLList(GeneType) },
+    genes: { type: GenesType },
     alternate: { type: GraphQLString },
     assembly_version: { type: GraphQLString },
     chromosome: { type: GraphQLString },
@@ -57,7 +65,7 @@ const VariantEdgesType = new GraphQLObjectType({
   }),
 });
 
-const VariantHitsType = new GraphQLObjectType({
+export const VariantHitsType = new GraphQLObjectType({
   name: 'VariantHitsType',
   fields: () => ({
     total: { type: GraphQLInt },
@@ -68,23 +76,59 @@ const VariantHitsType = new GraphQLObjectType({
   }),
 });
 
+const extendedType = new GraphQLObjectType({
+  name: 'extendedType',
+  fields: () => ({
+    unit: { type: GraphQLString },
+    displayValues: { type: GraphQLJSON },
+    quickSearchEnabled: { type: GraphQLBoolean },
+    field: { type: GraphQLString },
+    displayName: { type: GraphQLString },
+    active: { type: GraphQLBoolean },
+    isArray: { type: GraphQLBoolean },
+    rangeStep: { type: GraphQLInt },
+    type: { type: GraphQLString },
+    gqlId: { type: GraphQLString },
+    primaryKey: { type: GraphQLBoolean },
+  }),
+});
+
 const VariantsType = new GraphQLObjectType({
   name: 'VariantsType',
   fields: () => ({
     hits: {
       type: VariantHitsType,
       args: hitsArgsType,
-      resolve: async (parent, args, context) => {
-        const results = await VariantModel.getHits(args.first, args.sqon, args.sort, context);
-        return { total: results?.length || 0, edges: results || [] };
-      },
+      resolve: hitsResolver,
     },
     mapping: { type: GraphQLString },
-    extended: { type: GraphQLString },
+    extended: {
+      type: GraphQLJSON,
+      //todo: test in progress
+      resolve: () => [
+        {
+          unit: null,
+          displayValues: {},
+          quickSearchEnabled: false,
+          field: 'studies',
+          displayName: 'Studies',
+          active: false,
+          isArray: false,
+          rangeStep: 1,
+          type: 'nested',
+          gqlId: 'cqdg::Variant::extended::studies',
+          primaryKey: false,
+        },
+      ],
+    },
     aggsState: { type: AggsStateType },
     columnsState: { type: ColumnsStateType },
     matchBoxState: { type: MatchBoxStateType },
-    aggregations: { type: aggregationsType },
+    aggregations: {
+      type: VariantAggType,
+      args: aggregationsArgsType,
+      resolve: aggResolver,
+    },
   }),
 });
 

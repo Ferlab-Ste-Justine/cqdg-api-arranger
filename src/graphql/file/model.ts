@@ -1,5 +1,6 @@
 import { esFileIndex } from '../../config/env';
-import searchHits from '../common/searchHits';
+import { getBody } from '../../services/elasticsearch/utils';
+import { searchHits } from '../elasticsearch';
 import FileType from './type';
 
 const get = async (file_id, context) => {
@@ -7,27 +8,25 @@ const get = async (file_id, context) => {
   return body._source;
 };
 
-const getHits = async (first, sqon, sort, context) =>
-  searchHits(context.es, sqon, sort, FileType.extensions.nestedFields as any, {
+const getHits = async ({ first, offset, sqon, sort, searchAfter, context }) => {
+  const searchParams = {
     index: esFileIndex,
     size: first,
+    searchAfter,
+    offset,
+  };
+  const nestedFields = FileType.extensions.nestedFields || [];
+  return searchHits({
+    es: context.es,
+    sqon,
+    sort,
+    nestedFields,
+    searchParams,
   });
+};
 
 const getBy = async ({ field, value, path, args, context }) => {
-  const body = {
-    query: {
-      bool: {
-        must: [
-          {
-            nested: {
-              path,
-              query: { bool: { must: [{ match: { [field]: value } }] } },
-            },
-          },
-        ],
-      },
-    },
-  };
+  const body = getBody({ field, value, path, nested: FileType?.extensions?.nestedFields?.includes(path) });
 
   const res = await context.es.search({
     index: esFileIndex,
