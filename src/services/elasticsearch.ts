@@ -2,12 +2,7 @@ import { Client } from '@elastic/elasticsearch';
 import filesize from 'filesize';
 
 import {
-  addCagCount,
   biospecimenIdKey,
-  cagBiospecimensCount,
-  cagFilesCount,
-  cagFilesSize,
-  cagParticipantsCount,
   esBiospecimenIndex,
   esFileIndex,
   esHost,
@@ -43,11 +38,7 @@ export const fetchFileStats = async (): Promise<number> => {
       body: { aggs: { types_count: { value_count: { field: fileIdKey } } } },
       size: 0,
     });
-    let filesCount = body?.aggregations?.types_count.value;
-    if (addCagCount) {
-      filesCount += cagFilesCount;
-    }
-    return filesCount;
+    return body?.aggregations?.types_count.value;
   } catch (error) {
     console.log('[fetchFileStats] error: ', error);
     return null;
@@ -61,10 +52,7 @@ export const fetchFileSizeStats = async (): Promise<string> => {
       body: { aggs: { types_count: { sum: { field: 'file_size' } } } },
       size: 0,
     });
-    let filesSize = body?.aggregations?.types_count.value;
-    if (addCagCount) {
-      filesSize += cagFilesSize;
-    }
+    const filesSize = body?.aggregations?.types_count.value;
     return filesize(filesSize).replace(' ', '');
   } catch (error) {
     console.log('[fetchFileSizeStats] error: ', error);
@@ -93,11 +81,7 @@ export const fetchParticipantStats = async (): Promise<number> => {
       body: { aggs: { types_count: { value_count: { field: participantIdKey } } } },
       size: 0,
     });
-    let participantsCount = body?.aggregations?.types_count.value;
-    if (addCagCount) {
-      participantsCount += cagParticipantsCount;
-    }
-    return participantsCount;
+    return body?.aggregations?.types_count.value;
   } catch (error) {
     console.log('[fetchParticipantStats] error: ', error);
     return null;
@@ -111,11 +95,7 @@ export const fetchBiospecimenStats = async (): Promise<number> => {
       body: { aggs: { types_count: { value_count: { field: biospecimenIdKey } } } },
       size: 0,
     });
-    let biospecimensCount = body?.aggregations?.types_count.value;
-    if (addCagCount) {
-      biospecimensCount += cagBiospecimensCount;
-    }
-    return biospecimensCount;
+    return body?.aggregations?.types_count.value;
   } catch (error) {
     console.log('[fetchBiospecimenStats] error: ', error);
     return null;
