@@ -2,6 +2,7 @@ import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graph
 
 import { aggregationsType, AggsStateType, ColumnsStateType, MatchBoxStateType } from '../../common/types';
 import { totalType } from './frequencies';
+import GraphQLJSON from './variant';
 
 /** way of have hits.edges.node all combined in one const type */
 export const VariantStudiesType = new GraphQLObjectType({
@@ -34,7 +35,7 @@ export const VariantStudiesType = new GraphQLObjectType({
                 }),
               }),
             ),
-            resolve: async parent => parent.edges.map(node => ({ searchAfter: [], node })),
+            resolve: async (parent, args) => parent.edges.map(node => ({ searchAfter: args?.searchAfter || [], node })),
           },
         }),
       }),
@@ -43,8 +44,8 @@ export const VariantStudiesType = new GraphQLObjectType({
         return { total: results?.length || 0, edges: results || [] };
       },
     },
-    mapping: { type: GraphQLString },
-    extended: { type: GraphQLString },
+    mapping: { type: GraphQLJSON },
+    extended: { type: GraphQLJSON },
     aggsState: { type: AggsStateType },
     columnsState: { type: ColumnsStateType },
     matchBoxState: { type: MatchBoxStateType },

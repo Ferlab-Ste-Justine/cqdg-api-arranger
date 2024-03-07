@@ -23,7 +23,7 @@ const CosmicHitsType = new GraphQLObjectType({
     total: { type: GraphQLInt },
     edges: {
       type: new GraphQLList(CosmicEdgesType),
-      resolve: async parent => parent.edges.map(node => ({ searchAfter: [], node })),
+      resolve: async (parent, args) => parent.edges.map(node => ({ searchAfter: args?.searchAfter || [], node })),
     },
   }),
 });

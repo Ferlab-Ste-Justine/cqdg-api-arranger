@@ -1,4 +1,4 @@
-import StudiesType from './type';
+import StudiesType from './types/study';
 
 export const getStudies = {
   type: StudiesType,

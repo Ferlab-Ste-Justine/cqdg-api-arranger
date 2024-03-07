@@ -1,22 +1,28 @@
-import { GraphQLBoolean, GraphQLFloat, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
+import { GraphQLFloat, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
+import { esGeneIndex } from '../../../config/env';
+import { hitsResolver } from '../../common/resolvers';
 import { aggregationsType, AggsStateType, ColumnsStateType, hitsArgsType, MatchBoxStateType } from '../../common/types';
 import GraphQLJSON from '../../common/types/jsonType';
-import GeneModel from '../model';
+import { ParticipantType } from '../../participant/types';
+import extendedMapping from '../extendedMapping';
+import ConsequencesType from './consequence';
 import CosmicsType from './cosmic';
 import DddsType from './ddd';
+import HposType from './hpo';
+import OmimsType from './omim';
+import OrphanetsType from './orphanet';
 
-const ConsequenceType = new GraphQLObjectType({
-  name: 'Consequence',
+const GnomadType = new GraphQLObjectType({
+  name: 'GnomadType',
   fields: () => ({
-    vep_impact: { type: GraphQLString },
-    consequence: { type: new GraphQLList(GraphQLString) },
-    picked: { type: GraphQLBoolean },
+    loeuf: { type: GraphQLFloat },
+    pli: { type: GraphQLFloat },
   }),
 });
 
 export const GeneType = new GraphQLObjectType({
-  name: 'Gene',
+  name: 'GeneType',
   fields: () => ({
     id: { type: GraphQLString },
     alias: { type: new GraphQLList(GraphQLString) },
@@ -31,25 +37,17 @@ export const GeneType = new GraphQLObjectType({
     omim_gene_id: { type: GraphQLString },
     search_text: { type: GraphQLString },
     symbol: { type: GraphQLString },
-    consequences: { type: new GraphQLList(ConsequenceType) },
+    consequences: { type: ConsequencesType },
     cosmic: { type: CosmicsType },
     ddd: { type: DddsType },
-    gnomad: {
-      type: new GraphQLObjectType({
-        name: 'GeneGnomad',
-        fields: () => ({
-          loeuf: { type: GraphQLFloat },
-          pli: { type: GraphQLFloat },
-        }),
-      }),
-    },
-    //todo hpo omim orpha
-    hpo: { type: GraphQLString },
-    omim: { type: GraphQLString },
-    orphanet: { type: GraphQLString },
+    gnomad: { type: GnomadType },
+    hpo: { type: HposType },
+    omim: { type: OmimsType },
+    orphanet: { type: OrphanetsType },
   }),
   extensions: {
     nestedFields: ['consequences'],
+    esIndex: esGeneIndex,
   },
 });
 
@@ -67,7 +65,7 @@ const GeneHitsType = new GraphQLObjectType({
     total: { type: GraphQLInt },
     edges: {
       type: new GraphQLList(GeneEdgesType),
-      resolve: async parent => parent.edges.map(node => ({ searchAfter: [], node })),
+      resolve: async (parent, args) => parent.edges.map(node => ({ searchAfter: args?.searchAfter || [], node })),
     },
   }),
 });
@@ -78,18 +76,18 @@ const GenesType = new GraphQLObjectType({
     hits: {
       type: GeneHitsType,
       args: hitsArgsType,
-      resolve: async (parent, args, context) => {
-        // const results = await GeneModel.getHits(args.first, args.sqon, args.sort, context);
-        const results = parent.genes;
-        return { total: results?.length || 0, edges: results || [] };
-      },
+      resolve: (parent, args) => hitsResolver(args, GeneType),
     },
-    mapping: { type: GraphQLString },
-    extended: { type: GraphQLString },
+    mapping: { type: GraphQLJSON },
+    extended: {
+      type: GraphQLJSON,
+      resolve: () => extendedMapping,
+    },
     aggsState: { type: AggsStateType },
     columnsState: { type: ColumnsStateType },
     matchBoxState: { type: MatchBoxStateType },
     aggregations: { type: aggregationsType },
   }),
 });
+
 export default GenesType;

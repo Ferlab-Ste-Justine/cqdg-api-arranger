@@ -1,28 +1,10 @@
 import { esGeneIndex } from '../../config/env';
 import { getBody } from '../../services/elasticsearch/utils';
-import { searchHits } from '../elasticsearch';
-import { GeneType } from './types';
+import { GeneType } from './types/gene';
 
 const get = async (file_id, context) => {
   const { body } = await context.es.get({ index: esGeneIndex, file_id });
   return body._source;
-};
-
-const getHits = async ({ first, offset, sqon, sort, searchAfter, context }) => {
-  const searchParams = {
-    index: esGeneIndex,
-    size: first,
-    searchAfter,
-    offset,
-  };
-  const nestedFields = GeneType?.extensions?.nestedFields || [];
-  return searchHits({
-    es: context.es,
-    sqon,
-    sort,
-    nestedFields,
-    searchParams,
-  });
 };
 
 const getBy = async ({ field, value, path, args, context }) => {
@@ -44,7 +26,6 @@ const getBy = async ({ field, value, path, args, context }) => {
 
 const GeneModel = {
   get,
-  getHits,
   getBy,
 };
 

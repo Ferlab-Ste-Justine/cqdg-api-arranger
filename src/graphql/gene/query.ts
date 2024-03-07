@@ -1,4 +1,4 @@
-import GenesType from './types';
+import GenesType from './types/gene';
 
 export const getGenes = {
   type: GenesType,

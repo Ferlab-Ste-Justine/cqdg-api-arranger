@@ -1,4 +1,4 @@
-import SamplesType from './type';
+import SamplesType from './types/sample';
 
 export const getSamples = {
   type: SamplesType,

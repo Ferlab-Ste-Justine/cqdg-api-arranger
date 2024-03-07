@@ -12,21 +12,12 @@ import http from 'http';
 import Keycloak from 'keycloak-connect';
 
 import buildApp from './app';
-import { esHost, esPass, esUser, isDev, port } from './config/env';
+import { port } from './config/env';
 import keycloakConfig from './config/keycloak';
 import schema from './graphql/schema';
 
-const client = new Client({
-  node: esHost,
-  auth: {
-    password: esPass,
-    username: esUser,
-  },
-});
-
 const context = async req => ({
   auth: req.kauth?.grant?.access_token || {},
-  es: client,
 });
 
 const keycloak = new Keycloak({}, keycloakConfig);

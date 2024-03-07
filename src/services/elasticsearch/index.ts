@@ -10,11 +10,8 @@ import {
   cagParticipantsCount,
   esBiospecimenIndex,
   esFileIndex,
-  esHost,
   esParticipantIndex,
-  esPass,
   esStudyIndex,
-  esUser,
   esVariantIndex,
   fileIdKey,
   indexNameGeneFeatureSuggestion,
@@ -25,16 +22,7 @@ import {
   variantIdKey,
 } from '../../config/env';
 import { SUGGESTIONS_TYPES } from '../../endpoints/genomicFeatureSuggestions';
-
-const client = new Client({
-  node: esHost,
-  auth: {
-    password: esPass,
-    username: esUser,
-  },
-});
-
-export default client;
+import client from './client';
 
 export const fetchFileStats = async (): Promise<number> => {
   try {

@@ -1,32 +1,17 @@
-import { esStudyIndex, esVariantIndex } from '../../config/env';
+import { esStudyIndex } from '../../config/env';
 import { getBody } from '../../services/elasticsearch/utils';
-import { searchHits } from '../elasticsearch';
-import StudyType from './type';
+import { StudyType } from './types/study';
 
 const get = async (file_id, context) => {
   const { body } = await context.es.get({ index: esStudyIndex, file_id });
   return body._source;
 };
 
-const getHits = async ({ first, offset, sqon, sort, searchAfter, context }) => {
-  const searchParams = {
-    index: esStudyIndex,
-    size: first,
-    searchAfter,
-    offset,
-  };
-  const nestedFields = StudyType.extensions.nestedFields || [];
-  return searchHits({
-    es: context.es,
-    sqon,
-    sort,
-    nestedFields,
-    searchParams,
-  });
-};
-
 const getBy = async ({ field, value, path, args, context }) => {
-  const body = getBody({ field, value, path, nested: StudyType?.extensions?.nestedFields?.includes(path) });
+  const isNested = Array.isArray(StudyType.extensions?.nestedFields)
+    ? StudyType.extensions.nestedFields.includes(path)
+    : false;
+  const body = getBody({ field, value, path, nested: isNested });
 
   const res = await context.es.search({
     index: esStudyIndex,
@@ -41,7 +26,6 @@ const getBy = async ({ field, value, path, args, context }) => {
 
 const StudyModel = {
   get,
-  getHits,
   getBy,
 };
 

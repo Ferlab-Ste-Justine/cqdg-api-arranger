@@ -1,6 +1,7 @@
 // Legacy code from arranger 2.16
 import { buildAggregations, buildQuery, flattenAggregations } from '@arranger/middleware';
 
+import esClient from '../../services/elasticsearch/client';
 import { DEFAULT_SORT, DEFAULT_SQON } from '../common/constants';
 
 const toGraphqlField = (acc, [a, b]) => ({
@@ -8,19 +9,19 @@ const toGraphqlField = (acc, [a, b]) => ({
   [a.replace(/\./g, '__')]: b,
 });
 
-const searchAggregations = async (
-  es,
+const searchAggregations = async ({
   sqon = DEFAULT_SQON,
   nestedFields = DEFAULT_SORT,
   graphqlFields,
   aggregationsFilterThemselves,
   includeMissing = true,
-  searchParams,
-) => {
+  index,
+}) => {
   const query = buildQuery({
     nestedFields,
     filters: sqon,
   });
+
   const aggs = buildAggregations({
     query,
     sqon,
@@ -31,16 +32,16 @@ const searchAggregations = async (
 
   const body = Object.keys(query || {}).length ? { query, aggs } : { aggs };
 
-  const { index } = searchParams;
-  const r = await es.search({
+  const result = await esClient.search({
     index,
-    size: 0,
-    _source: false,
+    // size: 0,
+    // from: 0,
+    track_total_hits: true,
     body,
   });
 
   const aggregations = flattenAggregations({
-    aggregations: r.body.aggregations,
+    aggregations: result.body.aggregations,
     includeMissing,
   });
 

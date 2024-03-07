@@ -8,15 +8,16 @@ export const hitsArgsType = {
   first: { type: GraphQLInt },
   offset: { type: GraphQLInt },
   sort: { type: new GraphQLList(SortType) },
-  sqon: { type: RootSqonType },
+  // sqon: { type: RootSqonType },
   searchAfter: { type: GraphQLJSON },
   filters: { type: GraphQLJSON },
 };
 
 export const aggregationsArgsType = {
-  sqon: { type: RootSqonType },
+  sqon: { type: GraphQLJSON },
   aggregations_filter_themselves: { type: GraphQLBoolean },
   include_missing: { type: GraphQLBoolean },
+  filters: { type: GraphQLJSON },
 };
 
 export const AggsStateType = new GraphQLObjectType({
@@ -62,8 +63,8 @@ export const aggregationsType = new GraphQLObjectType({
 });
 
 export const hitsOthersFields = {
-  mapping: { type: GraphQLString },
-  extended: { type: GraphQLString },
+  mapping: { type: GraphQLJSON },
+  extended: { type: GraphQLJSON },
   aggsState: { type: AggsStateType },
   columnsState: { type: ColumnsStateType },
   matchBoxState: { type: MatchBoxStateType },

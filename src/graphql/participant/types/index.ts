@@ -1,13 +1,26 @@
 import { GraphQLBoolean, GraphQLEnumType, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
-import { aggregationsType, AggsStateType, ColumnsStateType, hitsArgsType, MatchBoxStateType } from '../../common/types';
+import { esParticipantIndex } from '../../../config/env';
+import { aggsResolver, hitsResolver } from '../../common/resolvers';
+import {
+  aggregationsArgsType,
+  aggregationsType,
+  AggsStateType,
+  ColumnsStateType,
+  hitsArgsType,
+  MatchBoxStateType,
+} from '../../common/types';
 import GraphQLJSON from '../../common/types/jsonType';
 import { getGQLFields } from '../../common/utils';
 import FileModel from '../../file/model';
-import FilesType from '../../file/type';
-import SamplesType from '../../sample/type';
+import FilesType from '../../file/types/file';
+import SamplesType from '../../sample/types/sample';
+import { VariantType } from '../../variant/types/variant';
+import VariantAggType from '../../variant/types/variantAgg';
+import extendedMapping from '../extendedMapping';
 import ParticipantModel from '../model';
 import DiagnosesType from './diagnoses';
+import ParticipantAgg from './participantAgg';
 
 const GenderType = new GraphQLEnumType({
   name: 'Gender',
@@ -75,6 +88,7 @@ export const ParticipantType = new GraphQLObjectType({
   }),
   extensions: {
     nestedFields: ['files'],
+    esIndex: esParticipantIndex,
   },
 });
 
@@ -92,7 +106,7 @@ const ParticipantHitsType = new GraphQLObjectType({
     total: { type: GraphQLInt },
     edges: {
       type: new GraphQLList(ParticipantEdgesType),
-      resolve: async parent => parent.edges.map(node => ({ searchAfter: [], node })),
+      resolve: async (parent, args) => parent.edges.map(node => ({ searchAfter: args?.searchAfter || [], node })),
     },
   }),
 });
@@ -103,35 +117,20 @@ const ParticipantsType = new GraphQLObjectType({
     hits: {
       type: ParticipantHitsType,
       args: hitsArgsType,
-      resolve: async (parent, args, context) => {
-        const result = await ParticipantModel.getHits({
-          sqon: args.sqon,
-          sort: args.sort,
-          first: args.first,
-          offset: args.offset,
-          searchAfter: args.searchAfter,
-          context,
-        });
-        return { total: result.total || 0, edges: result.hits || [] };
-      },
+      resolve: (parent, args) => hitsResolver(args, ParticipantType),
     },
-    mapping: { type: GraphQLString },
-    extended: { type: GraphQLString },
+    mapping: { type: GraphQLJSON },
+    extended: {
+      type: GraphQLJSON,
+      resolve: () => extendedMapping,
+    },
     aggsState: { type: AggsStateType },
     columnsState: { type: ColumnsStateType },
     matchBoxState: { type: MatchBoxStateType },
     aggregations: {
-      type: aggregationsType,
-      resolve: (parent, args, context, info) => {
-        const graphqlFields = getGQLFields(info);
-        return ParticipantModel.getAggs(
-          args.sqon,
-          args.aggregations_filter_themselves,
-          args.include_missing,
-          context,
-          graphqlFields,
-        );
-      },
+      type: ParticipantAgg,
+      args: aggregationsArgsType,
+      resolve: (parent, args, context, info) => aggsResolver(args, info, ParticipantType),
     },
   }),
 });

@@ -1,13 +1,15 @@
 import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
-import { aggregationsType, AggsStateType, ColumnsStateType, hitsArgsType, MatchBoxStateType } from '../common/types';
-import GraphQLJSON from '../common/types/jsonType';
-import FilesType from '../file/type';
-import { ParticipantType } from '../participant/types';
-import { StudyType } from '../study/type';
-import SampleModel from './model';
+import { esBiospecimenIndex } from '../../../config/env';
+import { hitsResolver } from '../../common/resolvers';
+import { aggregationsType, AggsStateType, ColumnsStateType, hitsArgsType, MatchBoxStateType } from '../../common/types';
+import GraphQLJSON from '../../common/types/jsonType';
+import FilesType from '../../file/types/file';
+import { ParticipantType } from '../../participant/types';
+import { StudyType } from '../../study/types/study';
+import extendedMapping from '../extendedMapping';
 
-const SampleType = new GraphQLObjectType({
+export const SampleType = new GraphQLObjectType({
   name: 'SampleType',
   fields: () => ({
     id: { type: GraphQLString },
@@ -29,6 +31,7 @@ const SampleType = new GraphQLObjectType({
   }),
   extensions: {
     nestedFields: ['files'],
+    esIndex: esBiospecimenIndex,
   },
 });
 
@@ -46,7 +49,7 @@ const SampleHitsType = new GraphQLObjectType({
     total: { type: GraphQLInt },
     edges: {
       type: new GraphQLList(SampleEdgesType),
-      resolve: async parent => parent.edges.map(node => ({ searchAfter: [], node })),
+      resolve: async (parent, args) => parent.edges.map(node => ({ searchAfter: args?.searchAfter || [], node })),
     },
   }),
 });
@@ -57,20 +60,13 @@ const SamplesType = new GraphQLObjectType({
     hits: {
       type: SampleHitsType,
       args: hitsArgsType,
-      resolve: async (parent, args, context) => {
-        const result = await SampleModel.getHits({
-          first: args.first,
-          offset: args.offset,
-          sqon: args.sqon,
-          sort: args.sort,
-          searchAfter: args.searchAfter,
-          context,
-        });
-        return { total: result.total || 0, edges: result.hits || [] };
-      },
+      resolve: (parent, args) => hitsResolver(args, SampleType),
     },
-    mapping: { type: GraphQLString },
-    extended: { type: GraphQLString },
+    mapping: { type: GraphQLJSON },
+    extended: {
+      type: GraphQLJSON,
+      resolve: () => extendedMapping,
+    },
     aggsState: { type: AggsStateType },
     columnsState: { type: ColumnsStateType },
     matchBoxState: { type: MatchBoxStateType },

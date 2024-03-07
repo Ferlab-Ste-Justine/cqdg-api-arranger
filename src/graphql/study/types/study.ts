@@ -1,12 +1,40 @@
 import { GraphQLBoolean, GraphQLFloat, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
-import { aggregationsType, AggsStateType, ColumnsStateType, hitsArgsType, MatchBoxStateType } from '../common/types';
-import GraphQLJSON from '../common/types/jsonType';
-import StudyModel from './model';
+import { esStudyIndex } from '../../../config/env';
+import { aggsResolver, hitsResolver } from '../../common/resolvers';
+import {
+  aggregationsArgsType,
+  AggsStateType,
+  ColumnsStateType,
+  hitsArgsType,
+  MatchBoxStateType,
+} from '../../common/types';
+import GraphQLJSON from '../../common/types/jsonType';
+import DataSetsType from '../../file/types/dataSets';
+import extendedMapping from '../extendedMapping';
+import DataCategoriesType from './dataCategories';
+import DataTypesType from './dataTypes';
+import ExperimentalStrategiesType from './experimentalStrategies';
+import StudyAggType from './studyAgg';
+
+export const StudyContactType = new GraphQLObjectType({
+  name: 'StudyContactType',
+  fields: () => ({
+    type: { type: GraphQLString },
+    value: { type: GraphQLString },
+  }),
+});
+
+export const DataAccessCodesType = new GraphQLObjectType({
+  name: 'DataAccessCodesType',
+  fields: () => ({
+    access_limitations: { type: new GraphQLList(GraphQLString) },
+    access_requirements: { type: new GraphQLList(GraphQLString) },
+  }),
+});
 
 export const StudyType = new GraphQLObjectType({
   name: 'Study',
-
   fields: () => ({
     id: { type: GraphQLString },
     data_category: { type: GraphQLString },
@@ -36,10 +64,17 @@ export const StudyType = new GraphQLObjectType({
     study_code: { type: GraphQLString },
     study_id: { type: GraphQLString },
     study_version: { type: GraphQLString },
-
-    // contact: { type: StudyContact },
-    // data_access_codes: { type: StudyData_access_codes },
+    contact: { type: StudyContactType },
+    data_access_codes: { type: DataAccessCodesType },
+    data_categories: { type: DataCategoriesType },
+    data_types: { type: DataTypesType },
+    datasets: { type: DataSetsType },
+    experimental_strategies: { type: ExperimentalStrategiesType },
   }),
+  extensions: {
+    nestedFields: [],
+    esIndex: esStudyIndex,
+  },
 });
 
 const StudyEdgesType = new GraphQLObjectType({
@@ -56,7 +91,7 @@ const StudiesHitsType = new GraphQLObjectType({
     total: { type: GraphQLInt },
     edges: {
       type: new GraphQLList(StudyEdgesType),
-      resolve: async parent => parent.edges.map(node => ({ searchAfter: [], node })),
+      resolve: async (parent, args) => parent.edges.map(node => ({ searchAfter: args?.searchAfter || [], node })),
     },
   }),
 });
@@ -67,24 +102,21 @@ const StudiesType = new GraphQLObjectType({
     hits: {
       type: StudiesHitsType,
       args: hitsArgsType,
-      resolve: async (parent, args, context) => {
-        const result = await StudyModel.getHits({
-          first: args.first,
-          offset: args.offset,
-          sqon: args.sqon,
-          sort: args.sort,
-          searchAfter: args.searchAfter,
-          context,
-        });
-        return { total: result.total || 0, edges: result.hits || [] };
-      },
+      resolve: (parent, args) => hitsResolver(args, StudyType),
     },
-    mapping: { type: GraphQLString },
-    extended: { type: GraphQLString },
+    mapping: { type: GraphQLJSON },
+    extended: {
+      type: GraphQLJSON,
+      resolve: () => extendedMapping,
+    },
     aggsState: { type: AggsStateType },
     columnsState: { type: ColumnsStateType },
     matchBoxState: { type: MatchBoxStateType },
-    aggregations: { type: aggregationsType },
+    aggregations: {
+      type: StudyAggType,
+      args: aggregationsArgsType,
+      resolve: (parent, args, context, info) => aggsResolver(args, info, StudyType),
+    },
   }),
 });
 

@@ -2,7 +2,7 @@ import { GraphQLObjectType } from 'graphql';
 
 import AggregationsType from '../../common/types/aggregationsType.js';
 
-const ParticipantAggType = new GraphQLObjectType({
+const ParticipantAgg = new GraphQLObjectType({
   name: 'ParticipantAgg',
   fields: {
     gender: { type: AggregationsType },
@@ -11,4 +11,4 @@ const ParticipantAggType = new GraphQLObjectType({
   },
 });
 
-export default ParticipantAggType;
+export default ParticipantAgg;

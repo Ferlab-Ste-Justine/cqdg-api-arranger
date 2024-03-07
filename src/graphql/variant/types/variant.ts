@@ -1,5 +1,7 @@
-import { GraphQLBoolean, GraphQLFloat, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
+import { GraphQLFloat, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
+import { esVariantIndex } from '../../../config/env';
+import { aggsResolver, hitsResolver } from '../../common/resolvers';
 import {
   aggregationsArgsType,
   AggsStateType,
@@ -8,10 +10,10 @@ import {
   MatchBoxStateType,
 } from '../../common/types';
 import GraphQLJSON from '../../common/types/jsonType';
-import GenesType from '../../gene/types';
-import { aggResolver, hitsResolver } from '../resolvers';
+import GenesType from '../../gene/types/gene';
+import extendedMapping from '../extendedMapping';
 import { frequenciesType } from './frequencies';
-import VariantAggType from './variantAggType';
+import VariantAggType from './variantAgg';
 import VariantStudiesType from './variantStudies';
 
 const ClinvarType = new GraphQLObjectType({
@@ -25,7 +27,7 @@ const ClinvarType = new GraphQLObjectType({
   }),
 });
 
-const VariantType = new GraphQLObjectType({
+export const VariantType = new GraphQLObjectType({
   name: 'Variant',
   fields: () => ({
     id: { type: GraphQLString },
@@ -50,10 +52,11 @@ const VariantType = new GraphQLObjectType({
     clinvar: { type: ClinvarType },
     // cmc: { type: VariantCmc },
     external_frequencies: { type: frequenciesType },
-    internal_frequencies_wgs: { type: new GraphQLList(frequenciesType) },
+    internal_frequencies_wgs: { type: frequenciesType },
   }),
   extensions: {
     nestedFields: ['genes', 'studies'],
+    esIndex: esVariantIndex,
   },
 });
 
@@ -71,25 +74,8 @@ export const VariantHitsType = new GraphQLObjectType({
     total: { type: GraphQLInt },
     edges: {
       type: new GraphQLList(VariantEdgesType),
-      resolve: async parent => parent.edges.map(node => ({ searchAfter: [], node })),
+      resolve: async (parent, args) => parent.edges.map(node => ({ searchAfter: args?.searchAfter || [], node })),
     },
-  }),
-});
-
-const extendedType = new GraphQLObjectType({
-  name: 'extendedType',
-  fields: () => ({
-    unit: { type: GraphQLString },
-    displayValues: { type: GraphQLJSON },
-    quickSearchEnabled: { type: GraphQLBoolean },
-    field: { type: GraphQLString },
-    displayName: { type: GraphQLString },
-    active: { type: GraphQLBoolean },
-    isArray: { type: GraphQLBoolean },
-    rangeStep: { type: GraphQLInt },
-    type: { type: GraphQLString },
-    gqlId: { type: GraphQLString },
-    primaryKey: { type: GraphQLBoolean },
   }),
 });
 
@@ -99,27 +85,12 @@ const VariantsType = new GraphQLObjectType({
     hits: {
       type: VariantHitsType,
       args: hitsArgsType,
-      resolve: hitsResolver,
+      resolve: (parent, args) => hitsResolver(args, VariantType),
     },
-    mapping: { type: GraphQLString },
+    mapping: { type: GraphQLJSON },
     extended: {
       type: GraphQLJSON,
-      //todo: test in progress
-      resolve: () => [
-        {
-          unit: null,
-          displayValues: {},
-          quickSearchEnabled: false,
-          field: 'studies',
-          displayName: 'Studies',
-          active: false,
-          isArray: false,
-          rangeStep: 1,
-          type: 'nested',
-          gqlId: 'cqdg::Variant::extended::studies',
-          primaryKey: false,
-        },
-      ],
+      resolve: () => extendedMapping,
     },
     aggsState: { type: AggsStateType },
     columnsState: { type: ColumnsStateType },
@@ -127,7 +98,7 @@ const VariantsType = new GraphQLObjectType({
     aggregations: {
       type: VariantAggType,
       args: aggregationsArgsType,
-      resolve: aggResolver,
+      resolve: (parent, args, context, info) => aggsResolver(args, info, VariantType),
     },
   }),
 });

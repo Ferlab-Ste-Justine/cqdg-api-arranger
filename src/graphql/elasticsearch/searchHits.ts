@@ -1,14 +1,21 @@
 import { buildQuery } from '@arranger/middleware';
 
+import esClient from '../../services/elasticsearch/client';
 import { DEFAULT_SORT, DEFAULT_SQON } from '../common/constants';
 
 const DEFAULT_HITS_SIZE = 10;
 
 const simpleSorter = xs => (xs || []).map(x => ({ [x.field]: x.order }));
 
-const searchHits = async ({ es, sqon = DEFAULT_SQON, sort = DEFAULT_SORT, nestedFields = [], searchParams }) => {
-  const { index, size = DEFAULT_HITS_SIZE, searchAfter, offset = 0 } = searchParams;
-
+const searchHits = async ({
+  sqon = DEFAULT_SQON,
+  sort = DEFAULT_SORT,
+  nestedFields = [],
+  index,
+  size = DEFAULT_HITS_SIZE,
+  searchAfter,
+  offset = 0,
+}) => {
   const query = buildQuery({
     nestedFields,
     filters: sqon,
@@ -20,7 +27,7 @@ const searchHits = async ({ es, sqon = DEFAULT_SQON, sort = DEFAULT_SORT, nested
     search_after: searchAfter,
   };
 
-  const res = await es.search({
+  const result = await esClient.search({
     index,
     size,
     from: offset,
@@ -29,7 +36,7 @@ const searchHits = async ({ es, sqon = DEFAULT_SQON, sort = DEFAULT_SORT, nested
     body,
   });
 
-  const hits = res.body?.hits || {};
+  const hits = result.body?.hits || {};
 
   return {
     total: hits?.total?.value,

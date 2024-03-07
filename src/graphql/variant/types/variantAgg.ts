@@ -11,7 +11,6 @@ const VariantAggType = new GraphQLObjectType({
     hgvsg: { type: AggregationsType },
     max_impact_score: { type: NumericAggregationsType },
     studies__study_code: { type: AggregationsType },
-
     variant_class: { type: AggregationsType },
     genes__consequences__consequence: { type: AggregationsType },
     variant_external_reference: { type: AggregationsType },
