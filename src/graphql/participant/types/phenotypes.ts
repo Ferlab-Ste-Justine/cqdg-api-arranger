@@ -3,25 +3,15 @@ import { GraphQLBoolean, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLStri
 import { aggregationsType, AggsStateType, ColumnsStateType, hitsArgsType, MatchBoxStateType } from '../../common/types';
 import GraphQLJSON from '../../common/types/jsonType';
 
-export const DiagnosisType = new GraphQLObjectType({
-  name: 'DiagnosisType',
+export const PhenotypeType = new GraphQLObjectType({
+  name: 'PhenotypeType',
   fields: () => ({
     id: { type: GraphQLString },
     score: { type: GraphQLInt },
-
-    // from current diagnoses
-    age_at_diagnosis: { type: GraphQLString },
-    diagnosis_ICD_code: { type: GraphQLString },
-    diagnosis_icd_display: { type: GraphQLString },
-    diagnosis_mondo_code: { type: GraphQLString },
-    diagnosis_mondo_display: { type: GraphQLString },
-    diagnosis_source_text: { type: GraphQLString },
-    fhir_id: { type: GraphQLString },
-
-    // from current mondo
     age_at_event: { type: GraphQLJSON },
     internal_phenotype_id: { type: GraphQLString },
     is_leaf: { type: GraphQLBoolean },
+    is_observed: { type: GraphQLBoolean },
     is_tagged: { type: GraphQLBoolean },
     name: { type: GraphQLString },
     parents: { type: new GraphQLList(GraphQLString) },
@@ -29,30 +19,30 @@ export const DiagnosisType = new GraphQLObjectType({
   }),
 });
 
-const DiagnosisEdgesType = new GraphQLObjectType({
-  name: 'DiagnosisEdgesType',
+const PhenotypeEdgesType = new GraphQLObjectType({
+  name: 'PhenotypeEdgesType',
   fields: () => ({
     searchAfter: { type: GraphQLJSON },
-    node: { type: DiagnosisType },
+    node: { type: PhenotypeType },
   }),
 });
 
-const DiagnosisHitsType = new GraphQLObjectType({
-  name: 'DiagnosisHitsType',
+const PhenotypeHitsType = new GraphQLObjectType({
+  name: 'PhenotypeHitsType',
   fields: () => ({
     total: { type: GraphQLInt },
     edges: {
-      type: new GraphQLList(DiagnosisEdgesType),
+      type: new GraphQLList(PhenotypeEdgesType),
       resolve: async (parent, args) => parent.edges.map(node => ({ searchAfter: args?.searchAfter || [], node })),
     },
   }),
 });
 
-const DiagnosesType = new GraphQLObjectType({
-  name: 'DiagnosesType',
+const PhenotypesType = new GraphQLObjectType({
+  name: 'PhenotypesType',
   fields: () => ({
     hits: {
-      type: DiagnosisHitsType,
+      type: PhenotypeHitsType,
       args: hitsArgsType,
       resolve: async parent => ({ total: parent?.length || 0, edges: parent || [] }),
     },
@@ -65,4 +55,4 @@ const DiagnosesType = new GraphQLObjectType({
   }),
 });
 
-export default DiagnosesType;
+export default PhenotypesType;

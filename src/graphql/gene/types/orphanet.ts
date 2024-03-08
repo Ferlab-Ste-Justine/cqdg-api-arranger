@@ -2,7 +2,6 @@ import { GraphQLFloat, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString
 
 import { aggregationsType, AggsStateType, ColumnsStateType, hitsArgsType, MatchBoxStateType } from '../../common/types';
 import GraphQLJSON from '../../common/types/jsonType';
-import GeneModel from '../model';
 
 export const OrphanetType = new GraphQLObjectType({
   name: 'OrphanetType',

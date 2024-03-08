@@ -4,26 +4,25 @@ import { esParticipantIndex } from '../../../config/env';
 import { aggsResolver, hitsResolver } from '../../common/resolvers';
 import {
   aggregationsArgsType,
-  aggregationsType,
   AggsStateType,
   ColumnsStateType,
   hitsArgsType,
   MatchBoxStateType,
 } from '../../common/types';
 import GraphQLJSON from '../../common/types/jsonType';
-import { getGQLFields } from '../../common/utils';
 import FileModel from '../../file/model';
 import FilesType from '../../file/types/file';
 import SamplesType from '../../sample/types/sample';
-import { VariantType } from '../../variant/types/variant';
-import VariantAggType from '../../variant/types/variantAgg';
+import { StudyType } from '../../study/types/study';
 import extendedMapping from '../extendedMapping';
-import ParticipantModel from '../model';
 import DiagnosesType from './diagnoses';
+import FamilyRelationshipsType from './familyRelationships';
+import IcdsType from './icds';
 import ParticipantAgg from './participantAgg';
+import PhenotypesType from './phenotypes';
 
-const GenderType = new GraphQLEnumType({
-  name: 'Gender',
+const SexType = new GraphQLEnumType({
+  name: 'Sex',
   values: {
     female: { value: 'female' },
     male: { value: 'male' },
@@ -36,7 +35,7 @@ export const ParticipantType = new GraphQLObjectType({
     id: { type: GraphQLString },
     participant_id: { type: GraphQLString },
     participant_2_id: { type: GraphQLString },
-    gender: { type: GenderType },
+    sex: { type: SexType },
     age_at_recruitment: { type: GraphQLString },
     age_of_death: { type: GraphQLString },
     cause_of_death: { type: GraphQLString },
@@ -76,15 +75,16 @@ export const ParticipantType = new GraphQLObjectType({
       },
     },
     biospecimens: { type: SamplesType },
+    family_relationships: { type: FamilyRelationshipsType },
+    study: { type: StudyType },
+    icd_tagged: { type: IcdsType },
     diagnoses: { type: DiagnosesType },
-    // family_relationships: { type: any() },
-    // icd_tagged: { type: ParticipantIcdTagged },
-    // mondo: { type: ParticipantMondo },
-    // mondo_tagged: { type: ParticipantMondoTagged },
-    // non_observed_phenotype_tagged: { type: ParticipantNonObservedPhenotypeTagged },
-    // observed_phenotype_tagged: { type: ParticipantObservedPhenotypeTagged },
-    // observed_phenotypes: { type: ParticipantObservedPhenotypes },
-    // phenotypes_tagged: { type: ParticipantPhenotypesTagged },
+    mondo: { type: DiagnosesType },
+    mondo_tagged: { type: DiagnosesType },
+    phenotypes_tagged: { type: PhenotypesType },
+    non_observed_phenotype_tagged: { type: PhenotypesType },
+    observed_phenotype_tagged: { type: PhenotypesType },
+    observed_phenotypes: { type: PhenotypesType },
   }),
   extensions: {
     nestedFields: ['files'],

@@ -11,6 +11,7 @@ import {
 } from '../../common/types';
 import GraphQLJSON from '../../common/types/jsonType';
 import GenesType from '../../gene/types/gene';
+import StudiesType from '../../study/types/study';
 import extendedMapping from '../extendedMapping';
 import { frequenciesType } from './frequencies';
 import VariantAggType from './variantAgg';
@@ -27,12 +28,25 @@ const ClinvarType = new GraphQLObjectType({
   }),
 });
 
+const CmcType = new GraphQLObjectType({
+  name: 'CmcType',
+  fields: () => ({
+    cosmic_id: { type: GraphQLString },
+    mutation_url: { type: GraphQLString },
+    sample_mutated: { type: GraphQLFloat },
+    sample_ratio: { type: GraphQLFloat },
+    sample_tested: { type: GraphQLFloat },
+    shared_aa: { type: GraphQLFloat },
+    tier: { type: GraphQLString },
+  }),
+});
+
 export const VariantType = new GraphQLObjectType({
   name: 'Variant',
   fields: () => ({
     id: { type: GraphQLString },
-    studies: { type: VariantStudiesType },
-    genes: { type: GenesType },
+    studies: { type: StudiesType },
+    genes: { type: GenesType, resolve: parent => parent.genes },
     alternate: { type: GraphQLString },
     assembly_version: { type: GraphQLString },
     chromosome: { type: GraphQLString },
@@ -50,9 +64,10 @@ export const VariantType = new GraphQLObjectType({
     variant_class: { type: GraphQLString },
     variant_external_reference: { type: new GraphQLList(GraphQLString) },
     clinvar: { type: ClinvarType },
-    // cmc: { type: VariantCmc },
+    cmc: { type: CmcType },
     external_frequencies: { type: frequenciesType },
     internal_frequencies_wgs: { type: frequenciesType },
+    study_frequencies_wgs: { type: StudiesType, resolve: parent => parent.study_frequencies_wgs },
   }),
   extensions: {
     nestedFields: ['genes', 'studies'],

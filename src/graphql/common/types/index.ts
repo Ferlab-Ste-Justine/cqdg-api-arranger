@@ -2,13 +2,11 @@ import { GraphQLBoolean, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLStri
 
 import GraphQLJSON from './jsonType';
 import { SortType } from './sortType';
-import { RootSqonType } from './sqonType';
 
 export const hitsArgsType = {
   first: { type: GraphQLInt },
   offset: { type: GraphQLInt },
   sort: { type: new GraphQLList(SortType) },
-  // sqon: { type: RootSqonType },
   searchAfter: { type: GraphQLJSON },
   filters: { type: GraphQLJSON },
 };
@@ -55,18 +53,10 @@ export const MatchBoxFieldType = new GraphQLObjectType({
   }),
 });
 
-export const aggregationsType = new GraphQLObjectType({
-  name: 'aggregationsType',
-  fields: () => ({
-    participant_id: { type: GraphQLString },
-  }),
-});
-
-export const hitsOthersFields = {
-  mapping: { type: GraphQLJSON },
-  extended: { type: GraphQLJSON },
-  aggsState: { type: AggsStateType },
-  columnsState: { type: ColumnsStateType },
-  matchBoxState: { type: MatchBoxStateType },
-  aggregations: { type: aggregationsType },
-};
+export const aggregationsType = GraphQLJSON;
+// export const aggregationsType = new GraphQLObjectType({
+//   name: 'aggregationsType',
+//   fields: () => ({
+//     id: { type: GraphQLString },
+//   }),
+// });

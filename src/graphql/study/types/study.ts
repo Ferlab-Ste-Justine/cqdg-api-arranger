@@ -11,6 +11,7 @@ import {
 } from '../../common/types';
 import GraphQLJSON from '../../common/types/jsonType';
 import DataSetsType from '../../file/types/dataSets';
+import { totalType } from '../../variant/types/frequencies';
 import extendedMapping from '../extendedMapping';
 import DataCategoriesType from './dataCategories';
 import DataTypesType from './dataTypes';
@@ -70,6 +71,11 @@ export const StudyType = new GraphQLObjectType({
     data_types: { type: DataTypesType },
     datasets: { type: DataSetsType },
     experimental_strategies: { type: ExperimentalStrategiesType },
+
+    //from VariantStudy
+    transmission: { type: new GraphQLList(GraphQLString) },
+    zygosity: { type: new GraphQLList(GraphQLString) },
+    total: { type: totalType },
   }),
   extensions: {
     nestedFields: [],

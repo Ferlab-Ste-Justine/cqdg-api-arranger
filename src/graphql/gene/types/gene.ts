@@ -4,7 +4,6 @@ import { esGeneIndex } from '../../../config/env';
 import { hitsResolver } from '../../common/resolvers';
 import { aggregationsType, AggsStateType, ColumnsStateType, hitsArgsType, MatchBoxStateType } from '../../common/types';
 import GraphQLJSON from '../../common/types/jsonType';
-import { ParticipantType } from '../../participant/types';
 import extendedMapping from '../extendedMapping';
 import ConsequencesType from './consequence';
 import CosmicsType from './cosmic';
@@ -18,6 +17,14 @@ const GnomadType = new GraphQLObjectType({
   fields: () => ({
     loeuf: { type: GraphQLFloat },
     pli: { type: GraphQLFloat },
+  }),
+});
+
+const SpliceaiType = new GraphQLObjectType({
+  name: 'SpliceaiType',
+  fields: () => ({
+    ds: { type: GraphQLFloat },
+    type: { type: new GraphQLList(GraphQLString) },
   }),
 });
 
@@ -44,6 +51,7 @@ export const GeneType = new GraphQLObjectType({
     hpo: { type: HposType },
     omim: { type: OmimsType },
     orphanet: { type: OrphanetsType },
+    spliceai: { type: SpliceaiType },
   }),
   extensions: {
     nestedFields: ['consequences'],
@@ -76,7 +84,13 @@ const GenesType = new GraphQLObjectType({
     hits: {
       type: GeneHitsType,
       args: hitsArgsType,
-      resolve: (parent, args) => hitsResolver(args, GeneType),
+      resolve: (parent, args) => {
+        //todo: if parent add all parent.gene_ids in sqon to find genes by variant in gene index. Ask adrian the link between gene and variant
+        if (parent) {
+          return { total: parent.length || 0, edges: parent };
+        }
+        return hitsResolver(args, GeneType);
+      },
     },
     mapping: { type: GraphQLJSON },
     extended: {

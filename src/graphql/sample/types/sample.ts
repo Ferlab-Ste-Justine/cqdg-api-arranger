@@ -5,7 +5,7 @@ import { hitsResolver } from '../../common/resolvers';
 import { aggregationsType, AggsStateType, ColumnsStateType, hitsArgsType, MatchBoxStateType } from '../../common/types';
 import GraphQLJSON from '../../common/types/jsonType';
 import FilesType from '../../file/types/file';
-import { ParticipantType } from '../../participant/types';
+import { ParticipantType } from '../../participant/types/participant';
 import { StudyType } from '../../study/types/study';
 import extendedMapping from '../extendedMapping';
 

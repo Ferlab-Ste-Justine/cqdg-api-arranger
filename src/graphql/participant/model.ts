@@ -1,6 +1,6 @@
 import { esParticipantIndex } from '../../config/env';
 import { getBody } from '../../services/elasticsearch/utils';
-import { ParticipantType } from './types';
+import { ParticipantType } from './types/participant';
 
 const get = async (file_id, context) => {
   const { body } = await context.es.get({ index: esParticipantIndex, file_id });

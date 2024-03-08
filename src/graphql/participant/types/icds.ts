@@ -1,42 +1,47 @@
-import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
+import { GraphQLBoolean, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
 import { aggregationsType, AggsStateType, ColumnsStateType, hitsArgsType, MatchBoxStateType } from '../../common/types';
 import GraphQLJSON from '../../common/types/jsonType';
 
-export const HpoType = new GraphQLObjectType({
-  name: 'HpoType',
+export const IcdType = new GraphQLObjectType({
+  name: 'IcdType',
   fields: () => ({
     id: { type: GraphQLString },
-    hpo_term_id: { type: GraphQLString },
-    hpo_term_label: { type: GraphQLString },
-    hpo_term_name: { type: GraphQLString },
+    score: { type: GraphQLInt },
+    age_at_event: { type: GraphQLJSON },
+    internal_phenotype_id: { type: GraphQLString },
+    is_leaf: { type: GraphQLBoolean },
+    is_tagged: { type: GraphQLBoolean },
+    name: { type: GraphQLString },
+    parents: { type: new GraphQLList(GraphQLString) },
+    source_text: { type: GraphQLString },
   }),
 });
 
-const HpoEdgesType = new GraphQLObjectType({
-  name: 'HpoEdgesType',
+const IcdsEdgesType = new GraphQLObjectType({
+  name: 'IcdsEdgesType',
   fields: () => ({
     searchAfter: { type: GraphQLJSON },
-    node: { type: HpoType },
+    node: { type: IcdType },
   }),
 });
 
-const HpoHitsType = new GraphQLObjectType({
-  name: 'HpoHitsType',
+const IcdsHitsType = new GraphQLObjectType({
+  name: 'IcdsHitsType',
   fields: () => ({
     total: { type: GraphQLInt },
     edges: {
-      type: new GraphQLList(HpoEdgesType),
+      type: new GraphQLList(IcdsEdgesType),
       resolve: async (parent, args) => parent.edges.map(node => ({ searchAfter: args?.searchAfter || [], node })),
     },
   }),
 });
 
-export const HposType = new GraphQLObjectType({
-  name: 'HposType',
+const IcdsType = new GraphQLObjectType({
+  name: 'IcdsType',
   fields: () => ({
     hits: {
-      type: HpoHitsType,
+      type: IcdsHitsType,
       args: hitsArgsType,
       resolve: async parent => ({ total: parent?.length || 0, edges: parent || [] }),
     },
@@ -49,4 +54,4 @@ export const HposType = new GraphQLObjectType({
   }),
 });
 
-export default HposType;
+export default IcdsType;

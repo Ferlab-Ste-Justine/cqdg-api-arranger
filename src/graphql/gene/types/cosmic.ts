@@ -1,6 +1,7 @@
 import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
-import { hitsArgsType, hitsOthersFields } from '../../common/types';
+import { aggregationsType, AggsStateType, ColumnsStateType, hitsArgsType, MatchBoxStateType } from '../../common/types';
+import GraphQLJSON from '../../common/types/jsonType';
 
 const CosmicType = new GraphQLObjectType({
   name: 'CosmicType',
@@ -39,7 +40,12 @@ const CosmicsType = new GraphQLObjectType({
         return { total: results?.length || 0, edges: results || [] };
       },
     },
-    ...hitsOthersFields,
+    mapping: { type: GraphQLJSON },
+    extended: { type: GraphQLJSON },
+    aggsState: { type: AggsStateType },
+    columnsState: { type: ColumnsStateType },
+    matchBoxState: { type: MatchBoxStateType },
+    aggregations: { type: aggregationsType },
   }),
 });
 

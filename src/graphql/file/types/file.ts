@@ -4,9 +4,11 @@ import { esFileIndex } from '../../../config/env';
 import { hitsResolver } from '../../common/resolvers';
 import { aggregationsType, AggsStateType, ColumnsStateType, hitsArgsType, MatchBoxStateType } from '../../common/types';
 import GraphQLJSON from '../../common/types/jsonType';
-import ParticipantsType from '../../participant/types';
+import ParticipantsType from '../../participant/types/participant';
+import SamplesType from '../../sample/types/sample';
 import { StudyType } from '../../study/types/study';
 import extendedMapping from '../extendedMapping';
+import SequencingExperimentType from './sequencingExperiment';
 
 const FileType = new GraphQLObjectType({
   name: 'File',
@@ -30,8 +32,8 @@ const FileType = new GraphQLObjectType({
     study_id: { type: GraphQLString },
     study: { type: StudyType },
     participants: { type: ParticipantsType },
-    // biospecimens: { type: FileBiospecimens },
-    // sequencing_experiment: { type: FileSequencingExperiment },
+    biospecimens: { type: SamplesType },
+    sequencing_experiment: { type: SequencingExperimentType },
   }),
   extensions: {
     nestedFields: [],
