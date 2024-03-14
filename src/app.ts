@@ -4,6 +4,7 @@ import express, { Express } from 'express';
 import { Keycloak } from 'keycloak-connect';
 import NodeCache from 'node-cache';
 
+import packageJson from '../package.json';
 import { cacheTTL, esHost, keycloakURL } from './config/env';
 import genomicFeatureSuggestions, { SUGGESTIONS_TYPES } from './endpoints/genomicFeatureSuggestions';
 import { getPhenotypesNodes } from './endpoints/phenotypes';
@@ -22,9 +23,7 @@ import { injectBodyHttpHeaders } from './middleware/injectBodyHttpHeaders';
 import { resolveSetIdMiddleware } from './middleware/resolveSetIdInSqon';
 import { globalErrorHandler, globalErrorLogger } from './utils/errors';
 
-// const require = createRequire(import.meta.url);
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { dependencies, version } = require('../package.json');
+const { dependencies, version } = packageJson;
 
 const buildApp = (keycloak: Keycloak): Express => {
   const app = express();
