@@ -2,7 +2,6 @@ import compression from 'compression';
 import cors from 'cors';
 import express, { Express } from 'express';
 import { Keycloak } from 'keycloak-connect';
-import { createRequire } from 'module';
 import NodeCache from 'node-cache';
 
 import { cacheTTL, esHost, keycloakURL } from './config/env';
@@ -23,7 +22,7 @@ import { injectBodyHttpHeaders } from './middleware/injectBodyHttpHeaders';
 import { resolveSetIdMiddleware } from './middleware/resolveSetIdInSqon';
 import { globalErrorHandler, globalErrorLogger } from './utils/errors';
 
-const require = createRequire(import.meta.url);
+// const require = createRequire(import.meta.url);
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { dependencies, version } = require('../package.json');
 
@@ -74,7 +73,9 @@ const buildApp = (keycloak: Keycloak): Express => {
   );
 
   app.get('/statistics', verifyCache(STATISTICS_CACHE_ID, cache), async (req, res) => {
+    console.log('heeere==');
     const data = await getStatistics();
+    console.log('data==', data);
     cache.set(STATISTICS_CACHE_ID, data);
     res.json(data);
   });

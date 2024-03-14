@@ -8,6 +8,7 @@ export const verifyCache = (cacheId: string, cache: NodeCache) => (
   res: Response,
   next: NextFunction,
 ): void => {
+  console.log('verifyCache==');
   try {
     if (cache.has(cacheId)) {
       res.status(200).json(cache.get(cacheId));

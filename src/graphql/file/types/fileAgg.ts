@@ -1,6 +1,6 @@
 import { GraphQLObjectType } from 'graphql';
 
-import AggregationsType, { NumericAggregationsType } from '../../common/types/aggregationsType.js';
+import AggregationsType, { NumericAggregationsType } from '../../common/types/aggregationsType';
 
 const FileAgg = new GraphQLObjectType({
   name: 'FileAgg',
