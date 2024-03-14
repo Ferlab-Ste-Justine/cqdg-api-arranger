@@ -1,36 +1,25 @@
 import get from 'lodash/get';
 
 import { maxSetContentSize, participantIdKey } from '../config/env';
-import { ArrangerProject, searchSqon } from '../sqon/searchSqon';
+import runQuery from '../graphql/runQuery';
+import { searchSqon } from '../sqon/searchSqon';
 import { replaceSetByIds } from '../sqon/setSqon';
 import { SetSqon } from './sets/setsTypes';
 
-const getParticipantIds = async (
-  sqon: SetSqon,
-  projectId: string,
-  getProject: (projectId: string) => ArrangerProject,
-) => await searchSqon(sqon, projectId, 'Participant', [], participantIdKey, getProject);
+const getParticipantIds = async (sqon: SetSqon) => await searchSqon(sqon, 'Participant', [], participantIdKey);
 
 export const getPhenotypesNodes = async (
   sqon: SetSqon,
-  projectId: string,
-  getProject: (projectId: string) => ArrangerProject,
   type: string,
   aggregations_filter_themselves: boolean,
   accessToken: string,
 ) => {
   const newSqon = await replaceSetByIds(sqon, accessToken);
-  const participantIds = await getParticipantIds(newSqon, projectId, getProject);
-  return getPhenotypesNodesByIds(participantIds, projectId, getProject, type, aggregations_filter_themselves);
+  const participantIds = await getParticipantIds(newSqon);
+  return getPhenotypesNodesByIds(participantIds, type, aggregations_filter_themselves);
 };
 
-const getPhenotypesNodesByIds = async (
-  ids: string[],
-  projectId: string,
-  getProject: (projectId: string) => ArrangerProject,
-  type: string,
-  aggregations_filter_themselves: boolean,
-) => {
+const getPhenotypesNodesByIds = async (ids: string[], type: string, aggregations_filter_themselves: boolean) => {
   const query = `query($sqon: JSON, $term_filters: JSON) {
     Participant {
       aggregations(filters: $sqon, aggregations_filter_themselves: ${aggregations_filter_themselves}) {
@@ -73,17 +62,12 @@ const getPhenotypesNodesByIds = async (
     ],
   };
 
-  const project = getProject(projectId);
-  if (!project) {
-    throw new Error(`ProjectID '${projectId}' cannot be established.`);
-  }
-
   const variables = { sqon, term_filters: termFilter, size: maxSetContentSize, offset: 0 };
 
-  const res = await project.runQuery({
+  const results = await runQuery({
     query,
     variables,
   });
 
-  return get(res, `data.Participant.aggregations.${type}__name.buckets`, []);
+  return get(results, `data.Participant.aggregations.${type}__name.buckets`, []);
 };

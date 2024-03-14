@@ -1,4 +1,4 @@
-import { searchHits } from '../../elasticsearch';
+import searchHits from '../../../services/elasticsearch/searchHits';
 
 const hitsResolver = async (args, type) => {
   const nestedFields = type.extensions.nestedFields || [];

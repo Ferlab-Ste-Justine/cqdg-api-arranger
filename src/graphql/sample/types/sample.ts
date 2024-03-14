@@ -1,13 +1,20 @@
 import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
 import { esBiospecimenIndex } from '../../../config/env';
-import { hitsResolver } from '../../common/resolvers';
-import { aggregationsType, AggsStateType, ColumnsStateType, hitsArgsType, MatchBoxStateType } from '../../common/types';
+import { aggsResolver, hitsResolver } from '../../common/resolvers';
+import {
+  aggregationsArgsType,
+  AggsStateType,
+  ColumnsStateType,
+  hitsArgsType,
+  MatchBoxStateType,
+} from '../../common/types';
 import GraphQLJSON from '../../common/types/jsonType';
 import FilesType from '../../file/types/file';
 import { ParticipantType } from '../../participant/types/participant';
 import { StudyType } from '../../study/types/study';
 import extendedMapping from '../extendedMapping';
+import SampleAgg from './sampleAgg';
 
 export const SampleType = new GraphQLObjectType({
   name: 'SampleType',
@@ -70,7 +77,11 @@ const SamplesType = new GraphQLObjectType({
     aggsState: { type: AggsStateType },
     columnsState: { type: ColumnsStateType },
     matchBoxState: { type: MatchBoxStateType },
-    aggregations: { type: aggregationsType },
+    aggregations: {
+      type: SampleAgg,
+      args: aggregationsArgsType,
+      resolve: (parent, args, context, info) => aggsResolver(args, info, SampleType),
+    },
   }),
 });
 

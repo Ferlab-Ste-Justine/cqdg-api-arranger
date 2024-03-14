@@ -1,8 +1,8 @@
 // Legacy code from arranger 2.16
 import { buildAggregations, buildQuery, flattenAggregations } from '@arranger/middleware';
 
-import esClient from '../../services/elasticsearch/client';
-import { DEFAULT_SORT, DEFAULT_SQON } from '../common/constants';
+import esClient from './client';
+import { DEFAULT_SORT, DEFAULT_SQON } from './constants';
 
 const toGraphqlField = (acc, [a, b]) => ({
   ...acc,

@@ -2118,6 +2118,20 @@ const extendedMapping = [
     gqlId: 'cqdg::Variant::extended::variant_external_reference',
     primaryKey: false,
   },
+
+  {
+    unit: null,
+    displayValues: {},
+    quickSearchEnabled: false,
+    field: 'external_frequencies.gnomad_genomes_2_1_1',
+    displayName: 'External Frequencies Gnomad Genomes 2 1 1',
+    active: false,
+    isArray: false,
+    rangeStep: 1,
+    type: 'object',
+    gqlId: 'cqdg::Variant::extended::external_frequencies.gnomad_genomes_2_1_1',
+    primaryKey: false,
+  },
 ];
 
 export default extendedMapping;

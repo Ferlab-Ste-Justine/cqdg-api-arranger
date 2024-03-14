@@ -2,26 +2,10 @@ import get from 'lodash/get';
 
 import { maxSetContentSize } from '../config/env';
 import { SetSqon, Sort } from '../endpoints/sets/setsTypes';
+import runQuery from '../graphql/runQuery';
 
-export type ArrangerProject = {
-  runQuery: ({ query, variables }) => Promise<unknown>;
-};
-
-export const searchSqon = async (
-  sqon: SetSqon,
-  projectId: string,
-  type: string,
-  sort: Sort[],
-  idField: string,
-  getProject: (projectId: string) => ArrangerProject,
-): Promise<string[]> => {
-  const project = getProject(projectId);
-
-  if (!project) {
-    throw new Error(`ProjectID '${projectId}' cannot be established.`);
-  }
-
-  const results = await project.runQuery({
+export const searchSqon = async (sqon: SetSqon, type: string, sort: Sort[], idField: string): Promise<string[]> => {
+  const results = await runQuery({
     query: `
       query($sqon: JSON, $sort: [Sort], $first: Int) {
         ${type} {

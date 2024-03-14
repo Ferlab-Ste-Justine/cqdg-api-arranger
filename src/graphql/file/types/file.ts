@@ -1,13 +1,20 @@
 import { GraphQLFloat, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
 import { esFileIndex } from '../../../config/env';
-import { hitsResolver } from '../../common/resolvers';
-import { aggregationsType, AggsStateType, ColumnsStateType, hitsArgsType, MatchBoxStateType } from '../../common/types';
+import { aggsResolver, hitsResolver } from '../../common/resolvers';
+import {
+  aggregationsArgsType,
+  AggsStateType,
+  ColumnsStateType,
+  hitsArgsType,
+  MatchBoxStateType,
+} from '../../common/types';
 import GraphQLJSON from '../../common/types/jsonType';
 import ParticipantsType from '../../participant/types/participant';
 import SamplesType from '../../sample/types/sample';
 import { StudyType } from '../../study/types/study';
 import extendedMapping from '../extendedMapping';
+import FileAgg from './fileAgg';
 import SequencingExperimentType from './sequencingExperiment';
 
 const FileType = new GraphQLObjectType({
@@ -31,12 +38,13 @@ const FileType = new GraphQLObjectType({
     study_code: { type: GraphQLString },
     study_id: { type: GraphQLString },
     study: { type: StudyType },
+    //todo: create resolve: get participants and samples from participant_index
     participants: { type: ParticipantsType },
     biospecimens: { type: SamplesType },
     sequencing_experiment: { type: SequencingExperimentType },
   }),
   extensions: {
-    nestedFields: [],
+    nestedFields: ['participants', 'biospecimens'],
     esIndex: esFileIndex,
   },
 });
@@ -45,9 +53,7 @@ const FileEdgesType = new GraphQLObjectType({
   name: 'FileEdgesType',
   fields: () => ({
     searchAfter: { type: GraphQLJSON },
-    node: {
-      type: FileType,
-    },
+    node: { type: FileType },
   }),
 });
 
@@ -78,7 +84,11 @@ export const FilesType = new GraphQLObjectType({
     aggsState: { type: AggsStateType },
     columnsState: { type: ColumnsStateType },
     matchBoxState: { type: MatchBoxStateType },
-    aggregations: { type: aggregationsType },
+    aggregations: {
+      type: FileAgg,
+      args: aggregationsArgsType,
+      resolve: (parent, args, context, info) => aggsResolver(args, info, FileType),
+    },
   }),
 });
 

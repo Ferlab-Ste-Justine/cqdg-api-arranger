@@ -1,9 +1,7 @@
 import { buildQuery } from '@arranger/middleware';
 
-import esClient from '../../services/elasticsearch/client';
-import { DEFAULT_SORT, DEFAULT_SQON } from '../common/constants';
-
-const DEFAULT_HITS_SIZE = 10;
+import esClient from './client';
+import { DEFAULT_HITS_SIZE, DEFAULT_SORT, DEFAULT_SQON } from './constants';
 
 const simpleSorter = xs => (xs || []).map(x => ({ [x.field]: x.order }));
 

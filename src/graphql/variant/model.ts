@@ -8,7 +8,10 @@ const get = async (file_id, context) => {
 };
 
 const getBy = async ({ field, value, path, args, context }) => {
-  const body = getBody({ field, value, path, nested: VariantType?.extensions?.nestedFields?.includes(path) });
+  const isNested = Array.isArray(VariantType.extensions?.nestedFields)
+    ? VariantType.extensions.nestedFields.includes(path)
+    : false;
+  const body = getBody({ field, value, path, nested: isNested });
 
   const res = await context.es.search({
     index: esVariantIndex,

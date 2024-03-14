@@ -1,13 +1,12 @@
-import { getGQLFields } from '../../common/utils';
-import { searchAggregations } from '../../elasticsearch';
+//FIXME https://github.com/robrichard/graphql-fields#deprecation-notice
+import getFields from 'graphql-fields';
+
+import searchAggregations from '../../../services/elasticsearch/searchAggregations';
 
 const aggsResolver = (args, info, type) => {
-  const graphqlFields = getGQLFields(info);
+  const graphqlFields = getFields(info, {}, { processArguments: true });
   const nestedFields = type.extensions.nestedFields || [];
   const index = type.extensions.esIndex || '';
-
-  console.log('aggsResolver info==', info);
-  console.log('aggsResolver graphqlFields==', graphqlFields);
 
   return searchAggregations({
     sqon: args.sqon,

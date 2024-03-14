@@ -18,7 +18,7 @@ import { CreateUpdateBody, Output } from '../../services/usersApi';
 import { deleteUserContent, getUserContents, postUserContent, putUserContent } from '../../services/usersApi';
 import { addSqonToSetSqon, removeSqonToSetSqon } from '../../sqon/manipulateSqon';
 import { resolveSetsInSqon } from '../../sqon/resolveSetInSqon';
-import { ArrangerProject, searchSqon } from '../../sqon/searchSqon';
+import { searchSqon } from '../../sqon/searchSqon';
 import { SetNotFoundError } from './setError';
 import { CreateSetBody, Set, UpdateSetContentBody, UpdateSetTagBody } from './setsTypes';
 
@@ -54,11 +54,10 @@ export const createSet = async (
   accessToken: string,
   userId: string,
   sqs: SQS,
-  getProject: (projectId: string) => ArrangerProject,
 ): Promise<Set> => {
-  const { sqon, sort, projectId, type, idField, tag } = requestBody;
+  const { sqon, sort, type, idField, tag } = requestBody;
   const sqonAfterReplace = await resolveSetsInSqon(sqon, userId, accessToken);
-  const ids = await searchSqon(sqonAfterReplace, projectId, type, sort, idField, getProject);
+  const ids = await searchSqon(sqonAfterReplace, type, sort, idField);
 
   const truncatedIds = truncateIds(ids);
 
@@ -130,7 +129,6 @@ export const updateSetContent = async (
   userId: string,
   setId: string,
   sqs: SQS,
-  getProject: (projectId: string) => ArrangerProject,
 ): Promise<Set> => {
   const setToUpdate = await getUserSet(accessToken, userId, setId);
 
@@ -140,11 +138,9 @@ export const updateSetContent = async (
 
   const newSqonIds = await searchSqon(
     sqonAfterReplace,
-    requestBody.projectId,
     setToUpdate.content.setType,
     setToUpdate.content.sort,
     setToUpdate.content.idField,
-    getProject,
   );
 
   if (setType !== setToUpdate.content.setType) {

@@ -15,7 +15,6 @@ import StudiesType from '../../study/types/study';
 import extendedMapping from '../extendedMapping';
 import { frequenciesType } from './frequencies';
 import VariantAggType from './variantAgg';
-import VariantStudiesType from './variantStudies';
 
 const ClinvarType = new GraphQLObjectType({
   name: 'ClinvarType',
@@ -47,6 +46,8 @@ export const VariantType = new GraphQLObjectType({
     id: { type: GraphQLString },
     studies: { type: StudiesType },
     genes: { type: GenesType, resolve: parent => parent.genes },
+    //todo: genes by gene_centric
+    // genes2: { type: GenesType },
     alternate: { type: GraphQLString },
     assembly_version: { type: GraphQLString },
     chromosome: { type: GraphQLString },

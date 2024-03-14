@@ -6,7 +6,6 @@ import request from 'supertest';
 import { getToken, publicKey } from '../test/authTestUtils';
 import buildApp from './app';
 import { keycloakClient, keycloakRealm, keycloakURL } from './config/env';
-import { searchAllSources } from './endpoints/searchByIds/searchAllSources';
 import { SetNotFoundError } from './endpoints/sets/setError';
 import {
   createSet,
@@ -19,17 +18,13 @@ import {
 import { Set, UpdateSetContentBody, UpdateSetTagBody } from './endpoints/sets/setsTypes';
 import { getStatistics, Statistics } from './endpoints/statistics';
 import { UsersApiError } from './services/usersApi';
-import { ArrangerProject } from './sqon/searchSqon';
 
 jest.mock('./endpoints/sets/setsFeature');
 jest.mock('./endpoints/statistics');
-jest.mock('./endpoints/searchByIds/searchAllSources');
 
 describe('Express app (without Arranger)', () => {
   let app: Express;
   let keycloakFakeConfig;
-
-  const getProject = (_s: string) => ({} as ArrangerProject);
 
   beforeEach(() => {
     const sqs = new AWS.SQS({ apiVersion: '2012-11-05' });
@@ -44,7 +39,7 @@ describe('Express app (without Arranger)', () => {
       'realm-public-key': publicKeyToVerify, // For test purpose, we use public key to validate token.
     };
     const keycloak = new Keycloak({}, keycloakFakeConfig);
-    app = buildApp(keycloak, sqs, getProject); // Re-create app between each test to ensure isolation between tests.
+    app = buildApp(keycloak, sqs); // Re-create app between each test to ensure isolation between tests.
   });
 
   it('GET /status (public) should responds with json', async () => {
@@ -383,54 +378,6 @@ describe('Express app (without Arranger)', () => {
         .set({ Authorization: `Bearer ${token}` })
         .expect(500, { error: 'Internal Server Error' });
       expect((deleteSet as jest.Mock).mock.calls.length).toEqual(1);
-    });
-  });
-
-  describe('POST /searchByIds', () => {
-    const requestBody = {
-      project: '2021_05_03_v2',
-      ids: ['PT_HXDR3ZX6'],
-    };
-
-    beforeEach(() => {
-      (searchAllSources as jest.Mock).mockReset();
-    });
-
-    it('should return 403 if no Authorization header', () =>
-      request(app)
-        .post('/searchByIds')
-        .expect(403));
-
-    it('should return 200 if Authorization header contains valid token and no error occurs', async () => {
-      const mockSearchByIdsResponse = [{ search: 'PT_HXDR3ZX6', type: 'PARTICIPANT', participantIds: ['PT_HXDR3ZX6'] }];
-      (searchAllSources as jest.Mock).mockImplementation(() => mockSearchByIdsResponse);
-
-      const token = getToken();
-
-      await request(app)
-        .post('/searchByIds')
-        .send(requestBody)
-        .set('Content-type', 'application/json')
-        .set({ Authorization: `Bearer ${token}` })
-        .expect(200, { participants: mockSearchByIdsResponse });
-      expect((searchAllSources as jest.Mock).mock.calls.length).toEqual(1);
-    });
-
-    it('should return 500 if Authorization header contains valid token but an error occurs', async () => {
-      const expectedError = new Error('OOPS');
-      (searchAllSources as jest.Mock).mockImplementation(() => {
-        throw expectedError;
-      });
-
-      const token = getToken();
-
-      await request(app)
-        .post('/searchByIds')
-        .send(requestBody)
-        .set('Content-type', 'application/json')
-        .set({ Authorization: `Bearer ${token}` })
-        .expect(500, { error: 'Internal Server Error' });
-      expect((searchAllSources as jest.Mock).mock.calls.length).toEqual(1);
     });
   });
 });

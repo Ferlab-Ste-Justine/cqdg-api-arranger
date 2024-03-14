@@ -11,11 +11,11 @@
 
 ~~Run Variants page~~
 
-Do entities types
-Do aggregations part
+~~Do entities types~~
+~~Do aggregations part~~
 
-Add buildquery
-add buildaggregations
+~~Add buildquery~~
+~~add buildaggregations~~
 
 Clean last arranger things
 

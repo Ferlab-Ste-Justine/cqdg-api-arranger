@@ -52,6 +52,8 @@ export const ParticipantType = new GraphQLObjectType({
     study_id: { type: GraphQLString },
     submitter_participant_id: { type: GraphQLString },
     vital_status: { type: GraphQLString },
+    //todo: get study by study_index with id
+    study: { type: StudyType },
     //get files direct
     files: { type: FilesType },
     //get files with new field from resolve
@@ -76,7 +78,6 @@ export const ParticipantType = new GraphQLObjectType({
     },
     biospecimens: { type: SamplesType },
     family_relationships: { type: FamilyRelationshipsType },
-    study: { type: StudyType },
     icd_tagged: { type: IcdsType },
     diagnoses: { type: DiagnosesType },
     mondo: { type: DiagnosesType },
@@ -87,7 +88,19 @@ export const ParticipantType = new GraphQLObjectType({
     observed_phenotypes: { type: PhenotypesType },
   }),
   extensions: {
-    nestedFields: ['files'],
+    nestedFields: [
+      'files',
+      'biospecimens',
+      'family_relationships',
+      'icd_tagged',
+      'diagnoses',
+      'mondo',
+      'mondo_tagged',
+      'phenotypes_tagged',
+      'non_observed_phenotype_tagged',
+      'observed_phenotype_tagged',
+      'observed_phenotypes',
+    ],
     esIndex: esParticipantIndex,
   },
 });
