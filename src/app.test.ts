@@ -1,4 +1,3 @@
-import AWS from 'aws-sdk';
 import { Express } from 'express';
 import Keycloak from 'keycloak-connect';
 import request from 'supertest';
@@ -27,7 +26,6 @@ describe('Express app (without Arranger)', () => {
   let keycloakFakeConfig;
 
   beforeEach(() => {
-    const sqs = new AWS.SQS({ apiVersion: '2012-11-05' });
     const publicKeyToVerify = publicKey;
     keycloakFakeConfig = {
       realm: keycloakRealm,
@@ -39,7 +37,7 @@ describe('Express app (without Arranger)', () => {
       'realm-public-key': publicKeyToVerify, // For test purpose, we use public key to validate token.
     };
     const keycloak = new Keycloak({}, keycloakFakeConfig);
-    app = buildApp(keycloak, sqs); // Re-create app between each test to ensure isolation between tests.
+    app = buildApp(keycloak); // Re-create app between each test to ensure isolation between tests.
   });
 
   it('GET /status (public) should responds with json', async () => {

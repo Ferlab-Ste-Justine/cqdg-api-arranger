@@ -28,8 +28,6 @@ export const indexNameGeneFeatureSuggestion = process.env.GENES_SUGGESTIONS_INDE
 export const indexNameVariantFeatureSuggestion = process.env.VARIANTS_SUGGESTIONS_INDEX_NAME || 'variant_suggestions';
 
 export const usersApiURL = process.env.USERS_API_URL || 'https://users.qa.cqdg.ferlab.bio';
-export const sendUpdateToSqs = process.env.SEND_UPDATE_TO_SQS === 'true';
-export const sqsQueueUrl = process.env.SQS_QUEUE_URL || '';
 export const maxSetContentSize: number = Number.parseInt(process.env.MAX_SET_CONTENT_SIZE) || 10000;
 
 export const fileIdKey = process.env.FILE_ID_KEY || 'file_id';

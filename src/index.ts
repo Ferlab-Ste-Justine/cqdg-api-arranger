@@ -3,7 +3,6 @@ import 'regenerator-runtime/runtime.js';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
-import SQS from 'aws-sdk/clients/sqs';
 import cors from 'cors';
 import express from 'express';
 import http from 'http';
@@ -17,8 +16,7 @@ import schema from './graphql/schema';
 const startApp = async () => {
   try {
     const keycloak = new Keycloak({}, keycloakConfig);
-    const sqs = new SQS({ apiVersion: '2012-11-05' });
-    const app = buildApp(keycloak, sqs);
+    const app = buildApp(keycloak);
     const httpServer = http.createServer(app);
     const server = new ApolloServer({
       schema,

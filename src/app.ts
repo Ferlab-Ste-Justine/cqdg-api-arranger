@@ -1,4 +1,3 @@
-import SQS from 'aws-sdk/clients/sqs';
 import compression from 'compression';
 import cors from 'cors';
 import express, { Express } from 'express';
@@ -28,7 +27,7 @@ const require = createRequire(import.meta.url);
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { dependencies, version } = require('../package.json');
 
-const buildApp = (keycloak: Keycloak, sqs: SQS): Express => {
+const buildApp = (keycloak: Keycloak): Express => {
   const app = express();
 
   const cache = new NodeCache({ stdTTL: cacheTTL });
@@ -90,7 +89,7 @@ const buildApp = (keycloak: Keycloak, sqs: SQS): Express => {
   app.post('/sets', async (req, res) => {
     const accessToken = req.headers.authorization;
     const userId = req['kauth']?.grant?.access_token?.content?.sub;
-    const createdSet = await createSet(req.body as CreateSetBody, accessToken, userId, sqs);
+    const createdSet = await createSet(req.body as CreateSetBody, accessToken, userId);
 
     res.send(createdSet);
   });
@@ -103,20 +102,17 @@ const buildApp = (keycloak: Keycloak, sqs: SQS): Express => {
     let updatedSet: Set;
 
     if (requestBody.subAction === SubActionTypes.RENAME_TAG) {
-      updatedSet = await updateSetTag(requestBody as UpdateSetTagBody, accessToken, userId, setId, sqs);
+      updatedSet = await updateSetTag(requestBody as UpdateSetTagBody, accessToken, userId, setId);
     } else {
-      updatedSet = await updateSetContent(requestBody as UpdateSetContentBody, accessToken, userId, setId, sqs);
+      updatedSet = await updateSetContent(requestBody as UpdateSetContentBody, accessToken, userId, setId);
     }
     res.send(updatedSet);
   });
 
   app.delete('/sets/:setId', async (req, res) => {
     const accessToken = req.headers.authorization;
-    const userId = req['kauth']?.grant?.access_token?.content?.sub;
     const setId: string = req.params.setId;
-
-    const deletedResult = await deleteSet(accessToken, setId, userId, sqs);
-
+    const deletedResult = await deleteSet(accessToken, setId);
     res.send(deletedResult);
   });
 

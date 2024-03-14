@@ -1,19 +1,8 @@
-import SQS from 'aws-sdk/clients/sqs';
 import difference from 'lodash/difference';
 import dropRight from 'lodash/dropRight';
 import union from 'lodash/union';
 
-import { maxSetContentSize, sendUpdateToSqs } from '../../config/env';
-import {
-  EventCreate,
-  EventCreateValue,
-  EventDelete,
-  EventDeleteValues,
-  EventUpdate,
-  UpdateContentValue,
-  UpdateTagValue,
-} from '../../services/SQS/eventTypes';
-import { sendSetInSQSQueue } from '../../services/SQS/sendEvent';
+import { maxSetContentSize } from '../../config/env';
 import { CreateUpdateBody, Output } from '../../services/usersApi';
 import { deleteUserContent, getUserContents, postUserContent, putUserContent } from '../../services/usersApi';
 import { addSqonToSetSqon, removeSqonToSetSqon } from '../../sqon/manipulateSqon';
@@ -49,12 +38,7 @@ export const getSets = async (accessToken: string): Promise<Set[]> => {
   return userContents.map(set => mapResultToSet(set));
 };
 
-export const createSet = async (
-  requestBody: CreateSetBody,
-  accessToken: string,
-  userId: string,
-  sqs: SQS,
-): Promise<Set> => {
+export const createSet = async (requestBody: CreateSetBody, accessToken: string, userId: string): Promise<Set> => {
   const { sqon, sort, type, idField, tag } = requestBody;
   const sqonAfterReplace = await resolveSetsInSqon(sqon, userId, accessToken);
   const ids = await searchSqon(sqonAfterReplace, type, sort, idField);
@@ -73,23 +57,6 @@ export const createSet = async (
   const createResult = await postUserContent(accessToken, payload);
 
   const setResult: Set = mapResultToSet(createResult);
-
-  if (sendUpdateToSqs && createResult.alias) {
-    await sendSetInSQSQueue(sqs, {
-      actionType: ActionTypes.CREATE,
-      values: {
-        userId,
-        setId: createResult.id,
-        ids: truncatedIds,
-        size: truncatedIds.length,
-        sqon,
-        path: idField,
-        type,
-        tag,
-        createdAt: createResult.creationDate,
-      } as EventCreateValue,
-    } as EventCreate);
-  }
   return setResult;
 };
 
@@ -98,7 +65,6 @@ export const updateSetTag = async (
   accessToken: string,
   userId: string,
   setId: string,
-  sqs: SQS,
 ): Promise<Set> => {
   const setToUpdate = await getUserSet(accessToken, userId, setId);
 
@@ -111,15 +77,6 @@ export const updateSetTag = async (
   const updateResult = await putUserContent(accessToken, payload, setId);
 
   const setResult: Set = mapResultToSet(updateResult);
-
-  if (sendUpdateToSqs && updateResult.alias) {
-    await sendSetInSQSQueue(sqs, {
-      actionType: ActionTypes.UPDATE,
-      subActionType: requestBody.subAction,
-      values: { userId, setId, newTag: updateResult.alias } as UpdateTagValue,
-    } as EventUpdate);
-  }
-
   return setResult;
 };
 
@@ -128,7 +85,6 @@ export const updateSetContent = async (
   accessToken: string,
   userId: string,
   setId: string,
-  sqs: SQS,
 ): Promise<Set> => {
   const setToUpdate = await getUserSet(accessToken, userId, setId);
 
@@ -165,33 +121,11 @@ export const updateSetContent = async (
   const updateResult = await putUserContent(accessToken, payload, setId);
 
   const setResult: Set = mapResultToSet(updateResult);
-
-  if (sendUpdateToSqs && updateResult.alias) {
-    await sendSetInSQSQueue(sqs, {
-      actionType: ActionTypes.UPDATE,
-      subActionType: requestBody.subAction,
-      values: {
-        userId,
-        setId,
-        tag: updateResult.alias,
-        ids: truncatedIds,
-        createdAt: updateResult.creationDate,
-      } as UpdateContentValue,
-    } as EventUpdate);
-  }
   return setResult;
 };
 
-export const deleteSet = async (accessToken: string, setId: string, userId: string, sqs: SQS): Promise<boolean> => {
+export const deleteSet = async (accessToken: string, setId: string): Promise<boolean> => {
   const deleteResult = await deleteUserContent(accessToken, setId);
-
-  if (sendUpdateToSqs) {
-    await sendSetInSQSQueue(sqs, {
-      actionType: ActionTypes.DELETE,
-      values: { setIds: [setId], userId } as EventDeleteValues,
-    } as EventDelete);
-  }
-
   return deleteResult;
 };
 
