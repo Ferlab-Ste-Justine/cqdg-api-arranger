@@ -52,30 +52,8 @@ export const ParticipantType = new GraphQLObjectType({
     study_id: { type: GraphQLString },
     submitter_participant_id: { type: GraphQLString },
     vital_status: { type: GraphQLString },
-    //todo: get study by study_index with id
     study: { type: StudyType },
-    //get files direct
     files: { type: FilesType },
-    //get files with new field from resolve
-    files_from_participant: {
-      type: FilesType,
-      resolve: async participant => ({ hits: participant.files || [] }),
-    },
-    //get files with new field from file index
-    files_from_es: {
-      type: FilesType,
-      args: hitsArgsType,
-      resolve: async (participant, args, context) => {
-        const files = await FileModel.getBy({
-          field: 'participants.participant_id',
-          value: participant.participant_id,
-          path: 'participants',
-          args,
-          context,
-        });
-        return { hits: files };
-      },
-    },
     biospecimens: { type: SamplesType },
     family_relationships: { type: FamilyRelationshipsType },
     icd_tagged: { type: IcdsType },
@@ -130,7 +108,7 @@ const ParticipantsType = new GraphQLObjectType({
     hits: {
       type: ParticipantHitsType,
       args: hitsArgsType,
-      resolve: (parent, args) => hitsResolver(args, ParticipantType),
+      resolve: (parent, args) => hitsResolver(parent, args, ParticipantType),
     },
     mapping: { type: GraphQLJSON },
     extended: {

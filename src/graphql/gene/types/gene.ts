@@ -84,13 +84,9 @@ const GenesType = new GraphQLObjectType({
     hits: {
       type: GeneHitsType,
       args: hitsArgsType,
-      resolve: (parent, args) => {
-        //todo: if parent add all parent.gene_ids in sqon to find genes by variant in gene index. Ask adrian the link between gene and variant
-        if (parent) {
-          return { total: parent.length || 0, edges: parent };
-        }
-        return hitsResolver(args, GeneType);
-      },
+      resolve: (parent, args) =>
+        //todo: if parent add all parent.gene_ids in sqon to find genes by variant in gene index. Ask link between gene and variant
+        hitsResolver(parent, args, GeneType),
     },
     mapping: { type: GraphQLJSON },
     extended: {

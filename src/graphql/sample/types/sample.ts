@@ -67,7 +67,7 @@ const SamplesType = new GraphQLObjectType({
     hits: {
       type: SampleHitsType,
       args: hitsArgsType,
-      resolve: (parent, args) => hitsResolver(args, SampleType),
+      resolve: (parent, args) => hitsResolver(parent, args, SampleType),
     },
     mapping: { type: GraphQLJSON },
     extended: {

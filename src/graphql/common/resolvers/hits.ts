@@ -1,6 +1,10 @@
 import searchHits from '../../../services/elasticsearch/searchHits';
 
-const hitsResolver = async (args, type) => {
+const hitsResolver = async (parent, args, type) => {
+  if (Array.isArray(parent)) {
+    return { total: parent.length || 0, edges: parent };
+  }
+
   const nestedFields = type.extensions.nestedFields || [];
   const index = type.extensions.esIndex || '';
 

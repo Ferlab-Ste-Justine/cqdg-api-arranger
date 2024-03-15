@@ -74,7 +74,7 @@ export const FilesType = new GraphQLObjectType({
     hits: {
       type: FileHitsType,
       args: hitsArgsType,
-      resolve: (parent, args) => hitsResolver(args, FileType),
+      resolve: (parent, args) => hitsResolver(parent, args, FileType),
     },
     mapping: { type: GraphQLJSON },
     extended: {
