@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const project = process.env.PROJECT;
-export const port = process.env.PORT || 5051;
+export const port = process.env.PORT || 5050;
 export const env = process.env.NODE_ENV || 'production';
 export const isDev = env === 'development';
 

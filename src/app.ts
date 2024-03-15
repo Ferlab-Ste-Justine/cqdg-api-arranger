@@ -72,9 +72,7 @@ const buildApp = (keycloak: Keycloak): Express => {
   );
 
   app.get('/statistics', verifyCache(STATISTICS_CACHE_ID, cache), async (req, res) => {
-    console.log('heeere==');
     const data = await getStatistics();
-    console.log('data==', data);
     cache.set(STATISTICS_CACHE_ID, data);
     res.json(data);
   });
