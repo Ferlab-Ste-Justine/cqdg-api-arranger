@@ -159,3 +159,28 @@ export const countNOfDocs = async (esClient: Client, indexName: string): Promise
   });
   return respCounts?.body?.count;
 };
+
+export const fetchFileFormatStats = async (experimental_strategy = 'WGS'): Promise<number> => {
+  try {
+    const { body } = await client.search({
+      index: esFileIndex,
+      body: {
+        query: {
+          bool: {
+            must: [
+              { match: { file_format: 'CRAM' } },
+              { match: { 'sequencing_experiment.experimental_strategy': experimental_strategy } },
+            ],
+          },
+        },
+        aggs: { types_count: { value_count: { field: 'file_format' } } },
+      },
+      size: 0,
+    });
+
+    return body?.aggregations?.types_count.value;
+  } catch (error) {
+    console.log('[fetchFileStats] error: ', error);
+    return null;
+  }
+};
