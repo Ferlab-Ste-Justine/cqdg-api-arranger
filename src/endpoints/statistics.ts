@@ -1,5 +1,6 @@
 import {
   fetchBiospecimenStats,
+  fetchFileFormatStats,
   fetchFileSizeStats,
   fetchFileStats,
   fetchParticipantStats,
@@ -14,16 +15,20 @@ export type Statistics = {
   participants: number;
   samples: number;
   variants: number;
+  genomes: number;
+  exomes: number;
 };
 
 export const getStatistics = async (): Promise<Statistics> => {
-  const [files, studies, participants, fileSize, samples, variants] = await Promise.all([
+  const [files, studies, participants, fileSize, samples, variants, genomes, exomes] = await Promise.all([
     fetchFileStats(),
     fetchStudyStats(),
     fetchParticipantStats(),
     fetchFileSizeStats(),
     fetchBiospecimenStats(),
     fetchVariantStats(),
+    fetchFileFormatStats('WGS'),
+    fetchFileFormatStats('WXS'),
   ]);
 
   return {
@@ -33,5 +38,7 @@ export const getStatistics = async (): Promise<Statistics> => {
     fileSize,
     samples,
     variants,
+    genomes,
+    exomes,
   } as Statistics;
 };

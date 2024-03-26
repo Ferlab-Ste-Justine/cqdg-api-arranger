@@ -91,6 +91,8 @@ describe('Express app (without Arranger)', () => {
         samples: 6111,
         participants: 4330,
         variants: 2333,
+        genomes: 599,
+        exomes: 0,
       };
       (getStatistics as jest.Mock).mockImplementation(() => expectedStats);
 
