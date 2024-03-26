@@ -165,6 +165,7 @@ export const fetchFileFormatStats = async (experimental_strategy = 'WGS'): Promi
     const { body } = await client.search({
       index: esFileIndex,
       body: {
+        size: 0,
         query: {
           bool: {
             must: [
@@ -175,7 +176,6 @@ export const fetchFileFormatStats = async (experimental_strategy = 'WGS'): Promi
         },
         aggs: { types_count: { value_count: { field: 'file_format' } } },
       },
-      size: 0,
     });
 
     return body?.aggregations?.types_count.value;

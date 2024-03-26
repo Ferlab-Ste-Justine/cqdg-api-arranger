@@ -20,7 +20,7 @@ export type Statistics = {
 };
 
 export const getStatistics = async (): Promise<Statistics> => {
-  const [files, studies, participants, fileSize, samples, variants] = await Promise.all([
+  const [files, studies, participants, fileSize, samples, variants, genomes, exomes] = await Promise.all([
     fetchFileStats(),
     fetchStudyStats(),
     fetchParticipantStats(),
@@ -38,5 +38,7 @@ export const getStatistics = async (): Promise<Statistics> => {
     fileSize,
     samples,
     variants,
+    genomes,
+    exomes,
   } as Statistics;
 };
