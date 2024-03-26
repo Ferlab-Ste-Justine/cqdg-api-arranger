@@ -180,7 +180,7 @@ export const fetchFileFormatStats = async (experimental_strategy = 'WGS'): Promi
 
     return body?.aggregations?.types_count.value;
   } catch (error) {
-    console.log('[fetchFileStats] error: ', error);
+    console.log('[fetchFileFormatStats] error: ', error);
     return null;
   }
 };
