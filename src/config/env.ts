@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-export const project = process.env.PROJECT;
+export const project = process.env.PROJECT || 'cqdg';
 export const port = process.env.PORT || 5050;
 export const env = process.env.NODE_ENV || 'production';
 export const isDev = env === 'development';
@@ -34,17 +34,10 @@ export const fileIdKey = process.env.FILE_ID_KEY || 'file_id';
 export const studyIdKey = process.env.STUDY_ID_KEY || 'study_id';
 export const participantIdKey = process.env.PARTICIPANT_ID_KEY || 'participant_id';
 export const biospecimenIdKey = process.env.BIOSPECIMEN_ID_KEY || 'sample_id';
-export const variantIdKey = process.env.VARIANT_ID_KEY || 'id';
+export const variantIdKey = process.env.VARIANT_ID_KEY || 'locus';
 
 export const participantKey = process.env.TO_PARTICIPANT_ID_KEY || 'participant_id';
 export const participantFileKey = process.env.TO_PARTICIPANT_FILE_ID_KEY || 'files.file_id';
 export const participantBiospecimenKey = process.env.TO_PARTICIPANT_BIOSPECIMEN_ID_KEY || 'biospecimens.sample_id';
 
 export const cacheTTL: number = Number.parseInt(process.env.CACHE_TTL_SEC) || 3600;
-
-// CQDG-434
-export const addCagCount = process.env.ADD_CAG_COUNT === 'true';
-export const cagFilesCount = Number(process.env.CAG_FILES_COUNT) || 10900;
-export const cagFilesSize = Number(process.env.CAG_FILES_SIZE) || 11035156250;
-export const cagParticipantsCount = Number(process.env.CAG_PARTICIPANTS_COUNT) || 2179;
-export const cagBiospecimensCount = Number(process.env.CAG_BIOSPECIMENS_COUNT) || 2179;

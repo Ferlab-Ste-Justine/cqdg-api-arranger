@@ -9,7 +9,7 @@ import http from 'http';
 import Keycloak from 'keycloak-connect';
 
 import buildApp from './app';
-import { port } from './config/env';
+import { port, project } from './config/env';
 import keycloakConfig from './config/keycloak';
 import schema from './graphql/schema';
 
@@ -31,7 +31,12 @@ const startApp = async () => {
       auth: req.kauth?.grant?.access_token || {},
     });
     await server.start();
-    await app.use('/graphql', cors(), express.json({ limit: '50mb' }), expressMiddleware(server, { context }));
+    await app.use(
+      `/${project}/graphql`,
+      cors(),
+      express.json({ limit: '50mb' }),
+      expressMiddleware(server, { context }),
+    );
     await httpServer.listen({ port });
     console.info(`[startApp] 🚀 Server ready on ${port}`);
   } catch (err) {
