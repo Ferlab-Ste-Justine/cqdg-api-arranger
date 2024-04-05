@@ -7,7 +7,7 @@ export const port = process.env.PORT || 5050;
 export const env = process.env.NODE_ENV || 'production';
 export const isDev = env === 'development';
 
-export const keycloakURL = process.env.KEYCLOAK_URL || 'https://auth.qa.cqdg.ferlab.bio/auth';
+export const keycloakURL = process.env.KEYCLOAK_URL || 'https://auth.qa.juno.cqdg.ferlab.bio';
 export const keycloakRealm = process.env.KEYCLOAK_REALM || 'CQDG';
 export const keycloakClient = process.env.KEYCLOAK_CLIENT || 'cqdg-client';
 
@@ -27,7 +27,7 @@ export const maxNOfGenomicFeatureSuggestions = process.env.MAX_NUMBER_OF_GF_SUGG
 export const indexNameGeneFeatureSuggestion = process.env.GENES_SUGGESTIONS_INDEX_NAME || 'gene_suggestions';
 export const indexNameVariantFeatureSuggestion = process.env.VARIANTS_SUGGESTIONS_INDEX_NAME || 'variant_suggestions';
 
-export const usersApiURL = process.env.USERS_API_URL || 'https://users.qa.cqdg.ferlab.bio';
+export const usersApiURL = process.env.USERS_API_URL || 'https://users.qa.juno.cqdg.ferlab.bio';
 export const maxSetContentSize: number = Number.parseInt(process.env.MAX_SET_CONTENT_SIZE) || 10000;
 
 export const fileIdKey = process.env.FILE_ID_KEY || 'file_id';

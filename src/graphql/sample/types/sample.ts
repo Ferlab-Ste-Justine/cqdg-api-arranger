@@ -19,13 +19,12 @@ import SampleAgg from './sampleAgg';
 export const SampleType = new GraphQLObjectType({
   name: 'SampleType',
   fields: () => ({
-    id: { type: GraphQLString },
-    age_biospecimen_collection: { type: GraphQLString },
+    id: { type: GraphQLString, resolve: parent => parent.sample_id },
     biospecimen_id: { type: GraphQLString },
-    biospecimen_tissue_source: { type: GraphQLString },
-    release_id: { type: GraphQLString },
-    sample_2_id: { type: GraphQLString },
     sample_id: { type: GraphQLString },
+    sample_2_id: { type: GraphQLString },
+    biospecimen_tissue_source: { type: GraphQLString },
+    age_biospecimen_collection: { type: GraphQLString },
     sample_type: { type: GraphQLString },
     security: { type: GraphQLString },
     study_code: { type: GraphQLString },

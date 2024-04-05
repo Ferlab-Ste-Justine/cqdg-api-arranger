@@ -43,7 +43,9 @@ const CmcType = new GraphQLObjectType({
 export const VariantType = new GraphQLObjectType({
   name: 'Variant',
   fields: () => ({
-    id: { type: GraphQLString },
+    id: { type: GraphQLString, resolve: parent => parent.locus },
+    hgvsg: { type: GraphQLString },
+    locus: { type: GraphQLString },
     studies: { type: StudiesType },
     genes: { type: GenesType, resolve: parent => parent.genes },
     //todo: genes by gene_centric
@@ -55,8 +57,6 @@ export const VariantType = new GraphQLObjectType({
     end: { type: GraphQLFloat },
     gene_external_reference: { type: new GraphQLList(GraphQLString) },
     hash: { type: GraphQLString },
-    hgvsg: { type: GraphQLString },
-    locus: { type: GraphQLString },
     max_impact_score: { type: GraphQLFloat },
     reference: { type: GraphQLString },
     rsnumber: { type: GraphQLString },

@@ -10,7 +10,6 @@ import {
   MatchBoxStateType,
 } from '../../common/types';
 import GraphQLJSON from '../../common/types/jsonType';
-import FileModel from '../../file/model';
 import FilesType from '../../file/types/file';
 import SamplesType from '../../sample/types/sample';
 import { StudyType } from '../../study/types/study';
@@ -32,7 +31,7 @@ const SexType = new GraphQLEnumType({
 export const ParticipantType = new GraphQLObjectType({
   name: 'Participant',
   fields: () => ({
-    id: { type: GraphQLString },
+    id: { type: GraphQLString, resolve: parent => parent.participant_id },
     participant_id: { type: GraphQLString },
     participant_2_id: { type: GraphQLString },
     sex: { type: SexType },
@@ -46,7 +45,6 @@ export const ParticipantType = new GraphQLObjectType({
     is_a_proband: { type: GraphQLBoolean },
     is_affected: { type: GraphQLString },
     relationship_to_proband: { type: GraphQLString },
-    release_id: { type: GraphQLString },
     security: { type: GraphQLString },
     study_code: { type: GraphQLString },
     study_id: { type: GraphQLString },

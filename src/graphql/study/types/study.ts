@@ -37,7 +37,9 @@ export const DataAccessCodesType = new GraphQLObjectType({
 export const StudyType = new GraphQLObjectType({
   name: 'Study',
   fields: () => ({
-    id: { type: GraphQLString },
+    id: { type: GraphQLString, resolve: parent => parent.study_code },
+    study_code: { type: GraphQLString },
+    study_id: { type: GraphQLString },
     data_category: { type: GraphQLString },
     description: { type: GraphQLString },
     domain: { type: new GraphQLList(GraphQLString) },
@@ -58,12 +60,9 @@ export const StudyType = new GraphQLObjectType({
       },
     },
     population: { type: GraphQLString },
-    release_id: { type: GraphQLString },
     sample_count: { type: GraphQLFloat },
     security: { type: GraphQLString },
     status: { type: GraphQLString },
-    study_code: { type: GraphQLString },
-    study_id: { type: GraphQLString },
     study_version: { type: GraphQLString },
     contact: { type: StudyContactType },
     data_access_codes: { type: DataAccessCodesType },
