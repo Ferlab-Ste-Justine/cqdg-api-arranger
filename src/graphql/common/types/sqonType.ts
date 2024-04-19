@@ -1,13 +1,14 @@
-import { CONSTANTS as ARRANGER_CONSTANTS } from '@arranger/middleware';
 import { GraphQLEnumType, GraphQLInputObjectType, GraphQLList, GraphQLString } from 'graphql';
+
+import { AND_OP, IN_OP, OR_OP } from '../../../arranger/constants';
 
 const OpType = new GraphQLEnumType({
   name: 'OpType',
   description: '',
   values: {
-    in: { value: ARRANGER_CONSTANTS.in },
-    or: { value: ARRANGER_CONSTANTS.or },
-    and: { value: ARRANGER_CONSTANTS.and },
+    in: { value: IN_OP },
+    or: { value: OR_OP },
+    and: { value: AND_OP },
   },
 });
 
