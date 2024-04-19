@@ -1,4 +1,6 @@
-const extendedMapping = [
+import { I_ExtendedMappingSetFieldInput } from '../../arranger/types';
+
+const extendedMapping: I_ExtendedMappingSetFieldInput[] = [
   {
     unit: null,
     displayValues: {},

@@ -1,7 +1,7 @@
 import { GraphQLBoolean, GraphQLEnumType, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
 import { esParticipantIndex } from '../../../config/env';
-import { aggsResolver, hitsResolver } from '../../common/resolvers';
+import { aggsResolver, columnStateResolver, hitsResolver } from '../../common/resolvers';
 import {
   aggregationsArgsType,
   AggsStateType,
@@ -114,7 +114,10 @@ const ParticipantsType = new GraphQLObjectType({
       resolve: () => extendedMapping,
     },
     aggsState: { type: AggsStateType },
-    columnsState: { type: ColumnsStateType },
+    columnsState: {
+      type: ColumnsStateType,
+      resolve: (_, args) => columnStateResolver(args, ParticipantType),
+    },
     matchBoxState: { type: MatchBoxStateType },
     aggregations: {
       type: ParticipantAgg,

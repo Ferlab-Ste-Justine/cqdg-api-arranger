@@ -1,5 +1,4 @@
-import { buildQuery } from '@arranger/middleware';
-
+import { buildQuery } from '../../arranger';
 import esClient from './client';
 import { DEFAULT_HITS_SIZE, DEFAULT_SORT, DEFAULT_SQON } from './constants';
 
@@ -15,7 +14,7 @@ const searchHits = async ({
   offset = 0,
 }) => {
   const query = buildQuery({
-    nestedFields,
+    nestedFieldNames: nestedFields,
     filters: sqon,
   });
 

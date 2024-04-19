@@ -1,5 +1,6 @@
 import { GraphQLBoolean, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
+import ColumnsStateType from './columnsStateType';
 import GraphQLJSON from './jsonType';
 import { SortType } from './sortType';
 
@@ -26,22 +27,6 @@ export const AggsStateType = new GraphQLObjectType({
   }),
 });
 
-export const ColumnsStateType = new GraphQLObjectType({
-  name: 'ColumnsStateType',
-  fields: () => ({
-    timestamp: { type: GraphQLString },
-    state: { type: new GraphQLList(ColumnsStateType) },
-  }),
-});
-
-export const MatchBoxStateType = new GraphQLObjectType({
-  name: 'MatchBoxStateType',
-  fields: () => ({
-    timestamp: { type: GraphQLString },
-    state: { type: new GraphQLList(MatchBoxFieldType) },
-  }),
-});
-
 export const MatchBoxFieldType = new GraphQLObjectType({
   name: 'MatchBoxFieldType',
   fields: () => ({
@@ -53,10 +38,16 @@ export const MatchBoxFieldType = new GraphQLObjectType({
   }),
 });
 
+export const MatchBoxStateType = new GraphQLObjectType({
+  name: 'MatchBoxStateType',
+  fields: () => ({
+    timestamp: { type: GraphQLString },
+    state: { type: new GraphQLList(MatchBoxFieldType) },
+  }),
+});
+
+//todo: rm aggregationsType for AggregationsType or skip it with GraphQLJSON
 export const aggregationsType = GraphQLJSON;
-// export const aggregationsType = new GraphQLObjectType({
-//   name: 'aggregationsType',
-//   fields: () => ({
-//     id: { type: GraphQLString },
-//   }),
-// });
+
+export { default as ColumnsStateType } from './columnsStateType';
+export { default as AggregationsType } from './aggregationsType';

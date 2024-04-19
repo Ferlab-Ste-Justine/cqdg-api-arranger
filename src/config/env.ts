@@ -41,3 +41,6 @@ export const participantFileKey = process.env.TO_PARTICIPANT_FILE_ID_KEY || 'fil
 export const participantBiospecimenKey = process.env.TO_PARTICIPANT_BIOSPECIMEN_ID_KEY || 'biospecimens.sample_id';
 
 export const cacheTTL: number = Number.parseInt(process.env.CACHE_TTL_SEC) || 3600;
+export const DOWNLOAD_STREAM_BUFFER_SIZE = Number.parseInt(process.env.DOWNLOAD_STREAM_BUFFER_SIZE) || 2000;
+export const ALLOW_CUSTOM_MAX_DOWNLOAD_ROWS = process.env.ALLOW_CUSTOM_MAX_DOWNLOAD_ROWS || false;
+export const MAX_DOWNLOAD_ROWS = maxSetContentSize;

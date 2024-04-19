@@ -5,6 +5,7 @@ import { Keycloak } from 'keycloak-connect';
 import NodeCache from 'node-cache';
 
 import packageJson from '../package.json';
+import downloadRouter from './arranger/download/downloadRouter';
 import { cacheTTL, esHost, keycloakURL } from './config/env';
 import genomicFeatureSuggestions, { SUGGESTIONS_TYPES } from './endpoints/genomicFeatureSuggestions';
 import { getPhenotypesNodes } from './endpoints/phenotypes';
@@ -123,6 +124,8 @@ const buildApp = (keycloak: Keycloak): Express => {
 
     res.send({ data });
   });
+
+  app.use('/cqdg/download', downloadRouter());
 
   app.use(globalErrorLogger, globalErrorHandler);
 

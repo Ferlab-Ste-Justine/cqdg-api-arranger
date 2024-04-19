@@ -23,7 +23,7 @@ const startApp = async () => {
       plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
       status400ForVariableCoercionErrors: true,
       formatError: error => {
-        console.error('[ApolloServer] formatError', error);
+        console.error('[ApolloServer] error', error);
         return error;
       },
     });

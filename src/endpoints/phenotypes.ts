@@ -69,5 +69,9 @@ const getPhenotypesNodesByIds = async (ids: string[], type: string, aggregations
     variables,
   });
 
+  if (results?.errors) {
+    console.error('[getPhenotypesNodesByIds]', results.errors?.[0] || results.errors);
+  }
+
   return get(results, `data.Participant.aggregations.${type}__name.buckets`, []);
 };

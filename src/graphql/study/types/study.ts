@@ -1,7 +1,7 @@
 import { GraphQLBoolean, GraphQLFloat, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
 import { esStudyIndex } from '../../../config/env';
-import { aggsResolver, hitsResolver } from '../../common/resolvers';
+import { aggsResolver, columnStateResolver, hitsResolver } from '../../common/resolvers';
 import {
   aggregationsArgsType,
   AggsStateType,
@@ -115,7 +115,10 @@ const StudiesType = new GraphQLObjectType({
       resolve: () => extendedMapping,
     },
     aggsState: { type: AggsStateType },
-    columnsState: { type: ColumnsStateType },
+    columnsState: {
+      type: ColumnsStateType,
+      resolve: (_, args) => columnStateResolver(args, StudyType),
+    },
     matchBoxState: { type: MatchBoxStateType },
     aggregations: {
       type: StudyAggType,

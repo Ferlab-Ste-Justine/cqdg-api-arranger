@@ -1,6 +1,4 @@
-// Legacy code from arranger 2.16
-import { buildAggregations, buildQuery, flattenAggregations } from '@arranger/middleware';
-
+import { buildAggregations, buildQuery, flattenAggregations } from '../../arranger';
 import esClient from './client';
 import { DEFAULT_SORT, DEFAULT_SQON } from './constants';
 
@@ -18,7 +16,7 @@ const searchAggregations = async ({
   index,
 }) => {
   const query = buildQuery({
-    nestedFields,
+    nestedFieldNames: nestedFields,
     filters: sqon,
   });
 
@@ -26,7 +24,7 @@ const searchAggregations = async ({
     query,
     sqon,
     graphqlFields,
-    nestedFields,
+    nestedFieldNames: nestedFields,
     aggregationsFilterThemselves,
   });
 

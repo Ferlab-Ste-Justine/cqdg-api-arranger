@@ -1,7 +1,7 @@
 import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
 import { esBiospecimenIndex } from '../../../config/env';
-import { aggsResolver, hitsResolver } from '../../common/resolvers';
+import { aggsResolver, columnStateResolver, hitsResolver } from '../../common/resolvers';
 import {
   aggregationsArgsType,
   AggsStateType,
@@ -74,7 +74,10 @@ const SamplesType = new GraphQLObjectType({
       resolve: () => extendedMapping,
     },
     aggsState: { type: AggsStateType },
-    columnsState: { type: ColumnsStateType },
+    columnsState: {
+      type: ColumnsStateType,
+      resolve: (_, args) => columnStateResolver(args, SampleType),
+    },
     matchBoxState: { type: MatchBoxStateType },
     aggregations: {
       type: SampleAgg,

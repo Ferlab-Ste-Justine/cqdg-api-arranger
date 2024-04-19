@@ -1,7 +1,7 @@
 import { GraphQLFloat, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
 import { esGeneIndex } from '../../../config/env';
-import { hitsResolver } from '../../common/resolvers';
+import { columnStateResolver, hitsResolver } from '../../common/resolvers';
 import { aggregationsType, AggsStateType, ColumnsStateType, hitsArgsType, MatchBoxStateType } from '../../common/types';
 import GraphQLJSON from '../../common/types/jsonType';
 import extendedMapping from '../extendedMapping';
@@ -94,7 +94,10 @@ const GenesType = new GraphQLObjectType({
       resolve: () => extendedMapping,
     },
     aggsState: { type: AggsStateType },
-    columnsState: { type: ColumnsStateType },
+    columnsState: {
+      type: ColumnsStateType,
+      resolve: (_, args) => columnStateResolver(args, GeneType),
+    },
     matchBoxState: { type: MatchBoxStateType },
     aggregations: { type: aggregationsType },
   }),
