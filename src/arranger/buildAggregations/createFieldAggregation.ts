@@ -117,7 +117,7 @@ const computeCardinalityAggregation = ({ field, graphqlField }) => ({
  * graphqlFields: output from `graphql-fields` (https://github.com/robrichard/graphql-fields)
  * field renamed to field, as that's the property name in ES
  */
-export default ({ field, graphqlField = {}, isNested = false, termFilters = [] }) => {
+export default ({ field, graphqlField = {}, isNested = false, termFilters = [] }: any) => {
   const types = [BUCKETS, STATS, HISTOGRAM, BUCKET_COUNT, CARDINALITY, TOPHITS].filter(t => graphqlField[t]);
 
   return types.reduce((acc, type) => {
