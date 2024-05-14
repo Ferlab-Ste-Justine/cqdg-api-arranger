@@ -44,14 +44,14 @@ test('1.injectNestedFiltersToAggs should not be mutative', () => {
       {
         op: 'in',
         content: {
-          fieldName: 'participants.diagnoses.mondo_id_diagnosis',
+          field: 'participants.diagnoses.mondo_id_diagnosis',
           value: ['SOME_VALUE'],
         },
       },
       {
         op: 'in',
         content: {
-          fieldName: 'participants.diagnoses.source_text_diagnosis',
+          field: 'participants.diagnoses.source_text_diagnosis',
           value: ['SOME_VALUE'],
         },
       },

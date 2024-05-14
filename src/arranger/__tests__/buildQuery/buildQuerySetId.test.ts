@@ -9,7 +9,7 @@ test('1.buildQuery sets', () => {
       input: {
         nestedFieldNames,
         filters: {
-          content: { fieldName: 'case_id', value: ['set_id:aaa'] },
+          content: { field: 'case_id', value: ['set_id:aaa'] },
           op: 'in',
         },
       },
@@ -29,7 +29,7 @@ test('1.buildQuery sets', () => {
       input: {
         nestedFieldNames,
         filters: {
-          content: { fieldName: 'ssms.ssm_id', value: ['set_id:aaa'] },
+          content: { field: 'ssms.ssm_id', value: ['set_id:aaa'] },
           op: 'in',
         },
       },
@@ -49,7 +49,7 @@ test('1.buildQuery sets', () => {
       input: {
         nestedFieldNames,
         filters: {
-          content: { fieldName: 'files.file_id', value: ['set_id:aaa'] },
+          content: { field: 'files.file_id', value: ['set_id:aaa'] },
           op: 'in',
         },
       },

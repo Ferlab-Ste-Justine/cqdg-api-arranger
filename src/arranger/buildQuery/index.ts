@@ -83,12 +83,12 @@ function getTermFilter({ nestedFieldNames, filter }) {
 
 function getFuzzyFilter({ nestedFieldNames, filter }) {
   const { content } = filter;
-  const { value, fieldNames } = content;
+  const { value, fields } = content;
 
   // group queries by their nesting level
   const sortedNested = nestedFieldNames?.slice().sort((a, b) => b.length - a.length);
   const nestedMap =
-    fieldNames?.reduce((acc, field) => {
+    fields?.reduce((acc, field) => {
       const group = sortedNested?.find(y => field?.includes?.(y)) || '';
       if (acc[group]) {
         acc[group].push(field);

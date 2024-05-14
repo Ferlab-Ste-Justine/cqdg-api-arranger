@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import { keycloakRealm, keycloakURL } from '../src/config/env';
 
 const privateKey = `
 -----BEGIN RSA PRIVATE KEY-----
@@ -17,7 +18,7 @@ export const publicKey = `MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJgoVgqi7/C9uSoUsfQeep
 export const getToken = (expire = 1000, sub = '12345-678-90abcdef', roles = []) =>
   jwt.sign(
     {
-      iss: 'https://kf-keycloak-qa.kf-strides.org/auth/realms/kidsfirstdrc',
+      iss: `${keycloakURL}/realms/${keycloakRealm}`,
       sub: sub,
       aud: 'kf-api-arranger',
       jti: '2c166d55-5ae6-4fb4-9daa-a1d5e1f535d7',

@@ -6,7 +6,7 @@ import NodeCache from 'node-cache';
 
 import packageJson from '../package.json';
 import downloadRouter from './arranger/download/downloadRouter';
-import { cacheTTL, esHost, keycloakURL } from './config/env';
+import { cacheTTL, esHost, isDev, keycloakURL } from './config/env';
 import genomicFeatureSuggestions, { SUGGESTIONS_TYPES } from './endpoints/genomicFeatureSuggestions';
 import { getPhenotypesNodes } from './endpoints/phenotypes';
 import {
@@ -42,12 +42,27 @@ const buildApp = (keycloak: Keycloak): Express => {
   );
   app.use(injectBodyHttpHeaders());
 
+  /** Update the validateGrant to Provides more logging/information
+   * on the reason the token is rejected by keycloak **/
+  // const k: any = keycloak;
+  // const originalValidateGrant = k.grantManager.validateGrant;
+  // k.grantManager.validateGrant = grant =>
+  //   originalValidateGrant.call(k.grantManager, grant).catch(err => {
+  //     console.error('Grant Validation Error', err);
+  //     throw err;
+  //   });
+
   app.use(
     keycloak.middleware({
       logout: '/logout',
       admin: '/',
     }),
   );
+
+  /** disable protect to enable graphql playground */
+  if (!isDev) {
+    app.use(keycloak.protect());
+  }
 
   app.use(resolveSetIdMiddleware());
 
