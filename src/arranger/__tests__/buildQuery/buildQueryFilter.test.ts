@@ -8,7 +8,7 @@ test('1.buildQuery filter', () => {
       input: {
         nestedFieldNames,
         filters: {
-          content: { fieldNames: ['files.foo', 'test'], value: '*v*' },
+          content: { fields: ['files.foo', 'test'], value: '*v*' },
           op: 'filter',
         },
       },

@@ -71,7 +71,7 @@ export const VariantType = new GraphQLObjectType({
     study_frequencies_wgs: { type: StudiesType, resolve: parent => parent.study_frequencies_wgs },
   }),
   extensions: {
-    nestedFields: ['genes', 'studies'],
+    nestedFields: ['genes', 'studies', 'genes.consequences'],
     esIndex: esVariantIndex,
   },
 });
