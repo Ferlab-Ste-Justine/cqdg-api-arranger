@@ -9,9 +9,11 @@ import http from 'http';
 import Keycloak from 'keycloak-connect';
 
 import buildApp from './app';
+import downloadRouter from './arranger/download/downloadRouter';
 import { port, project } from './config/env';
 import keycloakConfig from './config/keycloak';
 import schema from './graphql/schema';
+import esClient from './services/elasticsearch/client';
 
 const startApp = async () => {
   try {
@@ -27,16 +29,19 @@ const startApp = async () => {
         return error;
       },
     });
-    const context = async req => ({
+    const resolveContext = async req => ({
       auth: req.kauth?.grant?.access_token || {},
+      schema,
+      esClient,
     });
     await server.start();
     await app.use(
       `/${project}/graphql`,
       cors(),
       express.json({ limit: '50mb' }),
-      expressMiddleware(server, { context }),
+      expressMiddleware(server, { context: resolveContext }),
     );
+    await app.use(`/${project}/download`, downloadRouter(resolveContext));
     await httpServer.listen({ port });
     console.info(`[startApp] 🚀 Server ready on ${port}`);
   } catch (err) {

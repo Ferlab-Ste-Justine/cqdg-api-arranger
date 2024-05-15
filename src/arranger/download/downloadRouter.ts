@@ -94,20 +94,18 @@ export const dataStream = async ({ ctx, params }) => {
   throw new Error('files array was missing or empty');
 };
 
-const downloadRouter = () => {
+const downloadRouter = resolveContext => {
   const router = Router();
 
   router.use(urlencoded({ extended: true }));
 
-  router.post('/', async function(req, res) {
+  router.post('/', async (req, res) => {
     try {
       console.time('download');
 
       const { params } = req.body;
       const { output, responseFileName, contentType } = await dataStream({
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        ctx: req.context,
+        ctx: await resolveContext(req),
         params: JSON.parse(params),
       });
 
