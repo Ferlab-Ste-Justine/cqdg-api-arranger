@@ -76,7 +76,7 @@ export interface ScalarFieldMapping extends FieldMappingBase {
     | 'boolean'
     | 'binary';
   fields?: {
-    [key: string]: { [key: string]: {} };
+    [key: string]: { [key: string]: any };
   };
 }
 

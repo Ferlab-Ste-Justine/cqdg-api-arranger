@@ -1,4 +1,4 @@
-import { I_ExtendedMappingSetFieldInput } from '../../arranger/types';
+import { I_ExtendedMappingSetFieldInput } from '@ferlab/next/lib/legacy/types';
 
 const extendedMapping: I_ExtendedMappingSetFieldInput[] = [
   {

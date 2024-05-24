@@ -11,7 +11,6 @@ FROM node:18.10-alpine AS prod-image
 WORKDIR /code
 COPY --from=build-image ./code/dist ./dist
 COPY package* ./
-COPY ./resource ./resource
 COPY ./admin ./admin
 RUN npm install --production
 

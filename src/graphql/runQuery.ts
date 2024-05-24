@@ -1,7 +1,7 @@
+import { SetSqon, Sort } from '@ferlab/next/lib/sets/types';
 import { graphql } from 'graphql';
 import { ExecutionResult } from 'graphql/execution/execute';
 
-import { SetSqon, Sort } from '../endpoints/sets/setsTypes';
 import esClient from '../services/elasticsearch/client';
 import schema from './schema';
 

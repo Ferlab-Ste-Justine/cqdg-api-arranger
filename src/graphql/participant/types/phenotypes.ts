@@ -1,7 +1,12 @@
+import {
+  aggregationsType,
+  AggsStateType,
+  ColumnsStateType,
+  hitsArgsType,
+  MatchBoxStateType,
+} from '@ferlab/next/lib/common/types';
+import GraphQLJSON from '@ferlab/next/lib/common/types/jsonType';
 import { GraphQLBoolean, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
-
-import { aggregationsType, AggsStateType, ColumnsStateType, hitsArgsType, MatchBoxStateType } from '../../common/types';
-import GraphQLJSON from '../../common/types/jsonType';
 
 export const PhenotypeType = new GraphQLObjectType({
   name: 'PhenotypeType',
@@ -33,7 +38,7 @@ const PhenotypeHitsType = new GraphQLObjectType({
     total: { type: GraphQLInt },
     edges: {
       type: new GraphQLList(PhenotypeEdgesType),
-      resolve: async (parent, args) => parent.edges.map(node => ({ searchAfter: args?.searchAfter || [], node })),
+      resolve: async (parent, args) => parent.edges.map((node) => ({ searchAfter: args?.searchAfter || [], node })),
     },
   }),
 });
@@ -44,7 +49,7 @@ const PhenotypesType = new GraphQLObjectType({
     hits: {
       type: PhenotypeHitsType,
       args: hitsArgsType,
-      resolve: async parent => ({ total: parent?.length || 0, edges: parent || [] }),
+      resolve: async (parent) => ({ total: parent?.length || 0, edges: parent || [] }),
     },
     mapping: { type: GraphQLJSON },
     extended: { type: GraphQLJSON },

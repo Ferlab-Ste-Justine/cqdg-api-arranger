@@ -1,7 +1,12 @@
+import {
+  aggregationsType,
+  AggsStateType,
+  ColumnsStateType,
+  hitsArgsType,
+  MatchBoxStateType,
+} from '@ferlab/next/lib/common/types';
+import GraphQLJSON from '@ferlab/next/lib/common/types/jsonType';
 import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
-
-import { aggregationsType, AggsStateType, ColumnsStateType, hitsArgsType, MatchBoxStateType } from '../../common/types';
-import GraphQLJSON from '../../common/types/jsonType';
 
 const DddType = new GraphQLObjectType({
   name: 'DddType',
@@ -24,7 +29,7 @@ const DddHitsType = new GraphQLObjectType({
     total: { type: GraphQLInt },
     edges: {
       type: new GraphQLList(DddEdgesType),
-      resolve: async (parent, args) => parent.edges.map(node => ({ searchAfter: args?.searchAfter || [], node })),
+      resolve: async (parent, args) => parent.edges.map((node) => ({ searchAfter: args?.searchAfter || [], node })),
     },
   }),
 });
@@ -35,7 +40,7 @@ const DddsType = new GraphQLObjectType({
     hits: {
       type: DddHitsType,
       args: hitsArgsType,
-      resolve: async parent => {
+      resolve: async (parent) => {
         const results = parent.ddd;
         return { total: results?.length || 0, edges: results || [] };
       },

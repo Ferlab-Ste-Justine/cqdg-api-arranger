@@ -1,15 +1,15 @@
-import { GraphQLBoolean, GraphQLFloat, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
-
-import { esStudyIndex } from '../../../config/env';
-import { aggsResolver, columnStateResolver, hitsResolver } from '../../common/resolvers';
+import { aggsResolver, columnStateResolver, hitsResolver } from '@ferlab/next/lib/common/resolvers';
 import {
   aggregationsArgsType,
   AggsStateType,
   ColumnsStateType,
   hitsArgsType,
   MatchBoxStateType,
-} from '../../common/types';
-import GraphQLJSON from '../../common/types/jsonType';
+} from '@ferlab/next/lib/common/types';
+import GraphQLJSON from '@ferlab/next/lib/common/types/jsonType';
+import { GraphQLBoolean, GraphQLFloat, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
+import { esStudyIndex } from 'src/config/env';
+
 import DataSetsType from '../../file/types/dataSets';
 import { totalType } from '../../variant/types/frequencies';
 import extendedMapping from '../extendedMapping';
@@ -37,7 +37,7 @@ export const DataAccessCodesType = new GraphQLObjectType({
 export const StudyType = new GraphQLObjectType({
   name: 'Study',
   fields: () => ({
-    id: { type: GraphQLString, resolve: parent => parent.study_code },
+    id: { type: GraphQLString, resolve: (parent) => parent.study_code },
     study_code: { type: GraphQLString },
     study_id: { type: GraphQLString },
     data_category: { type: GraphQLString },
@@ -55,7 +55,7 @@ export const StudyType = new GraphQLObjectType({
     participant_count: { type: GraphQLFloat },
     participant_count2: {
       type: GraphQLFloat,
-      resolve: study => {
+      resolve: (study) => {
         //do req to ES on participant_secret_centric index
       },
     },
@@ -96,7 +96,7 @@ const StudiesHitsType = new GraphQLObjectType({
     total: { type: GraphQLInt },
     edges: {
       type: new GraphQLList(StudyEdgesType),
-      resolve: async (parent, args) => parent.edges.map(node => ({ searchAfter: args?.searchAfter || [], node })),
+      resolve: async (parent, args) => parent.edges.map((node) => ({ searchAfter: args?.searchAfter || [], node })),
     },
   }),
 });
@@ -107,7 +107,7 @@ const StudiesType = new GraphQLObjectType({
     hits: {
       type: StudiesHitsType,
       args: hitsArgsType,
-      resolve: (parent, args) => hitsResolver(parent, args, StudyType),
+      resolve: (parent, args, context) => hitsResolver(parent, args, StudyType, context.esClient),
     },
     mapping: { type: GraphQLJSON },
     extended: {
@@ -117,13 +117,13 @@ const StudiesType = new GraphQLObjectType({
     aggsState: { type: AggsStateType },
     columnsState: {
       type: ColumnsStateType,
-      resolve: (_, args) => columnStateResolver(args, StudyType),
+      resolve: (_, args, context) => columnStateResolver(args, StudyType, context.esClient),
     },
     matchBoxState: { type: MatchBoxStateType },
     aggregations: {
       type: StudyAggType,
       args: aggregationsArgsType,
-      resolve: (parent, args, context, info) => aggsResolver(args, info, StudyType),
+      resolve: (parent, args, context, info) => aggsResolver(args, info, StudyType, context.esClient),
     },
   }),
 });

@@ -21,7 +21,7 @@ const getBy = async ({ field, value, path, args, context }) => {
   });
 
   const hits = res?.body?.hits?.hits || [];
-  return hits.map(hit => hit._source) || [];
+  return hits.map((hit) => hit._source) || [];
 };
 
 const StudyModel = {

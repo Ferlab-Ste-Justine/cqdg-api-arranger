@@ -1,4 +1,4 @@
-import AggregationsType, { NumericAggregationsType } from '../../common/types/aggregationsType';
+import AggregationsType, { NumericAggregationsType } from '@ferlab/next/lib/common/types/aggregationsType';
 
 const GeneAggFields = {
   alias: { type: AggregationsType },

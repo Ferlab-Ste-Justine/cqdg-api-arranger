@@ -1,7 +1,13 @@
+import {
+  aggregationsType,
+  AggsStateType,
+  ColumnsStateType,
+  hitsArgsType,
+  MatchBoxStateType,
+} from '@ferlab/next/lib/common/types';
+import GraphQLJSON from '@ferlab/next/lib/common/types/jsonType';
 import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
-import { aggregationsType, AggsStateType, ColumnsStateType, hitsArgsType, MatchBoxStateType } from '../../common/types';
-import GraphQLJSON from '../../common/types/jsonType';
 import GeneModel from '../model';
 
 export const OmimType = new GraphQLObjectType({
@@ -27,9 +33,9 @@ const OmimHitsType = new GraphQLObjectType({
             searchAfter: { type: GraphQLJSON },
             node: { type: OmimType },
           }),
-        }),
+        })
       ),
-      resolve: async (parent, args) => parent.edges.map(node => ({ searchAfter: args?.searchAfter || [], node })),
+      resolve: async (parent, args) => parent.edges.map((node) => ({ searchAfter: args?.searchAfter || [], node })),
     },
   }),
 });
@@ -40,7 +46,7 @@ export const OmimsType = new GraphQLObjectType({
     hits: {
       type: OmimHitsType,
       args: hitsArgsType,
-      resolve: async parent => ({ total: parent?.length || 0, edges: parent || [] }),
+      resolve: async (parent) => ({ total: parent?.length || 0, edges: parent || [] }),
     },
     mapping: { type: GraphQLJSON },
     extended: { type: GraphQLJSON },

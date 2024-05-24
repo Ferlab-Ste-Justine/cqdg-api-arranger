@@ -1,20 +1,13 @@
+import { createSet, deleteSet, getSets, SubActionTypes, updateSetContent, updateSetTag } from '@ferlab/next/lib/sets';
+import { Set, UpdateSetContentBody, UpdateSetTagBody } from '@ferlab/next/lib/sets/types';
 import { Express } from 'express';
 import Keycloak from 'keycloak-connect';
 import request from 'supertest';
 
-import { getToken, publicKey } from '../test/authTestUtils';
 import buildApp from './app';
 import { keycloakClient, keycloakRealm, keycloakURL } from './config/env';
-import {
-  createSet,
-  deleteSet,
-  getSets,
-  SubActionTypes,
-  updateSetContent,
-  updateSetTag,
-} from './endpoints/sets/setsFeature';
-import { Set, UpdateSetContentBody, UpdateSetTagBody } from './endpoints/sets/setsTypes';
 import { getStatistics, Statistics } from './endpoints/statistics';
+import { getToken, publicKey } from './utils/authTestUtils';
 
 jest.mock('./endpoints/sets/setsFeature');
 jest.mock('./endpoints/statistics');
@@ -48,10 +41,7 @@ describe('Express app (without Arranger)', () => {
   });
 
   describe('POST /cache-clear', () => {
-    it('should return 403 if no Authorization header', async () =>
-      await request(app)
-        .post('/cache-clear')
-        .expect(403));
+    it('should return 403 if no Authorization header', async () => await request(app).post('/cache-clear').expect(403));
 
     it('should return 403 if not an ADMIN', async () => {
       const token = getToken();
@@ -119,10 +109,7 @@ describe('Express app (without Arranger)', () => {
       (getSets as jest.Mock).mockReset();
     });
 
-    it('should return 403 if no Authorization header', () =>
-      request(app)
-        .get('/sets')
-        .expect(403));
+    it('should return 403 if no Authorization header', () => request(app).get('/sets').expect(403));
 
     it('should return 200 if Authorization header contains valid token and no error occurs', async () => {
       const expectedSets = [
@@ -189,10 +176,7 @@ describe('Express app (without Arranger)', () => {
       (createSet as jest.Mock).mockReset();
     });
 
-    it('should return 403 if no Authorization header', () =>
-      request(app)
-        .post('/sets')
-        .expect(403));
+    it('should return 403 if no Authorization header', () => request(app).post('/sets').expect(403));
 
     it('should return 200 if Authorization header contains valid token and no error occurs', async () => {
       const expectedCreatedSet = {
@@ -204,7 +188,7 @@ describe('Express app (without Arranger)', () => {
 
       const token = getToken();
 
-      const checkRes = res => {
+      const checkRes = (res) => {
         expect(JSON.stringify(res.body)).toEqual(JSON.stringify(expectedCreatedSet));
       };
 
@@ -266,11 +250,9 @@ describe('Express app (without Arranger)', () => {
       (updateSetContent as jest.Mock).mockReset();
     });
 
-    it('should return 403 if no Authorization header', () =>
-      request(app)
-        .put('/sets/1eh')
-        .expect(403));
+    it('should return 403 if no Authorization header', () => request(app).put('/sets/1eh').expect(403));
 
+    // eslint-disable-next-line max-len
     it('should return 200 if Authorization header contains valid token and no error occurs - update tag name', async () => {
       const expectedUpdatedSet = {
         id: '1eh',
@@ -282,7 +264,7 @@ describe('Express app (without Arranger)', () => {
       const userId = 'user_id';
       const token = getToken(1000, userId);
 
-      const checkRes = res => {
+      const checkRes = (res) => {
         expect(JSON.stringify(res.body)).toEqual(JSON.stringify(expectedUpdatedSet));
       };
 
@@ -300,6 +282,7 @@ describe('Express app (without Arranger)', () => {
       expect((updateSetTag as jest.Mock).mock.calls[0][3]).toEqual('1eh');
     });
 
+    // eslint-disable-next-line max-len
     it('should return 200 if Authorization header contains valid token and no error occurs - update content', async () => {
       const expectedUpdatedSet = {
         id: '1eh',
@@ -311,7 +294,7 @@ describe('Express app (without Arranger)', () => {
       const userId = 'user_id';
       const token = getToken(1000, userId);
 
-      const checkRes = res => {
+      const checkRes = (res) => {
         expect(JSON.stringify(res.body)).toEqual(JSON.stringify(expectedUpdatedSet));
       };
 
@@ -352,10 +335,7 @@ describe('Express app (without Arranger)', () => {
       (deleteSet as jest.Mock).mockReset();
     });
 
-    it('should return 403 if no Authorization header', () =>
-      request(app)
-        .delete('/sets/1eh')
-        .expect(403));
+    it('should return 403 if no Authorization header', () => request(app).delete('/sets/1eh').expect(403));
 
     it('should return 200 if Authorization header contains valid token and no error occurs', async () => {
       (deleteSet as jest.Mock).mockImplementation(() => true);

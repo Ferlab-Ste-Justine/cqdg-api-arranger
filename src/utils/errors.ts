@@ -1,7 +1,6 @@
+import { SetNotFoundError } from '@ferlab/next/lib/sets/setError';
 import { NextFunction, Request, Response } from 'express';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
-
-import { SetNotFoundError } from '../endpoints/sets/setError';
 
 export const globalErrorHandler = (err: unknown, _req: Request, res: Response, _next: NextFunction): void => {
   if (err instanceof SetNotFoundError) {

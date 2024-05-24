@@ -1,7 +1,6 @@
+import { AggsStateType, ColumnsStateType, hitsArgsType, MatchBoxStateType } from '@ferlab/next/lib/common/types';
+import GraphQLJSON from '@ferlab/next/lib/common/types/jsonType';
 import { GraphQLFloat, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
-
-import { AggsStateType, ColumnsStateType, hitsArgsType, MatchBoxStateType } from '../../common/types';
-import GraphQLJSON from '../../common/types/jsonType';
 
 export const DataCategoryType = new GraphQLObjectType({
   name: 'DataCategory',
@@ -26,7 +25,7 @@ const DataCategoryHitsType = new GraphQLObjectType({
     total: { type: GraphQLInt },
     edges: {
       type: new GraphQLList(DataCategoryEdgesType),
-      resolve: async (parent, args) => parent.edges.map(node => ({ searchAfter: args?.searchAfter || [], node })),
+      resolve: async (parent, args) => parent.edges.map((node) => ({ searchAfter: args?.searchAfter || [], node })),
     },
   }),
 });
@@ -37,7 +36,7 @@ const DataCategoriesType = new GraphQLObjectType({
     hits: {
       type: DataCategoryHitsType,
       args: hitsArgsType,
-      resolve: async parent => ({ total: parent?.length || 0, edges: parent || [] }),
+      resolve: async (parent) => ({ total: parent?.length || 0, edges: parent || [] }),
     },
     mapping: { type: GraphQLJSON },
     extended: { type: GraphQLJSON },

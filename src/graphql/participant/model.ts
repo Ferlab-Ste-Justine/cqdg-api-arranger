@@ -1,5 +1,6 @@
-import { esParticipantIndex } from '../../config/env';
-import { getBody } from '../../services/elasticsearch/utils';
+import { esParticipantIndex } from 'src/config/env';
+import { getBody } from 'src/services/elasticsearch/utils';
+
 import { ParticipantType } from './types/participant';
 
 const get = async (file_id, context) => {
@@ -18,7 +19,7 @@ const getBy = async ({ field, value, path, args, context }) => {
   });
 
   const hits = res?.body?.hits?.hits || [];
-  return hits.map(hit => hit._source) || [];
+  return hits.map((hit) => hit._source) || [];
 };
 
 const ParticipantModel = {

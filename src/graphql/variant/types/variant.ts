@@ -1,15 +1,15 @@
-import { GraphQLFloat, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
-
-import { esVariantIndex } from '../../../config/env';
-import { aggsResolver, columnStateResolver, hitsResolver } from '../../common/resolvers';
+import { aggsResolver, columnStateResolver, hitsResolver } from '@ferlab/next/lib/common/resolvers';
 import {
   aggregationsArgsType,
   AggsStateType,
   ColumnsStateType,
   hitsArgsType,
   MatchBoxStateType,
-} from '../../common/types';
-import GraphQLJSON from '../../common/types/jsonType';
+} from '@ferlab/next/lib/common/types';
+import GraphQLJSON from '@ferlab/next/lib/common/types/jsonType';
+import { GraphQLFloat, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
+import { esVariantIndex } from 'src/config/env';
+
 import GenesType from '../../gene/types/gene';
 import StudiesType from '../../study/types/study';
 import extendedMapping from '../extendedMapping';
@@ -43,11 +43,11 @@ const CmcType = new GraphQLObjectType({
 export const VariantType = new GraphQLObjectType({
   name: 'Variant',
   fields: () => ({
-    id: { type: GraphQLString, resolve: parent => parent.locus },
+    id: { type: GraphQLString, resolve: (parent) => parent.locus },
     hgvsg: { type: GraphQLString },
     locus: { type: GraphQLString },
     studies: { type: StudiesType },
-    genes: { type: GenesType, resolve: parent => parent.genes },
+    genes: { type: GenesType, resolve: (parent) => parent.genes },
     //todo: genes by gene_centric
     // genes2: { type: GenesType },
     alternate: { type: GraphQLString },
@@ -68,7 +68,7 @@ export const VariantType = new GraphQLObjectType({
     cmc: { type: CmcType },
     external_frequencies: { type: frequenciesType },
     internal_frequencies_wgs: { type: frequenciesType },
-    study_frequencies_wgs: { type: StudiesType, resolve: parent => parent.study_frequencies_wgs },
+    study_frequencies_wgs: { type: StudiesType, resolve: (parent) => parent.study_frequencies_wgs },
   }),
   extensions: {
     nestedFields: [
@@ -99,7 +99,7 @@ export const VariantHitsType = new GraphQLObjectType({
     total: { type: GraphQLInt },
     edges: {
       type: new GraphQLList(VariantEdgesType),
-      resolve: async (parent, args) => parent.edges.map(node => ({ searchAfter: args?.searchAfter || [], node })),
+      resolve: async (parent, args) => parent.edges.map((node) => ({ searchAfter: args?.searchAfter || [], node })),
     },
   }),
 });
@@ -110,7 +110,7 @@ const VariantsType = new GraphQLObjectType({
     hits: {
       type: VariantHitsType,
       args: hitsArgsType,
-      resolve: (parent, args) => hitsResolver(parent, args, VariantType),
+      resolve: (parent, args, context) => hitsResolver(parent, args, VariantType, context.esClient),
     },
     mapping: { type: GraphQLJSON },
     extended: {
@@ -120,13 +120,13 @@ const VariantsType = new GraphQLObjectType({
     aggsState: { type: AggsStateType },
     columnsState: {
       type: ColumnsStateType,
-      resolve: (_, args) => columnStateResolver(args, VariantType),
+      resolve: (_, args, context) => columnStateResolver(args, VariantType, context.esClient),
     },
     matchBoxState: { type: MatchBoxStateType },
     aggregations: {
       type: VariantAggType,
       args: aggregationsArgsType,
-      resolve: (parent, args, context, info) => aggsResolver(args, info, VariantType),
+      resolve: (parent, args, context, info) => aggsResolver(args, info, VariantType, context.esClient),
     },
   }),
 });

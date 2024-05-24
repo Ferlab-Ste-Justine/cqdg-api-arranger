@@ -1,26 +1,26 @@
-import { GraphQLFloat, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
-
-import { esFileIndex } from '../../../config/env';
-import { aggsResolver, columnStateResolver, hitsResolver } from '../../common/resolvers';
+import { aggsResolver, columnStateResolver, hitsResolver } from '@ferlab/next/lib/common/resolvers';
 import {
   aggregationsArgsType,
   AggsStateType,
   ColumnsStateType,
   hitsArgsType,
   MatchBoxStateType,
-} from '../../common/types';
-import GraphQLJSON from '../../common/types/jsonType';
-import ParticipantsType from '../../participant/types/participant';
-import SamplesType from '../../sample/types/sample';
+} from '@ferlab/next/lib/common/types';
+import GraphQLJSON from '@ferlab/next/lib/common/types/jsonType';
+import { GraphQLFloat, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
+import { esFileIndex } from 'src/config/env';
+
+import { BiospecimensType } from '../../biospecimen/types/biospecimen';
+import { ParticipantsType } from '../../participant/types/participant';
 import { StudyType } from '../../study/types/study';
 import extendedMapping from '../extendedMapping';
 import FileAgg from './fileAgg';
 import SequencingExperimentType from './sequencingExperiment';
 
-const FileType = new GraphQLObjectType({
+export const FileType = new GraphQLObjectType({
   name: 'File',
   fields: () => ({
-    id: { type: GraphQLString, resolve: parent => parent.file_id },
+    id: { type: GraphQLString, resolve: (parent) => parent.file_id },
     file_id: { type: GraphQLString },
     file_2_id: { type: GraphQLString },
     biospecimen_reference: { type: GraphQLString },
@@ -39,7 +39,7 @@ const FileType = new GraphQLObjectType({
     study: { type: StudyType },
     //todo: create resolve: get participants and samples from participant_index
     participants: { type: ParticipantsType },
-    biospecimens: { type: SamplesType },
+    biospecimens: { type: BiospecimensType },
     sequencing_experiment: { type: SequencingExperimentType },
   }),
   extensions: {
@@ -62,7 +62,11 @@ const FileHitsType = new GraphQLObjectType({
     total: { type: GraphQLInt },
     edges: {
       type: new GraphQLList(FileEdgesType),
-      resolve: async (parent, args) => parent.edges.map(node => ({ searchAfter: args?.searchAfter || [], node })),
+      resolve: async (parent, args) =>
+        parent.edges.map((node) => ({
+          searchAfter: args?.searchAfter || [],
+          node,
+        })),
     },
   }),
 });
@@ -73,7 +77,7 @@ export const FilesType = new GraphQLObjectType({
     hits: {
       type: FileHitsType,
       args: hitsArgsType,
-      resolve: (parent, args) => hitsResolver(parent, args, FileType),
+      resolve: (parent, args, context) => hitsResolver(parent, args, FileType, context.esClient),
     },
     mapping: { type: GraphQLJSON },
     extended: {
@@ -83,13 +87,13 @@ export const FilesType = new GraphQLObjectType({
     aggsState: { type: AggsStateType },
     columnsState: {
       type: ColumnsStateType,
-      resolve: (_, args) => columnStateResolver(args, FileType),
+      resolve: (_, args, context) => columnStateResolver(args, FileType, context.esClient),
     },
     matchBoxState: { type: MatchBoxStateType },
     aggregations: {
       type: FileAgg,
       args: aggregationsArgsType,
-      resolve: (parent, args, context, info) => aggsResolver(args, info, FileType),
+      resolve: (parent, args, context, info) => aggsResolver(args, info, FileType, context.esClient),
     },
   }),
 });

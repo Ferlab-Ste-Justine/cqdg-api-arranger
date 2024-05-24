@@ -1,9 +1,15 @@
+import { columnStateResolver, hitsResolver } from '@ferlab/next/lib/common/resolvers';
+import {
+  aggregationsType,
+  AggsStateType,
+  ColumnsStateType,
+  hitsArgsType,
+  MatchBoxStateType,
+} from '@ferlab/next/lib/common/types';
+import GraphQLJSON from '@ferlab/next/lib/common/types/jsonType';
 import { GraphQLFloat, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
 import { esGeneIndex } from '../../../config/env';
-import { columnStateResolver, hitsResolver } from '../../common/resolvers';
-import { aggregationsType, AggsStateType, ColumnsStateType, hitsArgsType, MatchBoxStateType } from '../../common/types';
-import GraphQLJSON from '../../common/types/jsonType';
 import extendedMapping from '../extendedMapping';
 import ConsequencesType from './consequence';
 import CosmicsType from './cosmic';
@@ -31,7 +37,7 @@ const SpliceaiType = new GraphQLObjectType({
 export const GeneType = new GraphQLObjectType({
   name: 'GeneType',
   fields: () => ({
-    id: { type: GraphQLString, resolve: parent => parent.alias },
+    id: { type: GraphQLString, resolve: (parent) => parent.alias },
     alias: { type: new GraphQLList(GraphQLString) },
     biotype: { type: GraphQLString },
     chromosome: { type: GraphQLString },
@@ -73,7 +79,7 @@ const GeneHitsType = new GraphQLObjectType({
     total: { type: GraphQLInt },
     edges: {
       type: new GraphQLList(GeneEdgesType),
-      resolve: async (parent, args) => parent.edges.map(node => ({ searchAfter: args?.searchAfter || [], node })),
+      resolve: async (parent, args) => parent.edges.map((node) => ({ searchAfter: args?.searchAfter || [], node })),
     },
   }),
 });
@@ -84,9 +90,9 @@ const GenesType = new GraphQLObjectType({
     hits: {
       type: GeneHitsType,
       args: hitsArgsType,
-      resolve: (parent, args) =>
+      resolve: (parent, args, context) =>
         //todo: if parent add all parent.gene_ids in sqon to find genes by variant in gene index. Ask link between gene and variant
-        hitsResolver(parent, args, GeneType),
+        hitsResolver(parent, args, GeneType, context.esClient),
     },
     mapping: { type: GraphQLJSON },
     extended: {
@@ -96,7 +102,7 @@ const GenesType = new GraphQLObjectType({
     aggsState: { type: AggsStateType },
     columnsState: {
       type: ColumnsStateType,
-      resolve: (_, args) => columnStateResolver(args, GeneType),
+      resolve: (_, args, context) => columnStateResolver(args, GeneType, context.esClient),
     },
     matchBoxState: { type: MatchBoxStateType },
     aggregations: { type: aggregationsType },

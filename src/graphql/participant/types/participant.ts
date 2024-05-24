@@ -1,17 +1,17 @@
-import { GraphQLBoolean, GraphQLEnumType, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
-
-import { esParticipantIndex } from '../../../config/env';
-import { aggsResolver, columnStateResolver, hitsResolver } from '../../common/resolvers';
+import { aggsResolver, columnStateResolver, hitsResolver } from '@ferlab/next/lib/common/resolvers';
 import {
   aggregationsArgsType,
   AggsStateType,
   ColumnsStateType,
   hitsArgsType,
   MatchBoxStateType,
-} from '../../common/types';
-import GraphQLJSON from '../../common/types/jsonType';
-import FilesType from '../../file/types/file';
-import SamplesType from '../../sample/types/sample';
+} from '@ferlab/next/lib/common/types';
+import GraphQLJSON from '@ferlab/next/lib/common/types/jsonType';
+import { GraphQLBoolean, GraphQLEnumType, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
+import { esParticipantIndex } from 'src/config/env';
+
+import { BiospecimensType } from '../../biospecimen/types/biospecimen';
+import { FilesType } from '../../file/types/file';
 import { StudyType } from '../../study/types/study';
 import extendedMapping from '../extendedMapping';
 import DiagnosesType from './diagnoses';
@@ -31,7 +31,7 @@ const SexType = new GraphQLEnumType({
 export const ParticipantType = new GraphQLObjectType({
   name: 'Participant',
   fields: () => ({
-    id: { type: GraphQLString, resolve: parent => parent.participant_id },
+    id: { type: GraphQLString, resolve: (parent) => parent.participant_id },
     participant_id: { type: GraphQLString },
     participant_2_id: { type: GraphQLString },
     sex: { type: SexType },
@@ -52,7 +52,7 @@ export const ParticipantType = new GraphQLObjectType({
     vital_status: { type: GraphQLString },
     study: { type: StudyType },
     files: { type: FilesType },
-    biospecimens: { type: SamplesType },
+    biospecimens: { type: BiospecimensType },
     family_relationships: { type: FamilyRelationshipsType },
     icd_tagged: { type: IcdsType },
     diagnoses: { type: DiagnosesType },
@@ -95,18 +95,22 @@ const ParticipantHitsType = new GraphQLObjectType({
     total: { type: GraphQLInt },
     edges: {
       type: new GraphQLList(ParticipantEdgesType),
-      resolve: async (parent, args) => parent.edges.map(node => ({ searchAfter: args?.searchAfter || [], node })),
+      resolve: async (parent, args) =>
+        parent.edges.map((node) => ({
+          searchAfter: args?.searchAfter || [],
+          node,
+        })),
     },
   }),
 });
 
-const ParticipantsType = new GraphQLObjectType({
+export const ParticipantsType = new GraphQLObjectType({
   name: 'ParticipantsType',
   fields: () => ({
     hits: {
       type: ParticipantHitsType,
       args: hitsArgsType,
-      resolve: (parent, args) => hitsResolver(parent, args, ParticipantType),
+      resolve: (parent, args, context) => hitsResolver(parent, args, ParticipantType, context.esClient),
     },
     mapping: { type: GraphQLJSON },
     extended: {
@@ -116,13 +120,13 @@ const ParticipantsType = new GraphQLObjectType({
     aggsState: { type: AggsStateType },
     columnsState: {
       type: ColumnsStateType,
-      resolve: (_, args) => columnStateResolver(args, ParticipantType),
+      resolve: (_, args, context) => columnStateResolver(args, ParticipantType, context.esClient),
     },
     matchBoxState: { type: MatchBoxStateType },
     aggregations: {
       type: ParticipantAgg,
       args: aggregationsArgsType,
-      resolve: (parent, args, context, info) => aggsResolver(args, info, ParticipantType),
+      resolve: (parent, args, context, info) => aggsResolver(args, info, ParticipantType, context.esClient),
     },
   }),
 });

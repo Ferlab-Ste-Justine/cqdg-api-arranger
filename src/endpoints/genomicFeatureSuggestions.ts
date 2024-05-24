@@ -11,7 +11,7 @@ export const SUGGESTIONS_TYPES = {
 const getGenomicFeatureSuggestions = async (req: Request, res: Response, type: string): Promise<void> => {
   const suggestionResponse = await fetchGenomicFeatureSuggestions(req.params.prefix, type);
   const searchText = suggestionResponse?.text;
-  const suggestions = suggestionResponse?.options?.map(suggestion => suggestion._source);
+  const suggestions = suggestionResponse?.options?.map((suggestion) => suggestion._source);
 
   res.status(StatusCodes.OK).send({
     searchText,

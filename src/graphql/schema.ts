@@ -1,9 +1,9 @@
 import { GraphQLObjectType, GraphQLSchema } from 'graphql';
 
+import Biospecimen from './biospecimen/query';
 import File from './file/query';
 import Gene from './gene/query';
 import Participant from './participant/query';
-import Biospecimen from './sample/query';
 import Study from './study/query';
 import Variant from './variant/query';
 

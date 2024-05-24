@@ -1,3 +1,6 @@
+import { createSet, deleteSet, getSets, SubActionTypes, updateSetContent, updateSetTag } from '@ferlab/next/lib/sets';
+import { CreateSetBody, Set, SetSqon, UpdateSetContentBody, UpdateSetTagBody } from '@ferlab/next/lib/sets/types';
+import resolveSetIdMiddleware from '@ferlab/next/lib/sqon/resolveSetIdMiddleware';
 import compression from 'compression';
 import cors from 'cors';
 import express, { Express } from 'express';
@@ -5,22 +8,14 @@ import { Keycloak } from 'keycloak-connect';
 import NodeCache from 'node-cache';
 
 import packageJson from '../package.json';
-import { cacheTTL, esHost, isDev, keycloakURL } from './config/env';
+import { cacheTTL, esHost, isDev, keycloakURL, maxSetContentSize, usersApiURL } from './config/env';
 import genomicFeatureSuggestions, { SUGGESTIONS_TYPES } from './endpoints/genomicFeatureSuggestions';
 import { getPhenotypesNodes } from './endpoints/phenotypes';
-import {
-  createSet,
-  deleteSet,
-  getSets,
-  SubActionTypes,
-  updateSetContent,
-  updateSetTag,
-} from './endpoints/sets/setsFeature';
-import { CreateSetBody, Set, SetSqon, UpdateSetContentBody, UpdateSetTagBody } from './endpoints/sets/setsTypes';
 import { getStatistics } from './endpoints/statistics';
+import schema from './graphql/schema';
 import { STATISTICS_CACHE_ID, verifyCache } from './middleware/cache';
 import { injectBodyHttpHeaders } from './middleware/injectBodyHttpHeaders';
-import { resolveSetIdMiddleware } from './middleware/resolveSetIdInSqon';
+import esClient from './services/elasticsearch/client';
 import { globalErrorHandler, globalErrorLogger } from './utils/errors';
 
 const { dependencies, version } = packageJson;
@@ -37,7 +32,7 @@ const buildApp = (keycloak: Keycloak): Express => {
     express.urlencoded({
       extended: true,
       limit: '50mb',
-    }),
+    })
   );
   app.use(injectBodyHttpHeaders());
 
@@ -55,7 +50,7 @@ const buildApp = (keycloak: Keycloak): Express => {
     keycloak.middleware({
       logout: '/logout',
       admin: '/',
-    }),
+    })
   );
 
   /** disable protect to enable graphql playground */
@@ -63,7 +58,7 @@ const buildApp = (keycloak: Keycloak): Express => {
     app.use(keycloak.protect());
   }
 
-  app.use(resolveSetIdMiddleware());
+  app.use(resolveSetIdMiddleware(usersApiURL));
 
   app.get('/status', (_req, res) =>
     res.send({
@@ -71,7 +66,7 @@ const buildApp = (keycloak: Keycloak): Express => {
       version,
       keycloak: keycloakURL,
       elasticsearch: esHost,
-    }),
+    })
   );
 
   app.post('/cache-clear', keycloak.protect('realm:ADMIN'), async (_req, res) => {
@@ -80,10 +75,10 @@ const buildApp = (keycloak: Keycloak): Express => {
   });
 
   app.get('/genesFeature/suggestions/:prefix', (req, res) =>
-    genomicFeatureSuggestions(req, res, SUGGESTIONS_TYPES.GENE),
+    genomicFeatureSuggestions(req, res, SUGGESTIONS_TYPES.GENE)
   );
   app.get('/variantsFeature/suggestions/:prefix', (req, res) =>
-    genomicFeatureSuggestions(req, res, SUGGESTIONS_TYPES.VARIANT),
+    genomicFeatureSuggestions(req, res, SUGGESTIONS_TYPES.VARIANT)
   );
 
   app.get('/statistics', verifyCache(STATISTICS_CACHE_ID, cache), async (req, res) => {
@@ -94,7 +89,7 @@ const buildApp = (keycloak: Keycloak): Express => {
 
   app.get('/sets', async (req, res) => {
     const accessToken = req.headers.authorization;
-    const userSets = await getSets(accessToken);
+    const userSets = await getSets(accessToken, usersApiURL);
 
     res.send(userSets);
   });
@@ -102,30 +97,46 @@ const buildApp = (keycloak: Keycloak): Express => {
   app.post('/sets', async (req, res) => {
     const accessToken = req.headers.authorization;
     const userId = req['kauth']?.grant?.access_token?.content?.sub;
-    const createdSet = await createSet(req.body as CreateSetBody, accessToken, userId);
+    const createdSet = await createSet(
+      req.body as CreateSetBody,
+      accessToken,
+      userId,
+      usersApiURL,
+      esClient,
+      schema,
+      maxSetContentSize
+    );
 
     res.send(createdSet);
   });
 
   app.put('/sets/:setId', async (req, res) => {
-    const requestBody: UpdateSetTagBody | UpdateSetContentBody = req.body;
+    const requestBody: UpdateSetTagBody | UpdateSetContentBody = req.body as any;
     const accessToken = req.headers.authorization;
     const userId = req['kauth']?.grant?.access_token?.content?.sub;
-    const setId: string = req.params.setId;
+    const { setId } = req.params;
     let updatedSet: Set;
-
     if (requestBody.subAction === SubActionTypes.RENAME_TAG) {
-      updatedSet = await updateSetTag(requestBody as UpdateSetTagBody, accessToken, userId, setId);
+      updatedSet = await updateSetTag(requestBody as UpdateSetTagBody, accessToken, userId, setId, usersApiURL);
     } else {
-      updatedSet = await updateSetContent(requestBody as UpdateSetContentBody, accessToken, userId, setId);
+      updatedSet = await updateSetContent(
+        requestBody as UpdateSetContentBody,
+        accessToken,
+        userId,
+        setId,
+        esClient,
+        schema,
+        usersApiURL,
+        maxSetContentSize
+      );
     }
     res.send(updatedSet);
   });
 
   app.delete('/sets/:setId', async (req, res) => {
     const accessToken = req.headers.authorization;
-    const setId: string = req.params.setId;
-    const deletedResult = await deleteSet(accessToken, setId);
+    const { setId } = req.params;
+    const deletedResult = await deleteSet(accessToken, setId, usersApiURL);
     res.send(deletedResult);
   });
 

@@ -1,21 +1,40 @@
+import { SetSqon } from '@ferlab/next/lib/sets/types';
+import searchSqon from '@ferlab/next/lib/sqon/searchSqon';
+import { replaceSetByIds } from '@ferlab/next/lib/sqon/setSqon';
 import get from 'lodash/get';
+import schema from 'src/graphql/schema';
+import esClient from 'src/services/elasticsearch/client';
 
-import { maxSetContentSize, participantIdKey } from '../config/env';
+import { participantBiospecimenKey, participantFileKey, participantKey } from '../config/env';
+import { maxSetContentSize, participantIdKey, usersApiURL } from '../config/env';
 import runQuery from '../graphql/runQuery';
-import { searchSqon } from '../sqon/searchSqon';
-import { replaceSetByIds } from '../sqon/setSqon';
-import { SetSqon } from './sets/setsTypes';
 
-const getParticipantIds = async (sqon: SetSqon) => await searchSqon(sqon, 'Participant', [], participantIdKey);
+const getPathToParticipantId = (type: string) => {
+  if (type === 'biospecimen') {
+    return participantBiospecimenKey;
+  } else if (type === 'file') {
+    return participantFileKey;
+  } else {
+    return participantKey;
+  }
+};
 
 export const getPhenotypesNodes = async (
   sqon: SetSqon,
   type: string,
   aggregations_filter_themselves: boolean,
-  accessToken: string,
+  accessToken: string
 ) => {
-  const newSqon = await replaceSetByIds(sqon, accessToken);
-  const participantIds = await getParticipantIds(newSqon);
+  const newSqon = await replaceSetByIds(sqon, accessToken, getPathToParticipantId, usersApiURL);
+  const participantIds = await searchSqon(
+    newSqon,
+    'Participant',
+    [],
+    participantIdKey,
+    esClient,
+    schema,
+    maxSetContentSize
+  );
   return getPhenotypesNodesByIds(participantIds, type, aggregations_filter_themselves);
 };
 

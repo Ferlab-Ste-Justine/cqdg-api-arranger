@@ -1,6 +1,5 @@
-import { Client } from '@elastic/elasticsearch';
-
-import { esHost, esPass, esUser } from '../../config/env';
+import { Client } from '@opensearch-project/opensearch';
+import { esHost, esPass, esUser } from 'src/config/env';
 
 const esClient = new Client({
   node: esHost,

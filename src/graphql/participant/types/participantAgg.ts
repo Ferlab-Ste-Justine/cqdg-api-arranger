@@ -1,6 +1,5 @@
+import AggregationsType, { NumericAggregationsType } from '@ferlab/next/lib/common/types/aggregationsType';
 import { GraphQLObjectType } from 'graphql';
-
-import AggregationsType, { NumericAggregationsType } from '../../common/types/aggregationsType';
 
 const ParticipantAgg = new GraphQLObjectType({
   name: 'ParticipantAgg',

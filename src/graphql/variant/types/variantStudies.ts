@@ -1,6 +1,6 @@
+import { aggregationsType, AggsStateType, ColumnsStateType, MatchBoxStateType } from '@ferlab/next/lib/common/types';
 import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
-import { aggregationsType, AggsStateType, ColumnsStateType, MatchBoxStateType } from '../../common/types';
 import { totalType } from './frequencies';
 import GraphQLJSON from './variant';
 
@@ -33,13 +33,17 @@ export const VariantStudiesType = new GraphQLObjectType({
                     }),
                   },
                 }),
-              }),
+              })
             ),
-            resolve: async (parent, args) => parent.edges.map(node => ({ searchAfter: args?.searchAfter || [], node })),
+            resolve: async (parent, args) =>
+              parent.edges.map((node) => ({
+                searchAfter: args?.searchAfter || [],
+                node,
+              })),
           },
         }),
       }),
-      resolve: async parent => {
+      resolve: async (parent) => {
         const results = parent.studies;
         return { total: results?.length || 0, edges: results || [] };
       },
