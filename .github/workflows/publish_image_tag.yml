@@ -1,10 +1,24 @@
 name: Publish Image Using Tag
 on:
   push:
-    tags:
-      - v*
+    branches:
+      - wrapper-next
 jobs:
-  publish-image:
+  create-tag:
+    name: Create Tag
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          current_version=v$(node -p -e "require('./package.json').version")
+          if [[ $(git tag -l "$current_version") ]]; then
+            echo "Exit if tag already exists"
+            exit 0
+          fi
+          echo "creating tag $current_version"
+          git tag $current_version
+          git push --tags
+  build:
     name: Publish Image
     runs-on: ubuntu-latest
     steps:
