@@ -1,6 +1,6 @@
 {
   "name": "cqdg-wrapper-next",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": ":factory: a data-model aware GraphQL API that sits above an Elasticsearch cluster",
   "main": "src/index.js",
   "type": "module",
