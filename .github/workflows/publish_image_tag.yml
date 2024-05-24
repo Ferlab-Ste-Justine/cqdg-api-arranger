@@ -1,34 +1,18 @@
 name: Publish Image Using Tag
 on:
   push:
-    branches:
-      - wrapper-next
+    tags:
+      - v*
 jobs:
-  tag-and-publish:
-    name: Create Tag and Publish Image
+  publish:
+    name: Publish Image
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Create Tag
-        id: create_tag
-        run: |
-          current_version=v$(node -p -e "require('./package.json').version")
-          if [[ $(git tag -l "$current_version") ]]; then
-            echo "Exit if tag already exists"
-            exit 0
-          fi
-          echo "creating tag $current_version"
-          git tag $current_version
-          git push --tags
-          
-      - name: Wait for 15 seconds
-        run: sleep 1
-
+      - uses: actions/checkout@v2
       - name: Push the image on the docker registry
         uses: Ferlab-Ste-Justine/action-push-image@v2
         with:
           username: ${{ secrets.FERLAB_DOCKER_HUB_USER }}
           password: ${{ secrets.FERLAB_DOCKER_HUB_TOKEN }}
           image: ferlabcrsj/cqdg-api-arranger
+          tag_format: "{semver}"
