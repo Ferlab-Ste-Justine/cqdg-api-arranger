@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: |
-          current_version=$(node -p -e "require('./package.json').version")
+          current_version=v$(node -p -e "require('./package.json').version")
           if [[ $(git tag -l "$current_version") ]]; then
             echo "Exit if tag already exists"
             exit 0
