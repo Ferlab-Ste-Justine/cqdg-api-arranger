@@ -3,7 +3,6 @@ FROM node:18.10-alpine AS build-image
 WORKDIR /code
 COPY . .
 RUN npm install
-RUN npm run clean
 RUN npm run build
 
 # Second image, that creates an image for production
