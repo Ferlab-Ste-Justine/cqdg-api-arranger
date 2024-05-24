@@ -32,4 +32,3 @@ jobs:
           username: ${{ secrets.FERLAB_DOCKER_HUB_USER }}
           password: ${{ secrets.FERLAB_DOCKER_HUB_TOKEN }}
           image: ferlabcrsj/cqdg-api-arranger
-          tag_format: "{semver}"
