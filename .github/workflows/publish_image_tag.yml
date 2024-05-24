@@ -4,12 +4,16 @@ on:
     branches:
       - wrapper-next
 jobs:
-  create-tag:
-    name: Create Tag
+  tag-and-publish:
+    name: Create Tag and Publish Image
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - run: |
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Create Tag
+        id: create_tag
+        run: |
           current_version=v$(node -p -e "require('./package.json').version")
           if [[ $(git tag -l "$current_version") ]]; then
             echo "Exit if tag already exists"
@@ -18,11 +22,7 @@ jobs:
           echo "creating tag $current_version"
           git tag $current_version
           git push --tags
-  build:
-    name: Publish Image
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
+
       - name: Push the image on the docker registry
         uses: Ferlab-Ste-Justine/action-push-image@v2
         with:
@@ -30,3 +30,4 @@ jobs:
           password: ${{ secrets.FERLAB_DOCKER_HUB_TOKEN }}
           image: ferlabcrsj/cqdg-api-arranger
           tag_format: "{semver}"
+          tags: ${{ steps.create_tag.current_version }}
