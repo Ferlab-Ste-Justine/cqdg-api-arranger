@@ -1,5 +1,6 @@
 import { createSet, deleteSet, getSets, SubActionTypes, updateSetContent, updateSetTag } from '@ferlab/next/lib/sets';
 import { Set, UpdateSetContentBody, UpdateSetTagBody } from '@ferlab/next/lib/sets/types';
+import { jest } from '@jest/globals';
 import { Express } from 'express';
 import Keycloak from 'keycloak-connect';
 import request from 'supertest';
@@ -9,10 +10,11 @@ import { keycloakClient, keycloakRealm, keycloakURL } from './config/env';
 import { getStatistics, Statistics } from './endpoints/statistics';
 import { getToken, publicKey } from './utils/authTestUtils';
 
-jest.mock('./endpoints/sets/setsFeature');
+jest.mock('@ferlab/next/lib/sets/index');
 jest.mock('./endpoints/statistics');
 
-describe('Express app (without Arranger)', () => {
+//todo: fix tests
+describe('Express app', () => {
   let app: Express;
   let keycloakFakeConfig;
 
