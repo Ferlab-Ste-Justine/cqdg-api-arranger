@@ -1,5 +1,5 @@
-import { esParticipantIndex } from 'src/config/env';
-import { getBody } from 'src/services/elasticsearch/utils';
+import { esParticipantIndex } from '#src/config/env';
+import { getBody } from '#src/services/elasticsearch/utils';
 
 import { ParticipantType } from './types/participant';
 

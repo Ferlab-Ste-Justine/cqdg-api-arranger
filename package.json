@@ -8,8 +8,11 @@
     "node": "^18.19.1",
     "npm": "^10.2.4"
   },
+  "imports": {
+    "#src/*": "./src/*"
+  },
   "scripts": {
-    "start": "node ./dist/src/index.js",
+    "start": "node --experimental-specifier-resolution=node --no-warnings ./dist/src/index.js",
     "dev": "tsx ./src/index.ts",
     "build": "tsc -p tsconfig.build.json",
     "clean": "rm -rf node_modules dist package-lock.json",

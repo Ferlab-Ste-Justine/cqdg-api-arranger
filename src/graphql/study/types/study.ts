@@ -8,7 +8,8 @@ import {
 } from '@ferlab/next/lib/common/types';
 import GraphQLJSON from '@ferlab/next/lib/common/types/jsonType';
 import { GraphQLBoolean, GraphQLFloat, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
-import { esStudyIndex } from 'src/config/env';
+
+import { esStudyIndex } from '#src/config/env';
 
 import DataSetsType from '../../file/types/dataSets';
 import { totalType } from '../../variant/types/frequencies';

@@ -7,7 +7,7 @@ import express, { Express } from 'express';
 import { Keycloak } from 'keycloak-connect';
 import NodeCache from 'node-cache';
 
-import packageJson from '../package.json';
+import packageJson from '../package.json' assert { type: 'json' };
 import { cacheTTL, esHost, isDev, keycloakURL, maxSetContentSize, usersApiURL } from './config/env';
 import genomicFeatureSuggestions, { SUGGESTIONS_TYPES } from './endpoints/genomicFeatureSuggestions';
 import { getPhenotypesNodes } from './endpoints/phenotypes';

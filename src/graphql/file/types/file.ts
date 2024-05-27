@@ -8,7 +8,8 @@ import {
 } from '@ferlab/next/lib/common/types';
 import GraphQLJSON from '@ferlab/next/lib/common/types/jsonType';
 import { GraphQLFloat, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
-import { esFileIndex } from 'src/config/env';
+
+import { esFileIndex } from '#src/config/env';
 
 import { BiospecimensType } from '../../biospecimen/types/biospecimen';
 import { ParticipantsType } from '../../participant/types/participant';

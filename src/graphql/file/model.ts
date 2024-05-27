@@ -1,5 +1,5 @@
-import { esFileIndex } from 'src/config/env';
-import { getBody } from 'src/services/elasticsearch/utils';
+import { esFileIndex } from '#src/config/env';
+import { getBody } from '#src/services/elasticsearch/utils';
 
 import { FileType } from './types/file';
 

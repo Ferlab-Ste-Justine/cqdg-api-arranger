@@ -1,5 +1,5 @@
-import { esBiospecimenIndex } from 'src/config/env';
-import { getBody } from 'src/services/elasticsearch/utils';
+import { esBiospecimenIndex } from '#src/config/env';
+import { getBody } from '#src/services/elasticsearch/utils';
 
 import { BiospecimenType } from './types/biospecimen';
 

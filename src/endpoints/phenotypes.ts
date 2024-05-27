@@ -2,8 +2,9 @@ import { SetSqon } from '@ferlab/next/lib/sets/types';
 import searchSqon from '@ferlab/next/lib/sqon/searchSqon';
 import { replaceSetByIds } from '@ferlab/next/lib/sqon/setSqon';
 import get from 'lodash/get';
-import schema from 'src/graphql/schema';
-import esClient from 'src/services/elasticsearch/client';
+
+import schema from '#src/graphql/schema';
+import esClient from '#src/services/elasticsearch/client';
 
 import { participantBiospecimenKey, participantFileKey, participantKey } from '../config/env';
 import { maxSetContentSize, participantIdKey, usersApiURL } from '../config/env';
