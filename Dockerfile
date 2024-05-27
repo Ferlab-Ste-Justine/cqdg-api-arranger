@@ -13,4 +13,4 @@ COPY package* ./
 COPY ./admin ./admin
 RUN npm install --production
 
-CMD [ "node", "./dist/src/index.js" ]
+CMD [ "npm", "run", "start" ]
