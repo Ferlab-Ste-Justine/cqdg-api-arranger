@@ -12,7 +12,6 @@ import { GraphQLBoolean, GraphQLFloat, GraphQLInt, GraphQLList, GraphQLObjectTyp
 import { esStudyIndex } from '#src/config/env';
 
 import DataSetsType from '../../file/types/dataSets';
-import { totalType } from '../../variant/types/frequencies';
 import extendedMapping from '../extendedMapping';
 import DataCategoriesType from './dataCategories';
 import DataTypesType from './dataTypes';
@@ -54,12 +53,6 @@ export const StudyType = new GraphQLObjectType({
     mondo_terms: { type: new GraphQLList(GraphQLString) },
     name: { type: GraphQLString },
     participant_count: { type: GraphQLFloat },
-    participant_count2: {
-      type: GraphQLFloat,
-      resolve: (study) => {
-        //do req to ES on participant_secret_centric index
-      },
-    },
     population: { type: GraphQLString },
     sample_count: { type: GraphQLFloat },
     security: { type: GraphQLString },
@@ -71,11 +64,6 @@ export const StudyType = new GraphQLObjectType({
     data_types: { type: DataTypesType },
     datasets: { type: DataSetsType },
     experimental_strategies: { type: ExperimentalStrategiesType },
-
-    //from VariantStudy
-    transmission: { type: new GraphQLList(GraphQLString) },
-    zygosity: { type: new GraphQLList(GraphQLString) },
-    total: { type: totalType },
   }),
   extensions: {
     nestedFields: [],

@@ -98,5 +98,3 @@ export const FilesType = new GraphQLObjectType({
     },
   }),
 });
-
-export default FilesType;

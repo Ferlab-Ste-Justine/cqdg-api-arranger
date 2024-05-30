@@ -11,7 +11,7 @@ import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graph
 
 import { esBiospecimenIndex } from '#src/config/env';
 
-// import FilesType from '../../file/types/file';
+import { FilesType } from '../../file/types/file';
 import { ParticipantType } from '../../participant/types/participant';
 import { StudyType } from '../../study/types/study';
 import extendedMapping from '../extendedMapping';
@@ -32,7 +32,7 @@ export const BiospecimenType = new GraphQLObjectType({
     study_id: { type: GraphQLString },
     submitter_biospecimen_id: { type: GraphQLString },
     submitter_sample_id: { type: GraphQLString },
-    // files: { type: FilesType },
+    files: { type: FilesType },
     participant: { type: ParticipantType },
     study: { type: StudyType },
   }),

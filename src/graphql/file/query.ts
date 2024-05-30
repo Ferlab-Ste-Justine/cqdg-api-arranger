@@ -1,4 +1,4 @@
-import FilesType from './types/file';
+import { FilesType } from './types/file';
 
 export const getFiles = {
   type: FilesType,
