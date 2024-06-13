@@ -22,7 +22,7 @@ const FamilyRelationshipType = new GraphQLObjectType({
 const FamilyRelationshipsEdgesType = new GraphQLObjectType({
   name: 'FamilyRelationshipsEdgesType',
   fields: () => ({
-    searchAfter: { type: new GraphQLList(GraphQLInt) },
+    searchAfter: { type: GraphQLJSON },
     node: { type: FamilyRelationshipType },
   }),
 });

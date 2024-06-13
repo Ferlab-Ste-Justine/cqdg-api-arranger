@@ -18,7 +18,14 @@ import esToSafeJsInt from '../utils/esToSafeJsInt';
  * @param sqon
  * @param index
  */
-const getAllData = async ({ chunkSize = DOWNLOAD_STREAM_BUFFER_SIZE, ctx, maxRows, sort = [], sqon, index }) => {
+const getAllData = async ({
+  chunkSize = DOWNLOAD_STREAM_BUFFER_SIZE,
+  ctx,
+  maxRows,
+  sort = [],
+  sqon,
+  index,
+}): Promise<PassThrough> => {
   const graphqlIndex = index;
   const esIndex = getESIndexFromIndex({ graphqlIndex });
   const extendedFields = await getExtendedFields({ esIndex, graphqlIndex });

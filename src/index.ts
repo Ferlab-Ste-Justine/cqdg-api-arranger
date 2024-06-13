@@ -36,12 +36,12 @@ const startApp = async () => {
     });
     await server.start();
     await app.use(
-      `/${project}/graphql`,
+      `/graphql`,
       cors(),
       express.json({ limit: '50mb' }),
       expressMiddleware(server, { context: resolveContext }),
     );
-    await app.use(`/${project}/download`, downloadRouter(resolveContext));
+    await app.use(`/download`, downloadRouter(resolveContext));
     await httpServer.listen({ port });
     console.info(`[startApp] 🚀 Server ready on ${port}`);
   } catch (err) {

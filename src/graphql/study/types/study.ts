@@ -96,7 +96,8 @@ const StudiesHitsType = new GraphQLObjectType({
     total: { type: GraphQLInt },
     edges: {
       type: new GraphQLList(StudyEdgesType),
-      resolve: async (parent, args) => parent.edges.map(node => ({ searchAfter: args?.searchAfter || [], node })),
+      resolve: async parent =>
+        parent.edges.map(node => ({ searchAfter: [node?.study_id?.toLowerCase() || ''] || [], node })),
     },
   }),
 });

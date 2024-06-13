@@ -1,6 +1,6 @@
 // TODO: will gradually tighten these as we migrate to TS
 
-import { Client } from '@elastic/elasticsearch';
+import { Client } from '@opensearch-project/opensearch';
 import { GraphQLResolveInfo } from 'graphql';
 
 export interface IQueryContext {

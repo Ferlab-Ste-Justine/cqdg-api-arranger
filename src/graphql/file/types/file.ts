@@ -62,7 +62,8 @@ const FileHitsType = new GraphQLObjectType({
     total: { type: GraphQLInt },
     edges: {
       type: new GraphQLList(FileEdgesType),
-      resolve: async (parent, args) => parent.edges.map(node => ({ searchAfter: args?.searchAfter || [], node })),
+      resolve: async parent =>
+        parent.edges.map(node => ({ searchAfter: [node?.file_id?.toLowerCase() || ''] || [], node })),
     },
   }),
 });

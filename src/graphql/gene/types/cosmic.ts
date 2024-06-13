@@ -13,7 +13,7 @@ const CosmicType = new GraphQLObjectType({
 const CosmicEdgesType = new GraphQLObjectType({
   name: 'CosmicEdgesType',
   fields: () => ({
-    searchAfter: { type: new GraphQLList(GraphQLInt) },
+    searchAfter: { type: GraphQLJSON },
     node: { type: CosmicType },
   }),
 });

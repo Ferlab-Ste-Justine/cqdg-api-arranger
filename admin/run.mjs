@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import 'regenerator-runtime/runtime';
 
-import {Client} from '@elastic/elasticsearch';
+import {Client} from '@opensearch-project/opensearch';
 
 import {createIndexIfNeeded} from '../dist/src/services/elasticsearch';
 import {ArrangerApi} from './arrangerApi.mjs';

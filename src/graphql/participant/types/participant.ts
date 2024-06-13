@@ -95,7 +95,8 @@ const ParticipantHitsType = new GraphQLObjectType({
     total: { type: GraphQLInt },
     edges: {
       type: new GraphQLList(ParticipantEdgesType),
-      resolve: async (parent, args) => parent.edges.map(node => ({ searchAfter: args?.searchAfter || [], node })),
+      resolve: async parent =>
+        parent.edges.map(node => ({ searchAfter: [node?.participant_id?.toLowerCase() || ''] || [], node })),
     },
   }),
 });

@@ -6,7 +6,7 @@ import participantExtendedMapping from '../../graphql/participant/extendedMappin
 import sampleExtendedMapping from '../../graphql/sample/extendedMapping';
 import studyExtendedMapping from '../../graphql/study/extendedMapping';
 import variantExtendedMapping from '../../graphql/variant/extendedMapping';
-import { getEsMapping } from '../../services/elasticsearch/utils';
+import { getEsMappingProperties } from '../../services/elasticsearch/utils';
 import {
   ColumnConfigsInterface,
   ConfigProperties,
@@ -37,8 +37,8 @@ const getExtendedMappingFromIndex = ({ graphqlIndex = '' }): I_ExtendedMappingSe
 
 export const getExtendedFields = async ({ esIndex, graphqlIndex }) => {
   try {
-    const mapping = await getEsMapping({ esIndex });
-    const fieldsFromMapping = await flattenMappingToFields(mapping);
+    const esMappingProperties = await getEsMappingProperties({ esIndex });
+    const fieldsFromMapping = await flattenMappingToFields(esMappingProperties);
     const extendedMapping = getExtendedMappingFromIndex({ graphqlIndex });
     return extendFields(fieldsFromMapping, extendedMapping);
   } catch (err) {

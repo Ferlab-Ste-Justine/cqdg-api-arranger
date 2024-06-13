@@ -13,7 +13,7 @@ const DddType = new GraphQLObjectType({
 const DddEdgesType = new GraphQLObjectType({
   name: 'DddEdgesType',
   fields: () => ({
-    searchAfter: { type: new GraphQLList(GraphQLInt) },
+    searchAfter: { type: GraphQLJSON },
     node: { type: DddType },
   }),
 });

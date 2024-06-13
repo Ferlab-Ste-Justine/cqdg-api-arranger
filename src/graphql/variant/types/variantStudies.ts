@@ -18,7 +18,7 @@ export const VariantStudiesType = new GraphQLObjectType({
               new GraphQLObjectType({
                 name: 'VariantStudyEdgesType',
                 fields: () => ({
-                  searchAfter: { type: new GraphQLList(GraphQLInt) },
+                  searchAfter: { type: GraphQLJSON },
                   node: {
                     type: new GraphQLObjectType({
                       name: 'VariantStudyType',
